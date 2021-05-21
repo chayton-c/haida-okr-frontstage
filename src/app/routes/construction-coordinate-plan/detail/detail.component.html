@@ -1,0 +1,15 @@
+<!--<div class="modal-header">-->
+<!--  <div class="modal-title">任务编辑</div>-->
+<!--</div>-->
+<!--&lt;!&ndash;<sf #sf mode="edit" [schema]="schema" [formData]="record" button="none">&ndash;&gt;-->
+<!--<sf #sf mode="edit" button="none">-->
+
+<!--  <div class="modal-footer">-->
+<!--    <button nz-button type="button" (click)="close()">关闭</button>-->
+<!--&lt;!&ndash;    <button nz-button type="submit" [nzType]="'primary'" (click)="save(sf.value)" [disabled]="!sf.valid">保存</button>&ndash;&gt;-->
+<!--    <button nz-button type="submit" [nzType]="'primary'" (click)="save(sf.value)">保存</button>-->
+<!--  </div>-->
+<!--</sf>-->
+<nz-modal [(nzVisible)]="isVisible" nzTitle="Modal Title" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()" [nzOkLoading]="isOkLoading">
+  <p *nzModalContent>Modal Content</p>
+</nz-modal>

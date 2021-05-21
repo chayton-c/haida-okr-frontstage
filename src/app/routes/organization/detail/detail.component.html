@@ -1,0 +1,64 @@
+<page-header [breadcrumb]="breadcrumb" [title]="'单位配置'"></page-header>
+<ng-template #breadcrumb>
+  <nz-breadcrumb>
+    <nz-breadcrumb-item>
+      <a [routerLink]="['/']">首页</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      <a [routerLink]="['/organization/list']">组织信息</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>单位配置</nz-breadcrumb-item>
+  </nz-breadcrumb>
+</ng-template>
+
+<nz-card nzTitle="单位信息">
+  <form nz-form [formGroup]="validateForm" (ngSubmit)="executeRoleInfo()">
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzSpan]="13">
+        <nz-form-item [nzGutter]="24">
+          <nz-form-label nzFor="name">名称</nz-form-label>
+          <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+            <input nz-input formControlName="name" placeholder="请输入名称" [(ngModel)]="organization.name" />
+            <ng-template #userErrorTpl let-control>
+              <ng-container *ngIf="control.hasError('required')"> 单位名称不能为空 </ng-container>
+              <ng-container *ngIf="control.hasError('duplicated')"> The username is redundant! </ng-container>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="13">
+        <nz-form-item [nzGutter]="24">
+          <nz-form-label>上级</nz-form-label>
+          <nz-form-control>
+            <nz-select formControlName="parentId" [(ngModel)]="organization.parentId">
+              <div *ngFor="let parentOrganization of parentOrganizations">
+                <nz-option [nzValue]="parentOrganization.id" nzLabel="{{ parentOrganization.name }}"></nz-option>
+              </div>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="13">
+        <nz-form-item [nzGutter]="24">
+          <nz-form-label nzFor="role">备注</nz-form-label>
+          <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+            <input nz-input formControlName="remark" placeholder="请输入名称" [(ngModel)]="organization.remark" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="18">
+        <nz-form-item [nzGutter]="24">
+          <nz-form-label nzFor="description">描述</nz-form-label>
+          <nz-form-control>
+            <input nz-input formControlName="description" placeholder="请输入描述" [(ngModel)]="organization.description" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div nz-row>
+      <div nz-col [nzSpan]="24" class="search-area">
+        <button nz-button [disabled]="!validateForm.valid" [nzType]="'primary'">提交</button>
+      </div>
+    </div>
+  </form>
+</nz-card>

@@ -1,0 +1,138 @@
+<page-header [breadcrumb]="breadcrumb" [title]="''"></page-header>
+<ng-template #breadcrumb>
+  <nz-breadcrumb>
+    <nz-breadcrumb-item>
+      <a [routerLink]="['/']">首页</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>径路编辑</nz-breadcrumb-item>
+  </nz-breadcrumb>
+</ng-template>
+
+<div nz-row>
+  <nz-card nz-col nzSpan="7">
+    <form nz-form [nzLayout]="'inline'" class="search__form">
+      <div nz-row [nzGutter]="12" style="width: 100%">
+        <div nz-col [nzSpan]="10">
+          <nz-form-item>
+            <nz-form-label>类型</nz-form-label>
+            <nz-form-control>
+              <nz-select [(ngModel)]="opcMarkSelectForm.opcMarkTypeId" name="opcMarkTypeId">
+                <nz-option *ngFor="let opcMarkType of opcMarkTypes" [nzValue]="opcMarkType.id" [nzLabel]="opcMarkType.name"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="10">
+          <nz-form-item>
+            <nz-form-label>名称</nz-form-label>
+            <nz-form-control>
+              <input nz-input [(ngModel)]="opcMarkSelectForm.name" name="name" placeholder="请输入标识名称" />
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="4">
+          <button nz-button nzType="primary" (click)="loadDataFromServer()">查询</button>
+        </div>
+      </div>
+    </form>
+    <nz-table
+      #editRowTable
+      nzBordered
+      nzShowSizeChanger
+      [nzData]="opcMarks"
+      [nzFrontPagination]="false"
+      [nzPageSizeOptions]="[5, 10, 20, 50]"
+      [nzLoading]="opcMarkLoading"
+      [nzTotal]="opcMarkTotal"
+      [nzPageSize]="opcMarkPageSize"
+      [nzPageIndex]="opcMarkPageIndex"
+      (nzQueryParams)="onQueryLocationParamsChange($event)"
+      nzSize="default"
+    >
+      <thead>
+        <tr>
+          <th nzWidth="25%">类型</th>
+          <th nzWidth="25%">名称</th>
+          <th nzWidth="25%">公里标</th>
+          <th nzWidth="25%">图片</th>
+          <th nzWidth="25%">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of editRowTable.data">
+          <ng-container *ngIf="!editCache[data.id].edit; else editTemplate">
+            <td>{{ data.typeName }}</td>
+            <td>{{ data.name }}</td>
+            <td>{{ data.kilometerMark }}</td>
+            <td>
+              <opc-mark-images-table [opcMarkId]="data.id"></opc-mark-images-table>
+            </td>
+            <td><a (click)="startEdit(data.id)">编辑</a>&nbsp;&nbsp;</td>
+          </ng-container>
+          <ng-template #editTemplate>
+            <td>
+              <nz-select
+                style="width: 90%"
+                nzPlaceHolder="请选择测量方法"
+                nzShowSearch
+                nzAllowClear
+                (ngModelChange)="changeOpcMarkType($event, editCache[data.id].data)"
+                [(ngModel)]="editCache[data.id].data.opcMarkTypeId"
+              >
+                <nz-option *ngFor="let opcMarkType of opcMarkTypes" [nzLabel]="opcMarkType.name" [nzValue]="opcMarkType.id"> </nz-option>
+              </nz-select>
+            </td>
+            <td><input type="text" nz-input [(ngModel)]="editCache[data.id].data.name" /></td>
+            <td><input type="text" nz-input [(ngModel)]="editCache[data.id].data.kilometerMark" /></td>
+            <td>-</td>
+            <td>
+              <a
+                nz-popconfirm
+                nzPopconfirmTitle="确定要保存修改吗?"
+                (nzOnConfirm)="saveEdit(data.id)"
+                nzPopconfirmPlacement="topLeft"
+                class="save"
+              >
+                保存 </a
+              >&nbsp;&nbsp;
+              <a (click)="cancelEdit(data.id)">取消</a>
+            </td>
+          </ng-template>
+        </tr>
+      </tbody>
+    </nz-table>
+  </nz-card>
+
+  <div nz-col nzSpan="17">
+    <nz-card>
+      <form nz-form [nzLayout]="'inline'" class="search__form">
+        <div nz-row [nzGutter]="24" style="width: 100%">
+          <div nz-col [nzSpan]="8">
+            <nz-form-item>
+              <nz-form-label>线路车站</nz-form-label>
+              <line-station-casecade
+                defaultValue="true"
+                [(values)]="lineStationCasecadeValue"
+                (valuesChange)="lineStationValueChange($event)"
+              >
+              </line-station-casecade>
+            </nz-form-item>
+          </div>
+          <div nz-col [nzSpan]="8" nzOffset="8">
+            <nz-form-item>
+              <button nz-button>添加线路</button>
+              <button nz-button>添加光电缆</button>
+              <button nz-button>添加光缆标</button>
+            </nz-form-item>
+          </div>
+        </div>
+      </form>
+      <construction-control-plan-preview
+        #constructionControlPlanPreview
+        [(stationId)]="stationId"
+        (focusOpcMarkIdChange)="selectFocusOpcMarkId($event)"
+      >
+      </construction-control-plan-preview>
+    </nz-card>
+  </div>
+</div>

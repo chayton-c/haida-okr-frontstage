@@ -1,0 +1,60 @@
+<div class="header-ul">
+  <div (click)="setSelect()" [ngClass]="isSelected ? 'selected' : ''">
+    <a [routerLink]="'/dashboard/v1'">首页</a>
+  </div>
+  <div
+    *ngFor="let menu of menus; let i = index"
+    (click)="hideSiblingsAndSelect(menu)"
+    [acl]="menu.acl"
+    [ngClass]="menu._selected ? 'selected' : ''"
+  >
+    <a>{{ menu.text }}</a>
+  </div>
+</div>
+
+<!--<ul nz-menu nzMode="horizontal" *ngIf="!hideTopNavigation">-->
+<!--  <li nz-menu-item nzSelected>-->
+<!--    &lt;!&ndash;nzDisabled&ndash;&gt;-->
+<!--    <a [routerLink]="'/dashboard/v1'">首页</a>-->
+<!--  </li>-->
+<!--  <li nz-submenu nzTitle="径路测绘">-->
+<!--    <ul>-->
+<!--      <li nz-menu-item class="item-li-one"><a [routerLink]="'/opc/upload'">径路总览</a></li>-->
+<!--      <li nz-menu-item class="item-li-other"><a [routerLink]="'/opc/upload'">光电缆测绘</a></li>-->
+<!--      <li nz-menu-item class="item-li-other"><a [routerLink]="'/opc/upload'">线路测绘</a></li>-->
+<!--    </ul>-->
+<!--  </li>-->
+<!--  <li nz-submenu nzTitle="动态管控">-->
+<!--    <ul>-->
+<!--      <li nz-menu-item class="item-li-one"><a (click)="openCenterScreen()">中心大屏</a></li>-->
+<!--      <li nz-menu-item class="item-li-other"><a [routerLink]="'/construction-coordinate-plan/list'">方案管控</a></li>-->
+<!--      <li nz-menu-item class="item-li-other"><a [routerLink]="'/relevance-plan/list'">关联计划</a></li>-->
+<!--      <li nz-menu-item class="item-li-other"><a [routerLink]="'/operation-process/list'">作业管控</a></li>-->
+<!--    </ul>-->
+<!--  </li>-->
+<!--  <li nz-menu-item>-->
+<!--    <a [routerLink]="''">统计分析</a>-->
+<!--  </li>-->
+<!--  <li nz-submenu nzTitle="基础数据">-->
+<!--    <ul>-->
+<!--      <li nz-menu-item class="item-li-one"><a [routerLink]="'/organization/list'">组织管理</a></li>-->
+<!--      <li nz-menu-item class="item-li-other"><a [routerLink]="'/railway-line/list'">线路车站</a></li>-->
+<!--      <li nz-menu-item class="item-li-other"><a [routerLink]="'/equipment/list'">现场设备</a></li>-->
+<!--    </ul>-->
+<!--  </li>-->
+<!--  <li nz-submenu nzTitle="系统设置" [style]="'margin-left:64%;'">-->
+<!--    <ul>-->
+<!--      <li nz-menu-item class="item-li-one"><a [routerLink]="''">字典设置</a></li>-->
+<!--    </ul>-->
+<!--  </li>-->
+<!--  <li nz-submenu nzTitle="帮助">-->
+<!--    <ul>-->
+<!--      <li nz-menu-item class="item-li-one"><a [routerLink]="'/help/project-significance'">项目意义</a></li>-->
+<!--      <li nz-menu-item class="item-li-other"><a [routerLink]="''">使用说明</a></li>-->
+<!--      <li nz-menu-item class="item-li-other"><a [routerLink]="'/help/about-us'">关于我们</a></li>-->
+<!--    </ul>-->
+<!--  </li>-->
+<!--  <li nz-menu-item>-->
+<!--    <a [routerLink]="'/passport/login'">退出</a>-->
+<!--  </li>-->
+<!--</ul>-->

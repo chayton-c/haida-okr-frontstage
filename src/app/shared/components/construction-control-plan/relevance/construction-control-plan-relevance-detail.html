@@ -1,0 +1,66 @@
+<div nz-row nzGutter="48">
+  <div nz-col [nzSpan]="12">
+    <h1 style="width: 100%; margin-bottom: 20px; text-align: center">《施工配合方案确认单》</h1>
+    <nz-descriptions nzTitle="" nzBordered [nzColumn]="1" nzSize="small">
+      <nz-descriptions-item nzTitle="方案编号">{{constructionControlPlan.code}}</nz-descriptions-item>
+      <nz-descriptions-item nzTitle="类别" [ngSwitch]="constructionControlPlan.constructionLevel">
+        <span *ngSwitchCase="constructionConstrolPlanConstant.LEVEL1">1级</span>
+        <span *ngSwitchCase="constructionConstrolPlanConstant.LEVEL2">2级</span>
+        <span *ngSwitchCase="constructionConstrolPlanConstant.LEVEL3">3级</span>
+        <span *ngSwitchCase="constructionConstrolPlanConstant.TYPEB">B类</span>
+        <span *ngSwitchCase="constructionConstrolPlanConstant.TYPEC">C类</span>
+        <span *ngSwitchDefault>-</span>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="施工项目">{{constructionControlPlan.constructionProjectInfo}}</nz-descriptions-item>
+      <nz-descriptions-item nzTitle="施工日期及时间">
+        <div *ngFor="let constructionControlPlanWorkTime of constructionControlPlan.constructionControlPlanWorkTimes">
+          {{constructionControlPlanWorkTime.detailInfo}}
+        </div>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="施工地点">
+        <div *ngFor="let constructionControlPlanKilometerMark of constructionControlPlan.constructionControlPlanKilometerMarks">
+          {{constructionControlPlanKilometerMark.detailInfo}}
+        </div>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="施工内容及影响范围"
+        >{{constructionControlPlan.constructionContentAndInfluenceArea}}</nz-descriptions-item
+      >
+      <nz-descriptions-item nzTitle="导入日期">{{constructionControlPlan.addTime | date: 'yyyy-MM-dd HH:mm:ss'}}</nz-descriptions-item>
+    </nz-descriptions>
+  </div>
+  <div nz-col [nzSpan]="12">
+    <h1 style="width: 100%; margin-bottom: 20px; text-align: center">《施工正式计划》</h1>
+    <nz-descriptions nzTitle="" nzBordered [nzColumn]="1" nzSize="small">
+      <nz-descriptions-item nzTitle="计划编号">{{constructionFormalPlan.planCode}}</nz-descriptions-item>
+      <nz-descriptions-item nzTitle="类别">{{constructionFormalPlan.planType}}</nz-descriptions-item>
+      <nz-descriptions-item nzTitle="线路">{{constructionFormalPlan.railwayLineName}}</nz-descriptions-item>
+      <nz-descriptions-item nzTitle="行别">{{constructionFormalPlan.downriver}}</nz-descriptions-item>
+      <nz-descriptions-item nzTitle="施工地点">{{constructionFormalPlan.constructionSite}}</nz-descriptions-item>
+      <nz-descriptions-item nzTitle="施工内容及影响范围"
+        >{{constructionFormalPlan.constructionContentAndInfluenceArea}}</nz-descriptions-item
+      >
+      <nz-descriptions-item nzTitle="施工机械">{{constructionFormalPlan.constructionMachinery}}</nz-descriptions-item>
+      <nz-descriptions-item nzTitle="建设单位">{{constructionFormalPlan.constructDepartment}}</nz-descriptions-item>
+      <nz-descriptions-item nzTitle="导入日期">{{constructionFormalPlan.addTime | date: 'yyyy-MM-dd HH:mm:ss'}}</nz-descriptions-item>
+    </nz-descriptions>
+  </div>
+  <div nz-row style="width: 100%; margin-top: 10px">
+    <div nz-col [nzSpan]="24" [nzOffset]="9">
+      <button nz-button [nzType]="'primary'" (click)="showPlanMapFunction()">施工范围预览</button>
+      <button nz-button [nzType]="'primary'" (click)="confirmRelevance()">确认关联</button>
+      <button nz-button [nzType]="'primary'" (click)="reinvestigationPlan()">补充配合方案</button>
+    </div>
+  </div>
+</div>
+
+<nz-modal
+  [nzWidth]="800"
+  nzTitle="施工范围预览"
+  [(nzVisible)]="showPlanMap"
+  [nzContent]="planMapContent"
+  (nzOnCancel)="this.showPlanMap = false"
+>
+  <ng-template #planMapContent>
+    <construction-control-plan-preview [constructionControlPlanId]="constructionControlPlanId"> </construction-control-plan-preview>
+  </ng-template>
+</nz-modal>

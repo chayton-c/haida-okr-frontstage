@@ -1,0 +1,26 @@
+<nz-card>
+  <div nz-row>
+    <div nz-col nzSpan="2"></div>
+    <div nz-col nzSpan="20">
+      <div style="margin-top: -13px; margin-left: -18px">
+        <button nz-button nzType="primary" (click)="resetPosition()" style="margin-left: 20px; margin-right: 200px">复位</button>
+        <nz-form-label>线路车站</nz-form-label>
+        <line-station-casecade style="margin-right: 30px" (valuesChange)="lineStationValueChange($event)"></line-station-casecade>
+        <button nz-button nzType="primary" (click)="savePosition()">保存点位置</button>
+        <!--  <button (click)="changePosition()">测试点位回显</button>-->
+      </div>
+      <div
+        style="background: url(/assets/opcimg/map-imgs/basemap.png) center no-repeat; background-size: 100%; width: 1465px; height: 796px"
+      >
+        <img
+          cdkDrag
+          [cdkDragFreeDragPosition]="dragPosition"
+          (cdkDragMoved)="setPosition($event)"
+          (click)="getFreeDragPosition($event)"
+          src="/assets/opcimg/status-imgs/2-0.png"
+        />
+      </div>
+    </div>
+    <div nz-col nzSpan="2"></div>
+  </div>
+</nz-card>

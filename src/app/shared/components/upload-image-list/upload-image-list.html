@@ -1,0 +1,58 @@
+<div style="margin-bottom: 20px" nz-row>
+  <nz-upload
+    acl="fanganguankong-upload-peihefangan"
+    *ngIf="constructionControlPlan.processStatus == constructionConstrolPlanConstant.PENDING_SUBMIT"
+    nz-col [nzSpan]="5"
+    [(nzFileList)]="excels"
+    [nzBeforeUpload]="cooperativeSchemeBeforeUpload"
+  >
+    <button nz-button><i nz-icon nzType="upload"></i>上传配合方案</button>
+  </nz-upload>
+  <nz-upload
+    acl="fanganguankong-upload-anquanxieyi"
+    *ngIf="constructionControlPlan.planStatus == constructionConstrolPlanConstant.SAFE_COUNTERSIGN"
+    nz-col [nzSpan]="5"
+    [(nzFileList)]="excels"
+    [nzBeforeUpload]="safetyProtocolBeforeUpload"
+  >
+    <button nz-button><i nz-icon nzType="upload"></i>上传安全协议</button>
+  </nz-upload>
+</div>
+<nz-table
+  nzShowSizeChanger
+  [nzData]="constructionCoordinatePlanUploads"
+  [nzFrontPagination]="false"
+  [nzPageSizeOptions]="[5, 10, 20, 50]"
+  [nzLoading]="loading"
+  [nzTotal]="total"
+  [nzPageSize]="pageSize"
+  [nzPageIndex]="pageIndex"
+  nzSize="small"
+  [nzBordered]="true"
+  (nzQueryParams)="onQueryParamsChange($event)"
+>
+  <thead>
+    <tr>
+      <th [nzChecked]="checked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="onAllChecked($event)"></th>
+      <th>文件名</th>
+      <th>类型</th>
+      <th>上传时间</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of constructionCoordinatePlanUploads" (click)="rowChecked(data.id)">
+      <td [nzChecked]="setOfCheckedId.has(data.id)" (nzCheckedChange)="onItemChecked(data.id, $event)"></td>
+      <td [ngSwitch]="data.fileType">
+        <span *ngSwitchCase="constructionCoordinatePlanUploadConstant.COOPERATIVE_SCHEME">配合方案</span>
+        <span *ngSwitchCase="constructionCoordinatePlanUploadConstant.SAFETY_PROTOCOL">安全协议</span>
+      </td>
+      <td>{{ data.fileName }}</td>
+      <td>{{ data.addTime | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+      <td>
+        <a nz-button nzType="link" target="_blank" rel="noopener noreferrer" href="/api{{ data.fileUrl }}">下载</a>
+        <a nz-button nzType="link" nzDanger (click)="deleteFile(data.id)">删除</a>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>

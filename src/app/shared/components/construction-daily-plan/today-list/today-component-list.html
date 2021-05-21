@@ -1,0 +1,70 @@
+<nz-table
+  nzShowSizeChanger
+  [nzData]="todayLists"
+  [nzFrontPagination]="true"
+  [nzShowPagination]="false"
+  [nzPageSizeOptions]="[5, 10, 20, 50]"
+  [nzLoading]="loading"
+  [nzTotal]="total"
+  [nzPageSize]="pageSize"
+  [nzPageIndex]="pageIndex"
+  nzSize="small"
+  [nzBordered]="true"
+  (nzQueryParams)="onQueryParamsChange($event)"
+>
+  <thead>
+    <tr>
+      <th>风险等级</th>
+      <th>线路</th>
+      <th>行别</th>
+      <th>方案编码</th>
+      <th>施工内容</th>
+      <th>起始站</th>
+      <th>结束站</th>
+      <th>起始公里标</th>
+      <th>结束公里标</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of todayLists">
+      <td [ngSwitch]="data.warnStatus">
+        <span *ngSwitchCase="todayListConstant.LEVEL1">一级</span>
+        <span *ngSwitchCase="todayListConstant.LEVEL2">二级</span>
+        <span *ngSwitchCase="todayListConstant.LEVEL3">三级</span>
+        <span *ngSwitchCase="todayListConstant.LEVEL4">四级</span>
+        <span *ngSwitchCase="todayListConstant.LEVEL5">五级</span>
+        <span *ngSwitchDefault>-</span>
+      </td>
+
+      <td>{{ data.railwayLineName }}</td>
+
+      <td [ngSwitch]="data.railwayLineStatus">
+        <span *ngSwitchCase="todayListConstant.UPRIVER">上行</span>
+        <span *ngSwitchCase="todayListConstant.DOWNRIVER">下行</span>
+        <span *ngSwitchDefault>-</span>
+      </td>
+
+      <td [ngSwitch]="data.railwayLineStatus">{{ data.code }}</td>
+      <td>{{ data.constructionProjectInfo }}</td>
+
+      <td>{{ data.startStationName }}</td>
+      <td>{{ data.endStationName }}</td>
+      <td>{{ data.startKilometer | kilometerPipe }}</td>
+      <td>{{ data.endKilometer | kilometerPipe }}</td>
+      <td><a nz-button nzType="link" (click)="showPlanMapFunction(data.id)">预览</a></td>
+    </tr>
+  </tbody>
+</nz-table>
+
+<nz-modal [nzWidth]="1600" nzTitle="施工范围预览" [(nzVisible)]="showPlanMap" [nzContent]="planMapContent" (nzOnCancel)="closePlanMap()">
+  <!--
+  (nzOnCancel)="this.showPlanMap = false"-->
+  <ng-template #planMapContent>
+    <construction-control-plan-preview #constructionControlPlanPreview
+      [constructionDailyPlanId]="constructionDailyPlanId"
+      [constructionControlPlanId]="constructionControlPlanId"
+    >
+    </construction-control-plan-preview>
+  </ng-template>
+</nz-modal>

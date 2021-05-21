@@ -1,0 +1,134 @@
+<page-header [title]="''"></page-header>
+<div nz-row>
+  <nz-card nz-col nzSpan="4" nzTitle="设备类型列表">
+    <nz-table #expandTable [nzData]="deviceTypeNodePojos" [nzLoading]="deviceTypeLoading" nzTableLayout="fixed" [nzFrontPagination]="false">
+      <tbody style="margin-left: 0">
+        <ng-container *ngFor="let data of expandTable.data">
+          <ng-container *ngFor="let item of mapOfExpandedData[data.id]">
+            <tr *ngIf="(item.parent && item.parent.expand) || !item.parent">
+              <td
+                [nzIndentSize]="item.level! * 20"
+                [nzShowExpand]="item.level == 0"
+                [(nzExpand)]="item.expand"
+                (nzExpandChange)="collapse(mapOfExpandedData[data.id], item, $event)"
+                (click)="clickLineNodePojo(item)"
+              >
+                <span [style]="item.id == checkedDeviceTypeNodePojo.id ? 'color:#1890ff;cursor:pointer' : 'cursor:pointer'">{{ item.name }}</span>
+              </td>
+            </tr>
+          </ng-container>
+        </ng-container>
+      </tbody>
+    </nz-table>
+  </nz-card>
+
+  <div nz-col nzSpan="20">
+    <nz-card>
+      <nz-tabset>
+        <nz-tab nzTitle="设备类型信息">
+          <form nz-form [nzLayout]="'inline'" class="search__form">
+            <div nz-row [nzGutter]="48" style="width: 50%">
+              <div nz-col nzSpan="14">
+                <nz-form-item>
+                  <nz-form-label>设备类型名称</nz-form-label>
+                  <nz-form-control>
+                    <input nz-input readonly [value]="checkedDeviceTypeNodePojo == null ? '' : checkedDeviceTypeNodePojo.name" />
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+              <div nz-col nzSpan="10">
+                <nz-form-item>
+                  <nz-form-control>
+                    <button nz-button (click)="formAddPage()" [nzType]="'primary'">新增</button>
+                    <button nz-button (click)="formUpdatePage()">修改</button>
+                    <button
+                      nz-popconfirm
+                      nzPopconfirmTitle="确定要删除该设备类型吗?"
+                      (nzOnConfirm)="deleteInForm()"
+                      nzPopconfirmPlacement="topLeft"
+                      nz-button
+                    >
+                      删除
+                    </button>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div>
+          </form>
+
+          <nz-divider style="margin-top: 0"></nz-divider>
+          <div *ngIf="checkedDeviceTypeNodePojo != null && checkedDeviceTypeNodePojo.level == 0">
+            <form
+              nz-form
+              [nzLayout]="'inline'"
+              (ngSubmit)="loadDeviceSubTypesFromServer(deviceSubTypePageIndex, deviceSubTypePageSize, deviceSubTypeFormParams)"
+              class="search__form"
+            >
+              <div nz-row [nzGutter]="{ xs: 8, sm: 8, md: 8, lg: 24, xl: 48, xxl: 48 }">
+                <div nz-col nzMd="12" nzSm="24">
+                  <nz-form-item>
+                    <nz-form-label>设备子类型名称</nz-form-label>
+                    <nz-form-control>
+                      <input nz-input [(ngModel)]="deviceSubTypeFormParams.name" name="name" placeholder="请输入组织名称" />
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+                <div nz-col nzSpan="12">
+                  <nz-form-item>
+                    <nz-form-control>
+                      <button nz-button type="submit" [nzType]="'primary'" [nzLoading]="deviceSubTypeLoading">查询</button>
+                      <button nz-button type="button" (click)="tableAddPage()">新增</button>
+                      <button nz-button type="button" (click)="tableUpdatePage()">修改</button>
+                      <button
+                        nz-popconfirm
+                        nzPopconfirmTitle="确定要删除该设备类型吗?"
+                        (nzOnConfirm)="deleteDeviceSubType()"
+                        nzPopconfirmPlacement="topLeft"
+                        nz-button
+                      >
+                        删除
+                      </button>
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+              </div>
+            </form>
+            <nz-table
+              nzShowSizeChanger
+              [nzData]="deviceSubTypes"
+              [nzFrontPagination]="false"
+              [nzPageSizeOptions]="[5, 10, 20, 50]"
+              [nzLoading]="deviceSubTypeLoading"
+              [nzTotal]="deviceSubTypeTotal"
+              [nzPageSize]="deviceSubTypePageSize"
+              [nzPageIndex]="deviceSubTypePageIndex"
+              nzSize="small"
+              (nzQueryParams)="onQueryParamsChange($event)"
+            >
+              <thead>
+                <tr>
+                  <th
+                    [nzChecked]="deviceSubTypeChecked"
+                    [nzIndeterminate]="deviceSubTypeIndeterminate"
+                    (nzCheckedChange)="onAllChecked($event)"
+                  ></th>
+                  <th>名称</th>
+                  <th>描述</th>
+                  <th>备注</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of deviceSubTypes">
+                  <td [nzChecked]="deviceSubTypeCheckedId.has(data.id)" (nzCheckedChange)="onItemChecked(data.id, $event)"></td>
+                  <td>{{ data.name }}</td>
+                  <td>{{ data.remark }}</td>
+                  <td>{{ data.description }}</td>
+                </tr>
+              </tbody>
+            </nz-table>
+          </div>
+        </nz-tab>
+      </nz-tabset>
+    </nz-card>
+  </div>
+</div>

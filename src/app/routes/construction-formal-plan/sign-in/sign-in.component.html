@@ -1,0 +1,92 @@
+<page-header [title]="''"></page-header>
+
+<nz-card>
+  <form nz-form [nzLayout]="'inline'" class="search__form">
+    <div nz-row [nzGutter]="12" style="width: 100%">
+      <div nz-col [nzSpan]="6">
+        <nz-form-item>
+          <nz-form-label>快速查询</nz-form-label>
+          <nz-form-control>
+            <input nz-input [(ngModel)]="formParams.nameOrCode" name="nameOrCode" placeholder="请输入编码或名称" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="1">
+        <nz-form-item>
+          <nz-form-control>
+            <button nz-button (click)="loadDataFromServer()" type="submit" [nzType]="'primary'" [nzLoading]="loading">查询</button>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="1">
+        <nz-form-item>
+          <nz-form-control>
+            <button nz-button [nzLoading]="loading" (click)="signIn()">签入</button>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+  </form>
+  <nz-table
+    nzShowSizeChanger
+    [nzData]="constructionControlPlans"
+    [nzFrontPagination]="false"
+    [nzPageSizeOptions]="[5, 10, 20, 50]"
+    [nzLoading]="loading"
+    [nzTotal]="total"
+    [nzPageSize]="pageSize"
+    [nzPageIndex]="pageIndex"
+    nzSize="default"
+    (nzQueryParams)="onQueryParamsChange($event)"
+  >
+    <thead>
+      <tr>
+        <th [nzChecked]="checked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="onAllChecked($event)"></th>
+        <th>类型</th>
+        <th>名称</th>
+        <th>计划编号</th>
+        <th>位置(公里标)</th>
+        <th>开始时间</th>
+        <th>结束时间</th>
+        <th>作业内容</th>
+        <th>影响范围</th>
+        <th>登记站</th>
+        <th>会签人</th>
+        <th>现场调查人</th>
+        <!--      <th>车间</th>-->
+      </tr>
+    </thead>
+    <tbody *ngFor="let data of constructionControlPlans" (click)="onItemChecked(data.id, !setOfCheckedId.has(data.id))">
+      <tr>
+        <td [nzChecked]="setOfCheckedId.has(data.id)" (nzCheckedChange)="onItemChecked(data.id, $event)"></td>
+        <td>计划方案</td>
+        <td>{{ data.name }}</td>
+        <td>{{ data.code }}</td>
+        <td>{{ data.kilometerMark }}</td>
+        <td>{{ data.startTime | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+        <td>{{ data.endTime | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+        <td>{{ data.workInfo }}</td>
+        <td>{{ data.influenceArea }}</td>
+        <td>{{ data.stationName }}</td>
+        <td>{{ data.signInUserName }}</td>
+        <td>{{ data.executorName }}</td>
+        <!--        <td>{{ data.workshopName }}</td>-->
+      </tr>
+      <tr *ngIf="data.constructionFormalPlan">
+        <td></td>
+        <td>正式计划</td>
+        <td>{{ data.constructionFormalPlan.name }}</td>
+        <td>{{ data.constructionFormalPlan.code }}</td>
+        <td>{{ data.constructionFormalPlan.kilometerMark }}</td>
+        <td>{{ data.constructionFormalPlan.startTime | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+        <td>{{ data.constructionFormalPlan.endTime | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+        <td>{{ data.constructionFormalPlan.workInfo }}</td>
+        <td>{{ data.constructionFormalPlan.influenceArea }}</td>
+        <td>{{ data.constructionFormalPlan.stationName }}</td>
+        <td>{{ data.constructionFormalPlan.signInUserName }}</td>
+        <td>{{ data.constructionFormalPlan.executorName }}</td>
+        <!--        <td>{{ data.constructionFormalPlan.workshopName }}</td>-->
+      </tr>
+    </tbody>
+  </nz-table>
+</nz-card>

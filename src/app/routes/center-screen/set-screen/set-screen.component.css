@@ -1,0 +1,36 @@
+.nz-space-box {
+  position: relative;
+  top: -15px;
+  left: 2px;
+}
+.space-item-card {
+  width: 170px;
+}
+.space-item-card p {
+  margin: 0;
+  padding: 0 0 3px 0;
+}
+.space-item-card-img {
+  width: 15px;
+  height: 20px;
+}
+.top-roll-content {
+  height: 30px;
+  font-size: 14px;
+  text-align: center;
+  background: white;
+}
+
+.nz-list-item {
+  padding: 0 15px;
+}
+.nz-list-item-carousel {
+  width: 130px;
+  height: 200px;
+}
+.nz-list-item-carousel-div {
+  width: 130px;
+  height: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

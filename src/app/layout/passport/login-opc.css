@@ -1,0 +1,61 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+.top-box {
+  height: 140px;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+.top-ul {
+  padding: 50px 0 0 70px;
+  list-style: none;
+}
+.top-ul li {
+  float: left;
+  margin-right: 20px;
+}
+.top-div-sys-name {
+  padding: 245px 0 0 155px;
+  color: white;
+  font-size: 62px;
+  letter-spacing: 6px;
+}
+#u39_p {
+  color: darkorange;
+  font-weight: bold;
+  font-size: 36px;
+}
+#u38_img {
+}
+#u37_p {
+  margin-left: 30px;
+  color: #4a4a4a;
+  font-weight: bold;
+  font-size: 22px;
+}
+#u36_p {
+  margin-left: 930px;
+  color: #4a4a4a;
+  font-weight: bold;
+  font-size: 20px;
+}
+.center-box {
+  height: 720px;
+  background: url('/assets/opcimg/login-imgs/center_img.png');
+}
+.center-login {
+  float: right;
+  padding: 170px 100px 0 0;
+}
+.bottom-box {
+  float: bottom;
+  margin-bottom: 0;
+  text-align: center;
+}
+.bottom-context {
+  margin-top: 6px;
+  margin-bottom: 6px;
+  font-size: 16px;
+}

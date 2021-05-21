@@ -1,0 +1,44 @@
+<div class="alain-default__header-logo">
+  <a [routerLink]="['/']" class="alain-default__header-logo-link">
+    <img class="alain-default__header-logo-expanded" src="./assets/ydkj-logo.png" [attr.alt]="app.name" style="max-height: 40px" />
+    <img class="alain-default__header-logo-collapsed" src="./assets/ydkj-logo.png" [attr.alt]="app.name" style="max-height: 30px" />
+  </a>
+</div>
+<div class="alain-default__nav-wrap">
+  <div class="alain-default__nav">
+    <!-- 左侧sidebar-Menu -->
+    <div>
+      <div class="alain-default__nav-item" (click)="toggleCollapsedSidebar()">
+        <i nz-icon nzType="menu-{{ collapsed ? 'unfold' : 'fold' }}"></i>
+      </div>
+    </div>
+    <!--    顶部一级导航-->
+    <div class="header-ul">
+      <div
+        *ngFor="let menu of menus; let i = index"
+        (click)="hideSiblingsAndSelect(menu)"
+        [acl]="menu.acl"
+        [ngClass]="menu._selected ? 'selected' : ''"
+      >
+        <a>{{ menu.text }}</a>
+      </div>
+    </div>
+    <!--    <div style="float: left; color: white; font-size: 22px">-->
+    <!--      <span style="margin-left: 20px">光电缆径路测绘及动态安全管控系统 V1.0.0</span>-->
+    <!--    </div>-->
+  </div>
+  <ul class="alain-default__nav">
+    <!--    <li>-->
+    <!--      <header-notify></header-notify>-->
+    <!--    </li>-->
+    <li style="margin-right: 15px; color: white; font-size: 12px">技术支持：哈尔滨盈达科技有限公司</li>
+    <!--    <li>-->
+    <!--      <a href="#">-->
+    <!--        <i nz-icon nzType="question-circle" nzTheme="outline" style="color: white"></i>-->
+    <!--      </a>-->
+    <!--    </li>-->
+    <li class="hidden-mobile">
+      <header-user></header-user>
+    </li>
+  </ul>
+</div>

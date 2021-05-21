@@ -1,0 +1,112 @@
+<h3 style="width: 100%; margin-bottom: 20px; text-align: center">《施工配合方案确认单》</h3>
+<nz-descriptions nzTitle="" nzSize="small" nzBordered [nzColumn]="2">
+  <nz-descriptions-item nzTitle="管控计划编号">{{constructionControlPlan.code}}</nz-descriptions-item>
+  <nz-descriptions-item nzTitle="项目名称">{{constructionControlPlan.constructionProjectInfo}}</nz-descriptions-item>
+  <nz-descriptions-item nzTitle="施工内容">
+    <div style="width: 300px">
+      {{constructionControlPlan.constructionContentAndInfluenceArea}}
+    </div>
+  </nz-descriptions-item>
+  <nz-descriptions-item nzTitle="备注"></nz-descriptions-item>
+  <nz-descriptions-item nzTitle="施工单位及负责人" [nzSpan]="3" nz-row>{{constructionControlPlan.constructionDepartmentAndPrincipalName}}</nz-descriptions-item>
+  <nz-descriptions-item nzTitle="施工时间" [nzSpan]="3" nz-row>
+    <span *ngFor="let constructionControlPlanWorkTime of constructionControlPlan.constructionControlPlanWorkTimes">
+      {{constructionControlPlanWorkTime.detailInfo}}
+    </span>
+  </nz-descriptions-item>
+  <nz-descriptions-item nzTitle="施工地点" [nzSpan]="3" nz-row>
+    <span *ngFor="let constructionControlPlanKilometerMark of constructionControlPlan.constructionControlPlanKilometerMarks">
+      {{constructionControlPlanKilometerMark.detailInfo}}
+    </span>
+  </nz-descriptions-item>
+
+  <!-- 日计划 -->
+  <nz-descriptions-item nzTitle="当日分解计划：" [nzSpan]="3" nz-row> </nz-descriptions-item>
+  <nz-descriptions-item nzTitle="管控计划编号">{{constructionControlPlan.code}}</nz-descriptions-item>
+  <nz-descriptions-item nzTitle="日计划编号">{{constructionDailyPlan.code}}</nz-descriptions-item>
+  <nz-descriptions-item nzTitle="线路" [nzSpan]="3">
+    <nz-select
+      style="width: 500px"
+      [(ngModel)]="checkedConstructionControlPlanKilometerMark"
+      (ngModelChange)="changeConstructionControlPlanKilometerMark()"
+    >
+      <nz-option
+        *ngFor="let constructionControlPlanKilometerMark of constructionControlPlanKilometerMarks"
+        [nzValue]="constructionControlPlanKilometerMark"
+        [nzLabel]="constructionControlPlanKilometerMark.detailInfo">
+
+      </nz-option>
+    </nz-select>
+  </nz-descriptions-item>
+  <nz-descriptions-item nzTitle="预计开始时间">
+    <nz-date-picker
+      #startDatePicker
+      style="width: 100%"
+      nzPlaceHolder="预计开始日期"
+      [nzShowTime]="{ nzFormat: 'HH:mm' , nzMinuteStep: 15}"
+      [nzFormat]="'yyyy-MM-dd HH:mm'"
+      [(ngModel)]="constructionDailyPlan.startTime"
+      (nzOnOpenChange)="handleStartOpenChange($event)"
+      (ngModelChange)="clearEndTime()"
+    ></nz-date-picker>
+  </nz-descriptions-item>
+  <nz-descriptions-item nzTitle="预计结束时间">
+    <nz-date-picker
+      #endDatePicker
+      style="width: 100%"
+      nzPlaceHolder="预计结束日期"
+      [nzDisabledDate]="checkDisabledEndDate"
+      [nzShowTime]="{ nzFormat: 'HH:mm' , nzMinuteStep: 15}"
+      [nzFormat]="'yyyy-MM-dd HH:mm'"
+      [(ngModel)]="constructionDailyPlan.endTime"
+      (nzOnOpenChange)="handleEndOpenChange()"
+    ></nz-date-picker>
+  </nz-descriptions-item>
+<!--  <nz-descriptions-item nzTitle="设备编号" [nzSpan]="3" nz-row>-->
+<!--    {{constructionDailyPlan.equipmentCodes}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a (click)="equipmentPage()">查看详情</a>-->
+<!--  </nz-descriptions-item>-->
+  <nz-descriptions-item nzTitle="开始公里标" [nzSpan]="3" nz-row>
+    <!--    <input nz-input [(ngModel)]="constructionDailyPlan.startKilometer" type="number" />-->
+    K&nbsp;&nbsp;&nbsp;
+    <input
+      nz-col
+      nzSpan="6"
+      nz-input
+      type="number"
+      placeholder="请输入公里标"
+      [(ngModel)]="constructionDailyPlan.startKilometerKilometerPart"
+      (ngModelChange)="setKilometer()"
+    />
+    &nbsp;&nbsp;&nbsp;+&nbsp;&nbsp;&nbsp;
+    <nz-input-number
+      nz-col
+      nzSpan="6"
+      [nzMax]="999"
+      [(ngModel)]="constructionDailyPlan.startKilometerMeterPart"
+      (ngModelChange)="setKilometer()"
+    >
+    </nz-input-number>
+  </nz-descriptions-item>
+  <nz-descriptions-item nzTitle="结束公里标" [nzSpan]="3" nz-row>
+    <!--    <input nz-input [(ngModel)]="constructionDailyPlan.endKilometer" type="number" />-->
+    K&nbsp;&nbsp;&nbsp;
+    <input
+      nz-col
+      nzSpan="6"
+      nz-input
+      type="number"
+      placeholder="请输入公里标"
+      [(ngModel)]="constructionDailyPlan.endKilometerKilometerPart"
+      (ngModelChange)="setKilometer()"
+    />
+    &nbsp;&nbsp;&nbsp;+&nbsp;&nbsp;&nbsp;
+    <nz-input-number
+      nz-col
+      nzSpan="6"
+      [nzMax]="999"
+      [(ngModel)]="constructionDailyPlan.endKilometerMeterPart"
+      (ngModelChange)="setKilometer()"
+    >
+    </nz-input-number>
+  </nz-descriptions-item>
+</nz-descriptions>

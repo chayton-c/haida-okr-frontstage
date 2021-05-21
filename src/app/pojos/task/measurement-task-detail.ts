@@ -1,0 +1,15 @@
+export interface MeasurementTaskDetail {
+  id: string,
+  measurementTemplateId?: string,
+  measurementTaskId?: string,
+  measurementTemplateName: string,
+  uploadorNames: string,
+  deviceId?: string,
+  deviceName: string,
+  deviceCode: string,
+  dataType: number,
+  abnormal: number,
+  finishedStatus: number,
+  errorStatus: number,
+  executeTime: Date,
+}

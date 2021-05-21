@@ -1,0 +1,38 @@
+nz-card {
+  margin: 10px 7px;
+}
+
+.station-box {
+  margin: -10px 0 12px 0;
+}
+
+table,
+table tr th,
+table tr td {
+  border: #f0f0f0 solid 1px;
+}
+table {
+  width: 100%;
+  min-height: 25px;
+  line-height: 25px;
+  text-align: center;
+  border-collapse: collapse;
+}
+.card-table-td {
+  width: auto;
+  text-align: left;
+}
+
+.cooperative-plan-card {
+  height: 100px;
+}
+
+.system-function-div {
+  text-align: center;
+}
+.system-function-div-img {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+}

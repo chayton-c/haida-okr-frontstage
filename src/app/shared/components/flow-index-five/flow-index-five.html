@@ -1,0 +1,772 @@
+<div nz-row>
+  <div nz-col nzSpan="24" style="margin: 13px 0 0 15px">
+    <nz-form-label>管辖单位</nz-form-label>
+    <organization-casecade [(values)]="organizationValues" (valuesChange)="queryDataFromServer($event)"></organization-casecade>
+  </div>
+</div>
+<nz-divider style="margin: 7px 0 18px 0"></nz-divider>
+
+<div nz-row class="nz-second-row">
+  <div nz-col nzSpan="10">
+    <nz-card nzTitle="径路测绘情况总览" class="nz-second-row-card">
+      <svg
+        (click)="linkToList(this.moduleTypeConstant.MODULE1)"
+        t="1613711718878"
+        class="icon nav-svg"
+        style="left: 94%"
+        viewBox="0 0 1024 1024"
+        version="1.1"
+        xmlns="http://www.w3.org/2000/svg"
+        p-id="12235"
+        width="24"
+        height="24"
+      >
+        <path
+          d="M512 1024A512 512 0 1 1 512 0a512 512 0 0 1 0 1024z m65.92-578.88H288a64 64 0 0 0-64 64v5.76a64 64 0 0 0 64 64h287.616L499.84 654.72a64 64 0 0 0 0 90.496l1.728 1.792a64 64 0 0 0 90.496 0l193.216-193.216a63.808 63.808 0 0 0 0-90.496l-186.24-186.24a64 64 0 0 0-90.56 0l-4.032 4.032a64 64 0 0 0 0 90.496l73.536 73.6z"
+          p-id="12236"
+        ></path>
+      </svg>
+      <table width="100%" class="">
+        <tr>
+          <td width="10%">1</td>
+          <td class="card-table-td">
+            <nz-form-label>&nbsp;管辖总里程</nz-form-label>
+          </td>
+          <td width="20%">-</td>
+          <td width="12%">km</td>
+        </tr>
+        <tr>
+          <td>1.1</td>
+          <td class="card-table-td">
+            <nz-form-label>&nbsp;已测绘线路里程</nz-form-label>
+          </td>
+          <td>
+            <div>{{ railwayLineMileage }}</div>
+          </td>
+          <td>km</td>
+        </tr>
+        <tr>
+          <td>1.2</td>
+          <td class="card-table-td">
+            <nz-form-label>&nbsp;已测绘区间光电缆径路</nz-form-label>
+          </td>
+          <td>
+            <div>{{ opcMileage }}</div>
+          </td>
+          <td>km</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td class="card-table-td">
+            <nz-form-label>&nbsp;管辖车站数</nz-form-label>
+          </td>
+          <td>-</td>
+          <td>个</td>
+        </tr>
+        <tr>
+          <td>2.1</td>
+          <td class="card-table-td">
+            <nz-form-label>&nbsp;已测绘站内光电缆径路</nz-form-label>
+          </td>
+          <td>
+            <div>-</div>
+          </td>
+          <td>个</td>
+        </tr>
+      </table>
+    </nz-card>
+  </div>
+  <div nz-col nzSpan="14">
+    <nz-card nzTitle="方案执行情况总览" class="nz-second-row-card">
+      <svg
+        (click)="linkToList(this.moduleTypeConstant.MODULE2)"
+        t="1613711718878"
+        class="icon nav-svg"
+        style="left: 95.8%"
+        viewBox="0 0 1024 1024"
+        version="1.1"
+        xmlns="http://www.w3.org/2000/svg"
+        p-id="12235"
+        width="24"
+        height="24"
+      >
+        <path
+          d="M512 1024A512 512 0 1 1 512 0a512 512 0 0 1 0 1024z m65.92-578.88H288a64 64 0 0 0-64 64v5.76a64 64 0 0 0 64 64h287.616L499.84 654.72a64 64 0 0 0 0 90.496l1.728 1.792a64 64 0 0 0 90.496 0l193.216-193.216a63.808 63.808 0 0 0 0-90.496l-186.24-186.24a64 64 0 0 0-90.56 0l-4.032 4.032a64 64 0 0 0 0 90.496l73.536 73.6z"
+          p-id="12236"
+        ></path>
+      </svg>
+      <table class="nz-second-row-card-table" width="100%">
+        <tr>
+          <td>图标</td>
+          <td>阶段</td>
+          <td>1级</td>
+          <td>2级</td>
+          <td>3级</td>
+          <td>4级</td>
+          <td>5级</td>
+          <td>当前总数</td>
+          <td>当年累计</td>
+          <td>其中上月</td>
+        </tr>
+        <tr>
+          <td><img src="/assets/opcimg/icons/have-been-approved.svg" /></td>
+          <td>已关联方案</td>
+          <td>
+            <a
+              (click)="linkToPlanList(this.constructionControlPlanConstant.RELEVANCEED, null,this.constructionControlPlanConstant.RED,null)"
+            >
+              <div>
+                <img src="assets/opcimg/status-imgs/0-0.png" />
+                {{ countControlPlans | planLevelDateFilterPipe: this.constructionControlPlanConstant.RED: 'none' : 'none' }}
+              </div>
+            </a>
+          </td>
+          <td>
+            <a
+              (click)="linkToPlanList(this.constructionControlPlanConstant.RELEVANCEED, null,this.constructionControlPlanConstant.ORANGE,null)"
+            >
+              <div>
+                <img src="assets/opcimg/status-imgs/0-1.png" />
+                {{ countControlPlans | planLevelDateFilterPipe: this.constructionControlPlanConstant.ORANGE: 'none' : 'none' }}
+              </div>
+            </a>
+          </td>
+          <td>
+            <a
+              (click)="linkToPlanList(this.constructionControlPlanConstant.RELEVANCEED, null,this.constructionControlPlanConstant.YELLOW,null)"
+            >
+              <div>
+                <img src="assets/opcimg/status-imgs/0-2.png" />
+                {{ countControlPlans | planLevelDateFilterPipe: this.constructionControlPlanConstant.YELLOW: 'none' : 'none' }}
+              </div>
+            </a>
+          </td>
+          <td>
+            <a
+              (click)="linkToPlanList(this.constructionControlPlanConstant.RELEVANCEED, null,this.constructionControlPlanConstant.BLUE,null)"
+            >
+              <div>
+                <img src="assets/opcimg/status-imgs/0-3.png" />
+                {{ countControlPlans | planLevelDateFilterPipe: this.constructionControlPlanConstant.BLUE: 'none' : 'none' }}
+              </div>
+            </a>
+          </td>
+          <td>
+            <a
+              (click)="linkToPlanList(this.constructionControlPlanConstant.RELEVANCEED, null,this.constructionControlPlanConstant.GREEN,null)"
+            >
+              <div>
+                <img src="assets/opcimg/status-imgs/0-4.png" />
+                {{ countControlPlans | planLevelDateFilterPipe: this.constructionControlPlanConstant.GREEN: 'none' : 'none' }}
+              </div>
+            </a>
+          </td>
+          <td>
+            <a (click)="linkToPlanList(this.constructionControlPlanConstant.RELEVANCEED, null,null,null)">
+              <div>{{ countControlPlans | planLevelDateFilterPipe: undefined: 'none' : 'none' }}</div>
+            </a>
+          </td>
+          <td>
+            <a (click)="linkToPlanList(this.constructionControlPlanConstant.RELEVANCEED, null,null,'nowYear')">
+              <div>{{ countControlPlans | planLevelDateFilterPipe: undefined: 'year' : 'none' }}</div>
+            </a>
+          </td>
+          <td>
+            <a (click)="linkToPlanList(this.constructionControlPlanConstant.RELEVANCEED, null,null,'lastMonth')">
+              <div>{{ countControlPlans | planLevelDateFilterPipe: undefined: 'month' : 'none' }}</div>
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td><img src="/assets/opcimg/icons/have-not-started.svg" /></td>
+          <td>未开始方案</td>
+          <td>
+            <a
+              (click)="linkToPlanList(this.constructionControlPlanConstant.RELEVANCEED, this.constructionControlPlanConstant.PENDING_START,this.constructionControlPlanConstant.RED,null)"
+            >
+              <div>
+                <img src="assets/opcimg/status-imgs/1-0.png" />
+                {{ countControlPlans | planLevelDateFilterPipe: this.constructionControlPlanConstant.RED: 'none' : 'notStart' }}
+              </div>
+            </a>
+          </td>
+          <td>
+            <a
+              (click)="linkToPlanList(this.constructionControlPlanConstant.RELEVANCEED, this.constructionControlPlanConstant.PENDING_START,this.constructionControlPlanConstant.ORANGE,null)"
+            >
+              <div>
+                <img src="assets/opcimg/status-imgs/1-1.png" />
+                {{ countControlPlans | planLevelDateFilterPipe: this.constructionControlPlanConstant.ORANGE: 'none' : 'notStart' }}
+              </div>
+            </a>
+          </td>
+          <td>
+            <a
+              (click)="linkToPlanList(this.constructionControlPlanConstant.RELEVANCEED, this.constructionControlPlanConstant.PENDING_START,this.constructionControlPlanConstant.YELLOW,null)"
+            >
+              <div>
+                <img src="assets/opcimg/status-imgs/1-2.png" />
+                {{ countControlPlans | planLevelDateFilterPipe: this.constructionControlPlanConstant.YELLOW: 'none' : 'notStart' }}
+              </div>
+            </a>
+          </td>
+          <td>
+            <a
+              (click)="linkToPlanList(this.constructionControlPlanConstant.RELEVANCEED, this.constructionControlPlanConstant.PENDING_START,this.constructionControlPlanConstant.BLUE,null)"
+            >
+              <div>
+                <img src="assets/opcimg/status-imgs/1-3.png" />
+                {{ countControlPlans | planLevelDateFilterPipe: this.constructionControlPlanConstant.BLUE: 'none' : 'notStart' }}
+              </div>
+            </a>
+          </td>
+          <td>
+            <a
+              (click)="linkToPlanList(this.constructionControlPlanConstant.RELEVANCEED, this.constructionControlPlanConstant.PENDING_START,this.constructionControlPlanConstant.GREEN,null)"
+            >
+              <div>
+                <img src="assets/opcimg/status-imgs/1-4.png" />
+                {{ countControlPlans | planLevelDateFilterPipe: this.constructionControlPlanConstant.GREEN: 'none' : 'notStart' }}
+              </div>
+            </a>
+          </td>
+          <td>
+            <a
+              (click)="linkToPlanList(this.constructionControlPlanConstant.RELEVANCEED, this.constructionControlPlanConstant.PENDING_START,null,null)"
+            >
+              <div>{{ countControlPlans | planLevelDateFilterPipe: undefined: 'none' : 'notStart' }}</div>
+            </a>
+          </td>
+          <td>
+            <a
+              (click)="linkToPlanList(this.constructionControlPlanConstant.RELEVANCEED, this.constructionControlPlanConstant.PENDING_START,null,'nowYear')"
+            >
+              <div>{{ countControlPlans | planLevelDateFilterPipe: undefined: 'year' : 'notStart' }}</div>
+            </a>
+          </td>
+          <td>
+            <a
+              (click)="linkToPlanList(this.constructionControlPlanConstant.RELEVANCEED, this.constructionControlPlanConstant.PENDING_START,null,'lastMonth')"
+            >
+              <div>{{ countControlPlans | planLevelDateFilterPipe: undefined: 'month' : 'notStart' }}</div>
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td><img src="/assets/opcimg/icons/have-already-started.svg" /></td>
+          <td>施工中方案</td>
+          <td>
+            <a
+              (click)="linkToPlanList(this.constructionControlPlanConstant.RELEVANCEED, this.constructionControlPlanConstant.CONSTRUCTING ,this.constructionControlPlanConstant.RED,null)"
+            >
+              <div>
+                <img src="assets/opcimg/status-imgs/2-0.png" />
+                {{ countControlPlans | planLevelDateFilterPipe: this.constructionControlPlanConstant.RED: 'none' : 'start' }}
+              </div>
+            </a>
+          </td>
+          <td>
+            <a
+              (click)="linkToPlanList(this.constructionControlPlanConstant.RELEVANCEED, this.constructionControlPlanConstant.CONSTRUCTING ,this.constructionControlPlanConstant.ORANGE,null)"
+            >
+              <div>
+                <img src="assets/opcimg/status-imgs/2-1.png" />
+                {{ countControlPlans | planLevelDateFilterPipe: this.constructionControlPlanConstant.ORANGE: 'none' : 'start' }}
+              </div>
+            </a>
+          </td>
+          <td>
+            <a
+              (click)="linkToPlanList(this.constructionControlPlanConstant.RELEVANCEED, this.constructionControlPlanConstant.CONSTRUCTING ,this.constructionControlPlanConstant.YELLOW,null)"
+            >
+              <div>
+                <img src="assets/opcimg/status-imgs/2-2.png" />
+                {{ countControlPlans | planLevelDateFilterPipe: this.constructionControlPlanConstant.YELLOW: 'none' : 'start' }}
+              </div>
+            </a>
+          </td>
+          <td>
+            <a
+              (click)="linkToPlanList(this.constructionControlPlanConstant.RELEVANCEED, this.constructionControlPlanConstant.CONSTRUCTING,this.constructionControlPlanConstant.BLUE,null)"
+            >
+              <div>
+                <img src="assets/opcimg/status-imgs/2-3.png" />
+                {{ countControlPlans | planLevelDateFilterPipe: this.constructionControlPlanConstant.BLUE: 'none' : 'start' }}
+              </div>
+            </a>
+          </td>
+          <td>
+            <a
+              (click)="linkToPlanList(this.constructionControlPlanConstant.RELEVANCEED, this.constructionControlPlanConstant.CONSTRUCTING,this.constructionControlPlanConstant.GREEN,null)"
+            >
+              <div>
+                <img src="assets/opcimg/status-imgs/2-4.png" />
+                {{ countControlPlans | planLevelDateFilterPipe: this.constructionControlPlanConstant.GREEN: 'none' : 'start' }}
+              </div>
+            </a>
+          </td>
+          <td>
+            <a
+              (click)="linkToPlanList(this.constructionControlPlanConstant.RELEVANCEED, this.constructionControlPlanConstant.CONSTRUCTING,null,null)"
+            >
+              <div>{{ countControlPlans | planLevelDateFilterPipe: undefined: 'none' : 'start' }}</div>
+            </a>
+          </td>
+          <td>
+            <a
+              (click)="linkToPlanList(this.constructionControlPlanConstant.RELEVANCEED, this.constructionControlPlanConstant.CONSTRUCTING,null,'nowYear')"
+            >
+              <div>{{ countControlPlans | planLevelDateFilterPipe: undefined: 'year' : 'start' }}</div>
+            </a>
+          </td>
+          <td>
+            <a
+              (click)="linkToPlanList(this.constructionControlPlanConstant.RELEVANCEED, this.constructionControlPlanConstant.CONSTRUCTING,null,'lastMonth')"
+            >
+              <div>{{ countControlPlans | planLevelDateFilterPipe: undefined: 'month' : 'start' }}</div>
+            </a>
+          </td>
+        </tr>
+      </table>
+    </nz-card>
+  </div>
+</div>
+
+<div nz-row>
+  <div nz-col nzSpan="10">
+    <nz-card nzTitle="方案审批、关联情况总览" class="nz-third-row-card">
+      <svg
+        (click)="linkToList(this.moduleTypeConstant.MODULE3)"
+        t="1613711718878"
+        class="icon nav-svg"
+        style="left: 94%"
+        viewBox="0 0 1024 1024"
+        version="1.1"
+        xmlns="http://www.w3.org/2000/svg"
+        p-id="12235"
+        width="24"
+        height="24"
+      >
+        <path
+          d="M512 1024A512 512 0 1 1 512 0a512 512 0 0 1 0 1024z m65.92-578.88H288a64 64 0 0 0-64 64v5.76a64 64 0 0 0 64 64h287.616L499.84 654.72a64 64 0 0 0 0 90.496l1.728 1.792a64 64 0 0 0 90.496 0l193.216-193.216a63.808 63.808 0 0 0 0-90.496l-186.24-186.24a64 64 0 0 0-90.56 0l-4.032 4.032a64 64 0 0 0 0 90.496l73.536 73.6z"
+          p-id="12236"
+        ></path>
+      </svg>
+      <table>
+        <tr>
+          <td colspan="6" style="height: 20px"></td>
+        </tr>
+        <tr>
+          <!--  待提交 -->
+          <td width="18%" align="center">
+            <a
+              (click)="constructionControlPlanListPage(constructionControlPlanConstant.PENDING_SUBMIT, undefined, undefined)"
+              style="color: black"
+            >
+              <div>
+                {{ constructionControlPlans | planFilterPipe:constructionControlPlanConstant.PENDING_SUBMIT : undefined :undefined }}
+              </div>
+            </a>
+          </td>
+          <!-- 待调查:初稿且待调查 -->
+          <td width="18%" align="center">
+            <a
+              (click)="constructionControlPlanListPage(undefined, constructionControlPlanConstant.FIRST_DRAFT, constructionControlPlanConstant.INVESTIGATION_NOT_OPENED)"
+              style="color: black"
+            >
+              <div>
+                {{ constructionControlPlans | planFilterPipe:undefined : constructionControlPlanConstant.FIRST_DRAFT
+                :constructionControlPlanConstant.INVESTIGATION_NOT_OPENED}}
+              </div>
+            </a>
+          </td>
+          <!-- 技术会签 -->
+          <td width="18%" align="center">
+            <a
+              (click)="constructionControlPlanListPage(undefined, constructionControlPlanConstant.TECH_COUNTERSIGN, undefined)"
+              style="color: black"
+            >
+              <div>
+                {{ constructionControlPlans | planFilterPipe:undefined : constructionControlPlanConstant.TECH_COUNTERSIGN : undefined }}
+              </div>
+            </a>
+          </td>
+          <!-- 安全会签 -->
+          <td width="18%" align="center">
+            <a
+              (click)="constructionControlPlanListPage(undefined, constructionControlPlanConstant.SAFE_COUNTERSIGN, undefined)"
+              style="color: black"
+            >
+              <div>
+                {{ constructionControlPlans | planFilterPipe:undefined : constructionControlPlanConstant.SAFE_COUNTERSIGN : undefined }}
+              </div>
+            </a>
+          </td>
+          <!-- 待关联 -->
+          <td width="18%" align="center">
+            <a
+              (click)="constructionControlPlanListPage(constructionControlPlanConstant.PENDING_RELEVANCE, undefined, undefined)"
+              style="color: black"
+            >
+              <div>
+                {{ constructionControlPlans | planFilterPipe:constructionControlPlanConstant.PENDING_RELEVANCE : undefined : undefined }}
+              </div>
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="6" style="height: 10px"></td>
+        </tr>
+        <tr>
+          <td align="bottom">
+            <img src="assets/opcimg/icons/not-submitted.svg" />
+            待提交
+          </td>
+          <td align="bottom">
+            <img src="assets/opcimg/icons/not-to-investigate.svg" />
+            待调查
+          </td>
+          <td align="bottom">
+            <img src="assets/opcimg/icons/unreviewed.svg" />
+            技术会签
+          </td>
+          <td align="bottom">
+            <img src="assets/opcimg/icons/unapproved.svg" />
+            安全会签
+          </td>
+          <td align="bottom">
+            <img src="assets/opcimg/icons/not-related.svg" />
+            待关联
+          </td>
+        </tr>
+      </table>
+    </nz-card>
+  </div>
+  <div nz-col nzSpan="14">
+    <nz-card nzTitle="日计划情况总览" class="nz-third-row-card-second">
+      <svg
+        (click)="linkToList(this.moduleTypeConstant.MODULE4)"
+        t="1613711718878"
+        class="icon nav-svg"
+        style="left: 95.8%"
+        viewBox="0 0 1024 1024"
+        version="1.1"
+        xmlns="http://www.w3.org/2000/svg"
+        p-id="12235"
+        width="24"
+        height="24"
+      >
+        <path
+          d="M512 1024A512 512 0 1 1 512 0a512 512 0 0 1 0 1024z m65.92-578.88H288a64 64 0 0 0-64 64v5.76a64 64 0 0 0 64 64h287.616L499.84 654.72a64 64 0 0 0 0 90.496l1.728 1.792a64 64 0 0 0 90.496 0l193.216-193.216a63.808 63.808 0 0 0 0-90.496l-186.24-186.24a64 64 0 0 0-90.56 0l-4.032 4.032a64 64 0 0 0 0 90.496l73.536 73.6z"
+          p-id="12236"
+        ></path>
+      </svg>
+      <table class="nz-third-row-card-second-table">
+        <tr>
+          <td>图标</td>
+          <td>阶段</td>
+          <td style="border-bottom: red 4px solid">1级</td>
+          <td style="border-bottom: #ff9933 4px solid">2级</td>
+          <td style="border-bottom: #ffff33 4px solid">3级</td>
+          <td style="border-bottom: #2ddfdf 4px solid">4级</td>
+          <td style="border-bottom: #59df86 4px solid">5级</td>
+          <td>当前总数</td>
+          <td>当年累计</td>
+          <td>其中上月</td>
+        </tr>
+        <tr>
+          <td><img src="/assets/opcimg/icons/have-not-started.svg" /></td>
+          <td>未开始</td>
+          <td>
+            <a (click)="linkToLocalControlList(this.constructionDailyPlanConstant.PENDING_START, this.constructionControlPlanConstant.RED)">
+              <div>{{ countDailyPlans | dailyPlanLevelDateFilterPipe: this.constructionControlPlanConstant.RED: 'none' : 'notStart' }}</div>
+            </a>
+          </td>
+          <td>
+            <a
+              (click)="linkToLocalControlList(this.constructionDailyPlanConstant.PENDING_START,this.constructionControlPlanConstant.ORANGE)"
+            >
+              <div>
+                {{ countDailyPlans | dailyPlanLevelDateFilterPipe: this.constructionControlPlanConstant.ORANGE: 'none' : 'notStart' }}
+              </div>
+            </a>
+          </td>
+          <td>
+            <a
+              (click)="linkToLocalControlList(this.constructionDailyPlanConstant.PENDING_START,this.constructionControlPlanConstant.YELLOW)"
+            >
+              <div>
+                {{ countDailyPlans | dailyPlanLevelDateFilterPipe: this.constructionControlPlanConstant.YELLOW: 'none' : 'notStart' }}
+              </div>
+            </a>
+          </td>
+          <td>
+            <a (click)="linkToLocalControlList(this.constructionDailyPlanConstant.PENDING_START,this.constructionControlPlanConstant.BLUE)">
+              <div>
+                {{ countDailyPlans | dailyPlanLevelDateFilterPipe: this.constructionControlPlanConstant.BLUE: 'none' : 'notStart' }}
+              </div>
+            </a>
+          </td>
+          <td>
+            <a
+              (click)="linkToLocalControlList(this.constructionDailyPlanConstant.PENDING_START,this.constructionControlPlanConstant.GREEN)"
+            >
+              <div>
+                {{ countDailyPlans | dailyPlanLevelDateFilterPipe: this.constructionControlPlanConstant.GREEN: 'none' : 'notStart' }}
+              </div>
+            </a>
+          </td>
+          <td>
+            <a (click)="linkToLocalControlList(this.constructionDailyPlanConstant.PENDING_START,null)">
+              <div>{{ countDailyPlans | dailyPlanLevelDateFilterPipe: undefined: 'none' : 'notStart' }}</div>
+            </a>
+          </td>
+          <td>
+            <a (click)="linkToLocalControlList(this.constructionDailyPlanConstant.PENDING_START,null)">
+              <div>{{ countDailyPlans | dailyPlanLevelDateFilterPipe: undefined: 'year' : 'notStart' }}</div>
+            </a>
+          </td>
+          <td>
+            <a (click)="linkToLocalControlList(this.constructionDailyPlanConstant.PENDING_START,null)">
+              <div>{{ countDailyPlans | dailyPlanLevelDateFilterPipe: undefined: 'month' : 'notStart' }}</div>
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td><img src="/assets/opcimg/icons/have-already-started.svg" /></td>
+          <td>进行中</td>
+          <td>
+            <a (click)="linkToLocalControlList(this.constructionDailyPlanConstant.PROCESSING,this.constructionControlPlanConstant.RED)">
+              <div>{{ countDailyPlans | dailyPlanLevelDateFilterPipe: this.constructionControlPlanConstant.RED: 'none' : 'start' }}</div>
+            </a>
+          </td>
+          <td>
+            <a (click)="linkToLocalControlList(this.constructionDailyPlanConstant.PROCESSING ,this.constructionControlPlanConstant.ORANGE)">
+              <div>{{ countDailyPlans | dailyPlanLevelDateFilterPipe: this.constructionControlPlanConstant.ORANGE: 'none' : 'start' }}</div>
+            </a>
+          </td>
+          <td>
+            <a (click)="linkToLocalControlList(this.constructionDailyPlanConstant.PROCESSING ,this.constructionControlPlanConstant.YELLOW)">
+              <div>{{ countDailyPlans | dailyPlanLevelDateFilterPipe: this.constructionControlPlanConstant.YELLOW: 'none' : 'start' }}</div>
+            </a>
+          </td>
+          <td>
+            <a (click)="linkToLocalControlList(this.constructionDailyPlanConstant.PROCESSING ,this.constructionControlPlanConstant.BLUE)">
+              <div>{{ countDailyPlans | dailyPlanLevelDateFilterPipe: this.constructionControlPlanConstant.BLUE: 'none' : 'start' }}</div>
+            </a>
+          </td>
+          <td>
+            <a (click)="linkToLocalControlList(this.constructionDailyPlanConstant.PROCESSING ,this.constructionControlPlanConstant.GREEN)">
+              <div>{{ countDailyPlans | dailyPlanLevelDateFilterPipe: this.constructionControlPlanConstant.GREEN: 'none' : 'start' }}</div>
+            </a>
+          </td>
+          <td>
+            <a (click)="linkToLocalControlList(this.constructionDailyPlanConstant.PROCESSING,null)">
+              <div>{{ countDailyPlans | dailyPlanLevelDateFilterPipe: undefined: 'none' : 'start' }}</div>
+            </a>
+          </td>
+          <td>
+            <a (click)="linkToLocalControlList(this.constructionDailyPlanConstant.PROCESSING,null)">
+              <div>{{ countDailyPlans | dailyPlanLevelDateFilterPipe: undefined: 'year' : 'start' }}</div>
+            </a>
+          </td>
+          <td>
+            <a (click)="linkToLocalControlList(this.constructionDailyPlanConstant.PROCESSING,null)">
+              <div>{{ countDailyPlans | dailyPlanLevelDateFilterPipe: undefined: 'month' : 'start' }}</div>
+            </a>
+          </td>
+        </tr>
+      </table>
+    </nz-card>
+  </div>
+</div>
+
+<div nz-row>
+  <div nz-col nzSpan="10">
+    <nz-card nzTitle="系统功能总览" class="nz-fourth-row-card">
+      <!--      <svg-->
+      <!--        (click)="linkToList(this.moduleTypeConstant.MODULE5)"-->
+      <!--        t="1613711718878"-->
+      <!--        class="icon nav-svg"-->
+      <!--        style="left: 94%"-->
+      <!--        viewBox="0 0 1024 1024"-->
+      <!--        version="1.1"-->
+      <!--        xmlns="http://www.w3.org/2000/svg"-->
+      <!--        p-id="12235"-->
+      <!--        width="24"-->
+      <!--        height="24"-->
+      <!--      >-->
+      <!--        <path-->
+      <!--          d="M512 1024A512 512 0 1 1 512 0a512 512 0 0 1 0 1024z m65.92-578.88H288a64 64 0 0 0-64 64v5.76a64 64 0 0 0 64 64h287.616L499.84 654.72a64 64 0 0 0 0 90.496l1.728 1.792a64 64 0 0 0 90.496 0l193.216-193.216a63.808 63.808 0 0 0 0-90.496l-186.24-186.24a64 64 0 0 0-90.56 0l-4.032 4.032a64 64 0 0 0 0 90.496l73.536 73.6z"-->
+      <!--          p-id="12236"-->
+      <!--        ></path>-->
+      <!--      </svg>-->
+      <div class="nz-fourth-row-card-first-div">
+        <img class="nz-fourth-row-card-first-img" src="/assets/opcimg/index-flow.png" />
+      </div>
+    </nz-card>
+  </div>
+  <div nz-col nzSpan="8">
+    <nz-card nzTitle="预警信息总览" class="nz-fourth-row-card">
+      <svg
+        (click)="linkToList(this.moduleTypeConstant.MODULE6)"
+        t="1613711718878"
+        class="icon nav-svg"
+        style="left: 92%"
+        viewBox="0 0 1024 1024"
+        version="1.1"
+        xmlns="http://www.w3.org/2000/svg"
+        p-id="12235"
+        width="24"
+        height="24"
+      >
+        <path
+          d="M512 1024A512 512 0 1 1 512 0a512 512 0 0 1 0 1024z m65.92-578.88H288a64 64 0 0 0-64 64v5.76a64 64 0 0 0 64 64h287.616L499.84 654.72a64 64 0 0 0 0 90.496l1.728 1.792a64 64 0 0 0 90.496 0l193.216-193.216a63.808 63.808 0 0 0 0-90.496l-186.24-186.24a64 64 0 0 0-90.56 0l-4.032 4.032a64 64 0 0 0 0 90.496l73.536 73.6z"
+          p-id="12236"
+        ></path>
+      </svg>
+      <table class="nz-fourth-row-card-table">
+        <tr>
+          <td width="23%" align="right">
+            <nz-form-label>预警级别</nz-form-label>
+          </td>
+          <td align="center"><img src="assets/opcimg/icons/warning-bell0.svg" /></td>
+          <td align="center"><img src="assets/opcimg/icons/warning-bell1.svg" /></td>
+          <td align="center"><img src="assets/opcimg/icons/warning-bell2.svg" /></td>
+          <td align="center"><img src="assets/opcimg/icons/warning-bell3.svg" /></td>
+        </tr>
+        <tr>
+          <td align="right">
+            <nz-form-label>未处理预警</nz-form-label>
+          </td>
+          <td align="center">
+            <a
+              (click)="linkToWarningInfoList(this.warnInfoConstant.NOT_PROCESSED, this.warnInfoConstant.LEVEL1, null)"
+              style="color: black"
+            >
+              <div>
+                {{ warningStatisticsResult | warningInfoFilterPipe : warnInfoConstant.LEVEL1 : warnInfoConstant.NOT_PROCESSED :'none' }}
+              </div>
+            </a>
+          </td>
+          <td align="center">
+            <a
+              (click)="linkToWarningInfoList(this.warnInfoConstant.NOT_PROCESSED, this.warnInfoConstant.LEVEL2, null)"
+              style="color: black"
+            >
+              <div>
+                {{ warningStatisticsResult | warningInfoFilterPipe : warnInfoConstant.LEVEL2 : warnInfoConstant.NOT_PROCESSED :'none' }}
+              </div>
+            </a>
+          </td>
+          <td align="center">
+            <a
+              (click)="linkToWarningInfoList(this.warnInfoConstant.NOT_PROCESSED, this.warnInfoConstant.LEVEL3, null)"
+              style="color: black"
+            >
+              <div>
+                {{ warningStatisticsResult | warningInfoFilterPipe : warnInfoConstant.LEVEL3 : warnInfoConstant.NOT_PROCESSED :'none' }}
+              </div>
+            </a>
+          </td>
+          <td align="center">
+            <a
+              (click)="linkToWarningInfoList(this.warnInfoConstant.NOT_PROCESSED, this.warnInfoConstant.LEVEL4, null)"
+              style="color: black"
+            >
+              <div>
+                {{ warningStatisticsResult | warningInfoFilterPipe : warnInfoConstant.LEVEL4 : warnInfoConstant.NOT_PROCESSED :'none' }}
+              </div>
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td align="right">
+            <nz-form-label>当月累计</nz-form-label>
+          </td>
+          <td align="center">
+            <a (click)="linkToWarningInfoList(null, this.warnInfoConstant.LEVEL1, 'nowMonth')" style="color: black">
+              <div>{{ warningStatisticsResult | warningInfoFilterPipe : warnInfoConstant.LEVEL1 : undefined :'month' }}</div>
+            </a>
+          </td>
+          <td align="center">
+            <a (click)="linkToWarningInfoList(null, this.warnInfoConstant.LEVEL2, 'nowMonth')" style="color: black">
+              <div>{{ warningStatisticsResult | warningInfoFilterPipe : warnInfoConstant.LEVEL2 : undefined :'month' }}</div>
+            </a>
+          </td>
+          <td align="center">
+            <a (click)="linkToWarningInfoList(null, this.warnInfoConstant.LEVEL3, 'nowMonth')" style="color: black">
+              <div>{{ warningStatisticsResult | warningInfoFilterPipe : warnInfoConstant.LEVEL3 : undefined :'month' }}</div>
+            </a>
+          </td>
+          <td align="center">
+            <a (click)="linkToWarningInfoList(null, this.warnInfoConstant.LEVEL4, 'nowMonth')" style="color: black">
+              <div>{{ warningStatisticsResult | warningInfoFilterPipe : warnInfoConstant.LEVEL4 : undefined :'month' }}</div>
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td align="right">
+            <nz-form-label>当年累计</nz-form-label>
+          </td>
+          <td align="center">
+            <a (click)="linkToWarningInfoList(null, this.warnInfoConstant.LEVEL1, 'nowYear')" style="color: black">
+              <div>{{ warningStatisticsResult | warningInfoFilterPipe : warnInfoConstant.LEVEL1 : undefined :'year' }}</div>
+            </a>
+          </td>
+          <td align="center">
+            <a (click)="linkToWarningInfoList(null, this.warnInfoConstant.LEVEL2, 'nowYear')" style="color: black">
+              <div>{{ warningStatisticsResult | warningInfoFilterPipe : warnInfoConstant.LEVEL2 : undefined :'year' }}</div>
+            </a>
+          </td>
+          <td align="center">
+            <a (click)="linkToWarningInfoList(null, this.warnInfoConstant.LEVEL3, 'nowYear')" style="color: black">
+              <div>{{ warningStatisticsResult | warningInfoFilterPipe : warnInfoConstant.LEVEL3 : undefined :'year' }}</div>
+            </a>
+          </td>
+          <td align="center">
+            <a (click)="linkToWarningInfoList(null, this.warnInfoConstant.LEVEL4, 'nowYear')" style="color: black">
+              <div>{{ warningStatisticsResult | warningInfoFilterPipe : warnInfoConstant.LEVEL4 : undefined :'year' }}</div>
+            </a>
+          </td>
+        </tr>
+      </table>
+    </nz-card>
+  </div>
+  <div nz-col nzSpan="6">
+    <nz-card nzTitle="安全施工天数" class="nz-fourth-row-card">
+      <!--      <svg-->
+      <!--        (click)="linkToList(this.moduleTypeConstant.MODULE7)"-->
+      <!--        t="1613711718878"-->
+      <!--        class="icon nav-svg"-->
+      <!--        style="left: 88.8%"-->
+      <!--        viewBox="0 0 1024 1024"-->
+      <!--        version="1.1"-->
+      <!--        xmlns="http://www.w3.org/2000/svg"-->
+      <!--        p-id="12235"-->
+      <!--        width="24"-->
+      <!--        height="24"-->
+      <!--      >-->
+      <!--        <path-->
+      <!--          d="M512 1024A512 512 0 1 1 512 0a512 512 0 0 1 0 1024z m65.92-578.88H288a64 64 0 0 0-64 64v5.76a64 64 0 0 0 64 64h287.616L499.84 654.72a64 64 0 0 0 0 90.496l1.728 1.792a64 64 0 0 0 90.496 0l193.216-193.216a63.808 63.808 0 0 0 0-90.496l-186.24-186.24a64 64 0 0 0-90.56 0l-4.032 4.032a64 64 0 0 0 0 90.496l73.536 73.6z"-->
+      <!--          p-id="12236"-->
+      <!--        ></path>-->
+      <!--      </svg>-->
+      <table width="100%">
+        <tr>
+          <td colspan="4" align="center">
+            <p style="color: #339900; font-size: 50px; font-weight: bold">{{ indexPojos.safetyConstructionDays }}天</p>
+          </td>
+        </tr>
+        <tr>
+          <td align="right" width="12%">
+            <nz-form-label>起止日期</nz-form-label>
+          </td>
+          <td align="right" width="32%">{{ indexPojos.lastWarningTime | date:'yyyy年MM月dd日' }}</td>
+          <td align="center" width="10%">至</td>
+          <td align="left">{{ indexPojos.nowTime | date:'yyyy年MM月dd日' }}</td>
+        </tr>
+      </table>
+    </nz-card>
+  </div>
+</div>

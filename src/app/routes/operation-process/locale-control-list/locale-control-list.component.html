@@ -1,0 +1,181 @@
+<page-header [breadcrumb]="breadcrumb" [title]="''"></page-header>
+<ng-template #breadcrumb>
+  <nz-breadcrumb>
+    <nz-breadcrumb-item>
+      <a [routerLink]="['/']">首页</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      <a [routerLink]="['/construction-control-plan/list']">动态管控</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      <a>作业管控</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>现场管控</nz-breadcrumb-item>
+  </nz-breadcrumb>
+</ng-template>
+
+<nz-card>
+  <form nz-form [nzLayout]="'inline'" class="search__form">
+    <div nz-row [nzGutter]="12" style="width: 100%">
+      <div nz-col [nzSpan]="2">
+        <nz-form-label>日计划列表</nz-form-label>
+      </div>
+      <div nz-col [nzSpan]="3">
+        <nz-form-item>
+          <nz-form-label>状态</nz-form-label>
+          <nz-form-control>
+            <nz-select name="finishedStatus" [(ngModel)]="constructionDailyPlanFormParams.finishedStatus" nzPlaceHolder="全部">
+              <nz-option [nzValue]="constructionDailyPlanConstant.PENDING_START" nzLabel="未开始"></nz-option>
+              <nz-option [nzValue]="constructionDailyPlanConstant.PROCESSING" nzLabel="进行中"></nz-option>
+              <nz-option [nzValue]="constructionDailyPlanConstant.CLOSED" nzLabel="已结束"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="3">
+        <nz-form-item>
+          <nz-form-label>风险等级</nz-form-label>
+          <nz-form-control>
+            <nz-select name="warnStatus" [(ngModel)]="constructionDailyPlanFormParams.warnStatus" nzPlaceHolder="全部">
+              <nz-option [nzValue]="constructionControlPlanConstant.RED" nzLabel="一级"></nz-option>
+              <nz-option [nzValue]="constructionControlPlanConstant.ORANGE" nzLabel="二级"></nz-option>
+              <nz-option [nzValue]="constructionControlPlanConstant.YELLOW" nzLabel="三级"></nz-option>
+              <nz-option [nzValue]="constructionControlPlanConstant.BLUE" nzLabel="四级"></nz-option>
+              <nz-option [nzValue]="constructionControlPlanConstant.GREEN" nzLabel="五级"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="1.5">
+        <nz-form-item>
+          <nz-form-control>
+            <button
+              nz-button
+              (click)="loadConstructionDailyPlans()"
+              type="submit"
+              [nzType]="'primary'"
+              [nzLoading]="constructionDailyPlanLoading"
+            >
+              查询
+            </button>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="1.5">
+        <nz-form-item>
+          <nz-form-control>
+            <button nz-button (click)="actualStart()" [nzLoading]="constructionDailyPlanLoading">开始</button>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="2">
+        <nz-form-item>
+          <nz-form-control>
+            <button nz-button (click)="actualClose()" [nzLoading]="constructionDailyPlanLoading">结束</button>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+  </form>
+  <nz-table
+    nzShowSizeChanger
+    [nzData]="constructionDailyPlans"
+    [nzFrontPagination]="false"
+    [nzPageSizeOptions]="[5, 10, 20, 50]"
+    [nzLoading]="constructionDailyPlanLoading"
+    [nzTotal]="constructionDailyPlanTotal"
+    [nzPageSize]="constructionDailyPlanPageSize"
+    [nzPageIndex]="constructionDailyPlanPageIndex"
+    nzSize="small"
+    [nzBordered]="true"
+    (nzQueryParams)="onConstructionDailyPlanQueryParamsChange($event)"
+  >
+    <thead>
+      <tr>
+        <th></th>
+        <th>日计划编号</th>
+        <th>方案编号</th>
+        <th>线路</th>
+        <th>行别</th>
+        <th>施工项目</th>
+        <th>开始时间</th>
+        <th>结束时间</th>
+        <th>开始里程</th>
+        <th>结束里程</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="let data of constructionDailyPlans"
+        (click)="onConstructionDailyPlanItemChecked(data.id, !setOfConstructionDailyPlanCheckedId.has(data.id))"
+      >
+        <td
+          [nzChecked]="setOfConstructionDailyPlanCheckedId.has(data.id)"
+          (nzCheckedChange)="onConstructionDailyPlanItemChecked(data.id, $event)"
+        ></td>
+        <td>
+          <a (click)="showPlanMapFunction(data.id)">{{ data.code }}</a>
+        </td>
+
+        <td>
+          <a (click)="showControlPlanMapFunction(data.constructionControlPlanId)">{{ data.constructionControlPlanCode }}</a>
+        </td>
+
+        <td>{{ data.railwayLineName }}</td>
+        <td [ngSwitch]="data.downriver">
+          <span *ngSwitchCase="constructionDailyPlanConstant.UPRIVER">上行</span>
+          <span *ngSwitchCase="constructionDailyPlanConstant.DOWNRIVER">下行</span>
+          <span *ngSwitchDefault>-</span>
+        </td>
+        <td>{{ data.constructionProjectInfo }}</td>
+        <td>{{ data.startTime | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+        <td>{{ data.endTime | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+        <td>{{ data.startKilometer | kilometerPipe }}</td>
+        <td>{{ data.endKilometer | kilometerPipe }}</td>
+      </tr>
+    </tbody>
+  </nz-table>
+</nz-card>
+
+<nz-modal
+  [nzWidth]="1800"
+  nzTitle="施工范围预览"
+  [(nzVisible)]="showPlanMap"
+  [nzContent]="planMapContent"
+  [nzFooter]="planMapFooter"
+  (nzOnCancel)="this.showPlanMap = false"
+>
+  <ng-template #planMapContent>
+    <div nz-row>
+      <div nz-col [nzSpan]="7">
+        <h2 style="width: 100%; margin-bottom: 20px; text-align: center">《日计划详情》</h2>
+        <nz-descriptions nzBordered [nzSize]="'middle'" [nzColumn]="1">
+          <nz-descriptions-item nzTitle="方案编号">{{ checkedConstructionDailyPlan.constructionControlPlanCode }}</nz-descriptions-item>
+          <nz-descriptions-item nzTitle="日计划编号">{{ checkedConstructionDailyPlan.code }}</nz-descriptions-item>
+          <nz-descriptions-item nzTitle="施工项目">{{ checkedConstructionDailyPlan.constructionProjectInfo }}</nz-descriptions-item>
+          <nz-descriptions-item nzTitle="线路">{{ checkedConstructionDailyPlan.railwayLineName }}</nz-descriptions-item>
+          <nz-descriptions-item nzTitle="行别" [ngSwitch]="checkedConstructionDailyPlan.downriver">
+            <span *ngSwitchCase="constructionDailyPlanConstant.DOWNRIVER">下行</span>
+            <span *ngSwitchCase="constructionDailyPlanConstant.UPRIVER">上行</span>
+            <span *ngSwitchDefault>-</span>
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="日计划时间">
+            {{ checkedConstructionDailyPlan.startTime | date: 'yyyy-MM-dd HH:mm' }} 至
+            {{ checkedConstructionDailyPlan.endTime | date: 'yyyy-MM-dd HH:mm' }}
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="日计划里程">
+            {{ checkedConstructionDailyPlan.startKilometer | kilometerPipe }} 至
+            {{ checkedConstructionDailyPlan.endKilometer | kilometerPipe }}
+          </nz-descriptions-item>
+          <!--  <nz-descriptions-item nzTitle="施工机械"></nz-descriptions-item>-->
+        </nz-descriptions>
+      </div>
+      <div nz-col nzSpan="17">
+        <construction-control-plan-preview [constructionDailyPlanId]="dailyPlanId"> </construction-control-plan-preview>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #planMapFooter>
+    <button nz-button nzType="primary" (click)="this.showPlanMap = false">确定</button>
+  </ng-template>
+</nz-modal>

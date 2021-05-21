@@ -1,0 +1,141 @@
+<page-header [breadcrumb]="breadcrumb" [title]="''"></page-header>
+<ng-template #breadcrumb>
+  <nz-breadcrumb>
+    <nz-breadcrumb-item>
+      <a [routerLink]="['/']">首页</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      <a [routerLink]="['/construction-control-plan/list']">动态管控</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      <a>作业管控</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>预警信息</nz-breadcrumb-item>
+  </nz-breadcrumb>
+</ng-template>
+
+<nz-card>
+  <form nz-form class="search__form">
+    <div nz-row>
+      <div nz-col nzSpan="3">
+        <nz-form-item>
+          <nz-form-label>预警状态</nz-form-label>
+          <nz-form-control>
+            <nz-select [(ngModel)]="formParams.processStatus" name="processStatus" nzPlaceHolder="全部">
+              <nz-option nzValue="" nzLabel="全部"></nz-option>
+              <nz-option [nzValue]="warnInfoConstant.NOT_PROCESSED" nzLabel="待执行"></nz-option>
+              <nz-option [nzValue]="warnInfoConstant.PROCESSING" nzLabel="执行中"></nz-option>
+              <nz-option [nzValue]="warnInfoConstant.PROCESSED" nzLabel="已处理"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <span style="margin-right: 10px"></span>
+      <div nz-col nzSpan="3">
+        <nz-form-item>
+          <nz-form-label>预警等级</nz-form-label>
+          <nz-form-control>
+            <nz-select [(ngModel)]="formParams.warnLevel" name="warnLevel" nzPlaceHolder="全部">
+              <nz-option nzValue="" nzLabel="全部"></nz-option>
+              <nz-option [nzValue]="warnInfoConstant.LEVEL1" nzLabel="红色预警"></nz-option>
+              <nz-option [nzValue]="warnInfoConstant.LEVEL2" nzLabel="橙色预警"></nz-option>
+              <nz-option [nzValue]="warnInfoConstant.LEVEL3" nzLabel="黄色预警"></nz-option>
+              <nz-option [nzValue]="warnInfoConstant.LEVEL4" nzLabel="蓝色预警"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <span style="margin-right: 10px"></span>
+      <div nz-col nzSpan="8.5">
+        <nz-form-item>
+          <nz-form-label>起止日期</nz-form-label>
+          <nz-form-control>
+            <nz-date-picker [(ngModel)]="formParams.startTime" name="startTime"></nz-date-picker>
+            <span style="margin: 0 10px">至</span>
+            <nz-date-picker [(ngModel)]="formParams.endTime" name="endTime"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <span style="margin-right: 10px"></span>
+      <div nz-col nzSpan="2.5">
+        <nz-form-item>
+          <nz-form-control>
+            <button nz-button (click)="loadDataFromServer()" type="submit" [nzType]="'primary'" [nzLoading]="loading">查询</button>
+            <button nz-button (click)="showProcessModal()" type="submit" [nzLoading]="loading">处理预警</button>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+  </form>
+  <nz-table
+    nzShowSizeChanger
+    [nzData]="warningInfos"
+    [nzFrontPagination]="false"
+    [nzPageSizeOptions]="[5, 10, 20, 50]"
+    [nzLoading]="loading"
+    [nzTotal]="total"
+    [nzPageSize]="pageSize"
+    [nzPageIndex]="pageIndex"
+    nzSize="small"
+    (nzQueryParams)="onQueryParamsChange($event)"
+    [nzBordered]="true"
+  >
+    <thead>
+      <tr>
+        <th></th>
+        <th>方案编号</th>
+        <th>施工项目</th>
+        <th>预警设备编码</th>
+        <th>预警类别</th>
+        <th>预警信息</th>
+        <th>预警时间</th>
+        <th>预警状态</th>
+        <th>处理结果</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of warningInfos" (click)="onItemChecked(data.id, !setOfCheckedId.has(data.id))">
+        <td [nzChecked]="setOfCheckedId.has(data.id)" (nzCheckedChange)="onItemChecked(data.id, $event)"></td>
+
+        <td>
+          <a (click)="showControlPlanMapFunction(data.constructionControlPlanId)">{{ data.constructionControlPlanCode }}</a>
+        </td>
+
+        <td>{{ data.constructionControlPlanProjectInfo }}</td>
+        <td>{{ data.equipmentImei }}</td>
+        <td ngSwitch="{{ data.warnLevel }}">
+          <span *ngSwitchCase="warnInfoConstant.LEVEL1">红色</span>
+          <span *ngSwitchCase="warnInfoConstant.LEVEL2">橙色</span>
+          <span *ngSwitchCase="warnInfoConstant.LEVEL3">黄色</span>
+          <span *ngSwitchCase="warnInfoConstant.LEVEL4">蓝色</span>
+          <span *ngSwitchCase="warnInfoConstant.LEVEL5">绿色</span>
+          <span *ngSwitchDefault>-</span>
+        </td>
+        <!-- 预警信息 -->
+        <td>{{ data.warnInfo }}</td>
+        <td>{{ data.addTime | date: 'yyyy-MM-dd HH:mm' }}</td>
+        <td ngSwitch="{{ data.processStatus }}">
+          <span *ngSwitchCase="warnInfoConstant.NOT_PROCESSED">未处理</span>
+          <span *ngSwitchCase="warnInfoConstant.PROCESSING">处理中</span>
+          <span *ngSwitchCase="warnInfoConstant.PROCESSED">已处理</span>
+          <span *ngSwitchCase="warnInfoConstant.CLOSED">已关闭</span>
+          <span *ngSwitchDefault>-</span>
+        </td>
+        <td>{{ data.processResult }}</td>
+      </tr>
+    </tbody>
+  </nz-table>
+</nz-card>
+
+<!-- 预警处理方式选择 -->
+<nz-modal [(nzVisible)]="showProcess" nzTitle="预警处理" (nzOnCancel)="showProcess = false">
+  <div *nzModalContent>
+    <h3>请选择预警处理方式</h3>
+  </div>
+  <div *nzModalFooter>
+    <!--    <button nz-button nzType="default" (click)=" ()">微信</button>-->
+    <button nz-button nzType="primary" (click)="processWarningBySendSms()">短信</button>
+    <button nz-button nzType="primary" (click)="processWarningByDoNothing()">手动处理</button>
+    <button nz-button nzType="default" (click)="showProcess = false">取消</button>
+  </div>
+</nz-modal>

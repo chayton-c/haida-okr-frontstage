@@ -1,0 +1,48 @@
+<a (click)="showModal()">预览</a>
+
+<nz-modal
+  [(nzVisible)]="isVisible"
+  nzTitle="光电缆图片"
+  [nzWidth]="1500"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="handleOk()"
+>
+  <ng-container *nzModalContent>
+    <div>
+      <img
+        style="margin: 30px"
+        *ngFor="let opcMarkImage of opcMarkImages"
+        (click)="imageDetailShowModal(opcMarkImage)"
+        width="200px"
+        height="200px"
+        [src]="'/api' + opcMarkImage.url"
+        [alt]="opcMarkImage.addTime"
+      >
+    </div>
+  </ng-container>
+  <ng-container *nzModalFooter>
+    <button nz-button nzType="primary" (click)="handleCancel()">确定</button>
+  </ng-container>
+</nz-modal>
+
+<nz-modal
+  [(nzVisible)]="imageDetailVisible"
+  nzTitle="大图"
+  [nzWidth]="1800"
+  (nzOnCancel)="imageDetailHandleCancel()"
+  (nzOnOk)="imageDetailHandleOk()"
+>
+  <ng-container *nzModalContent>
+    <nz-card>
+      <img
+        style="margin: 30px"
+        width="1700"
+        [src]="'/api' + checkedImage.url"
+        [alt]="checkedImage.addTime"
+      >
+    </nz-card>
+  </ng-container>
+  <ng-container *nzModalFooter>
+    <button nz-button nzType="primary" (click)="imageDetailHandleCancel()">确定</button>
+  </ng-container>
+</nz-modal>

@@ -1,0 +1,101 @@
+<page-header [title]="''"></page-header>
+<!--<page-header [breadcrumb]="breadcrumb" [title]="''"></page-header>-->
+<!--<ng-template #breadcrumb>-->
+<!--  <nz-breadcrumb>-->
+<!--    <nz-breadcrumb-item>-->
+<!--      <a [routerLink]="['/']">首页</a>-->
+<!--    </nz-breadcrumb-item>-->
+<!--    <nz-breadcrumb-item>设备列表</nz-breadcrumb-item>-->
+<!--  </nz-breadcrumb>-->
+<!--</ng-template>-->
+
+<nz-card>
+  <form nz-form [nzLayout]="'inline'" class="search__form">
+    <div nz-row [nzGutter]="12" style="width: 100%">
+      <div nz-col [nzSpan]="4">
+        <nz-form-item>
+          <nz-form-label>车间</nz-form-label>
+          <nz-form-control>
+            <nz-select [(ngModel)]="formParams.workshopId" name="workshopId" style="min-width: 100px">
+              <nz-option *ngFor="let workshop of workshops" [nzValue]="workshop.id" [nzLabel]="workshop.name"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="4">
+        <nz-form-item>
+          <nz-form-label>快速查询</nz-form-label>
+          <nz-form-control>
+            <input nz-input [(ngModel)]="formParams.nameOrCode" name="nameOrCode" placeholder="请输入设备名称或编码" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col>
+        <nz-form-item>
+          <nz-form-control>
+            <button nz-button (click)="loadDataFromServer()" type="submit" [nzType]="'primary'" [nzLoading]="loading">查询</button>
+            <button nz-button (click)="addPage()" type="submit" [nzType]="'primary'" [nzLoading]="loading">添加</button>
+            <button nz-button (click)="updatePage()" type="submit" [nzType]="'primary'" [nzLoading]="loading">修改</button>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+  </form>
+  <nz-table
+    nzShowSizeChanger
+    [nzData]="equipments"
+    [nzFrontPagination]="false"
+    [nzPageSizeOptions]="[5, 10, 20, 50]"
+    [nzLoading]="loading"
+    [nzTotal]="total"
+    [nzPageSize]="pageSize"
+    [nzPageIndex]="pageIndex"
+    nzSize="small"
+    [nzBordered]="true"
+    (nzQueryParams)="onQueryParamsChange($event)"
+  >
+    <thead>
+      <tr>
+        <th></th>
+        <th>所属车间</th>
+        <th>设备类别</th>
+        <th>设备名称</th>
+        <th>编号</th>
+        <th>联系人手机号</th>
+        <th>状态</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of equipments" (click)="updateCheckedSet(data.id, !setOfCheckedId.has(data.id))">
+        <td [nzChecked]="setOfCheckedId.has(data.id)" (nzCheckedChange)="updateCheckedSet(data.id, $event)"></td>
+
+        <!-- 所属车间 -->
+        <td>{{ data.workshopName }}</td>
+
+        <!-- 设备类别 -->
+        <td [ngSwitch]="data.equipmentType">
+          <span *ngSwitchCase="equipmentConstant.SUPERVISOR">人员</span>
+          <span *ngSwitchCase="equipmentConstant.MACHINE">机具</span>
+          <span *ngSwitchDefault>-</span>
+        </td>
+
+        <!-- 设备名称 -->
+        <td>{{ data.name }}</td>
+
+        <!-- 编号 -->
+        <td>{{ data.imei }}</td>
+
+        <!-- 联系人手机号 -->
+        <td>{{ data.linkmanPhoneNumber }}</td>
+
+        <!-- 状态 -->
+        <td [ngSwitch]="data.status">
+          <span *ngSwitchCase="equipmentConstant.NORMAL">正常</span>
+          <span *ngSwitchCase="equipmentConstant.STOPPED">停用</span>
+          <span *ngSwitchCase="equipmentConstant.ERROR">异常</span>
+          <span *ngSwitchDefault>-</span>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</nz-card>

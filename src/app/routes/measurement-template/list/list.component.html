@@ -1,0 +1,138 @@
+<page-header [title]="''"></page-header>
+<div nz-row>
+  <nz-card nz-col nzSpan="4" nzTitle="设备类型列表">
+    <nz-table #expandTable [nzData]="deviceTypeNodePojos" [nzLoading]="deviceTypeLoading" nzTableLayout="fixed" [nzFrontPagination]="false">
+      <tbody style="margin-left: 0">
+      <ng-container *ngFor="let data of expandTable.data">
+        <ng-container *ngFor="let item of mapOfExpandedData[data.id]">
+          <tr *ngIf="(item.parent && item.parent.expand) || !item.parent">
+            <td
+              [nzIndentSize]="item.level! * 20"
+              [nzShowExpand]="item.level == 0"
+              [(nzExpand)]="item.expand"
+              (nzExpandChange)="collapse(mapOfExpandedData[data.id], item, $event)"
+              (click)="clickLineNodePojo(item)"
+            >
+              <span [style]="item.selected ? 'color:#1890ff;cursor:pointer' : 'cursor:pointer'">{{ item.name }}</span>
+            </td>
+          </tr>
+        </ng-container>
+      </ng-container>
+      </tbody>
+    </nz-table>
+  </nz-card>
+
+  <div nz-col nzSpan="20">
+    <nz-card>
+      <nz-tabset>
+        <nz-tab nzTitle="作业标准">
+          <form
+            nz-form
+            [nzLayout]="'inline'"
+            (ngSubmit)="loadMeasurementTemplates(measurementTemplatePageIndex, measurementTemplatePageSize, measurementTemplateFormParams)"
+            class="search__form"
+          >
+            <div nz-row [nzGutter]="24" style="width: 100%">
+              <div nz-col nzSpan="11">
+                <nz-form-item>
+                  <nz-form-label>名称</nz-form-label>
+                  <nz-form-control>
+                    <input nz-input [(ngModel)]="measurementTemplateFormParams.name" name="name" placeholder="请输入组织名称" />
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+              <div nz-col nzSpan="11">
+                <nz-form-item>
+                  <nz-form-control>
+                    <button nz-button type="submit" [nzType]="'primary'" [nzLoading]="measurementTemplateLoading">查询</button>
+                    <button nz-button type="button" (click)="measurementTemplateAddPage()">新增</button>
+                    <button nz-button type="button" (click)="measurementTemplateUpdatePage()">修改</button>
+                    <button nz-button type="button" (click)="measurementTemplateSettingPage()">检查项配置</button>
+                    <button nz-button type="button" (click)="measurementTemplateDelete()">删除</button>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div>
+          </form>
+          <nz-table
+            nzShowSizeChanger
+            [nzData]="measurementTemplates"
+            [nzFrontPagination]="false"
+            [nzPageSizeOptions]="[5, 10, 20, 50]"
+            [nzLoading]="measurementTemplateLoading"
+            [nzTotal]="measurementTemplateTypeTotal"
+            [nzPageSize]="measurementTemplatePageSize"
+            [nzPageIndex]="measurementTemplatePageIndex"
+            nzSize="small"
+            (nzQueryParams)="onQueryParamsChange($event)"
+          >
+            <thead>
+            <tr>
+              <th
+                [nzChecked]="false"
+              ></th>
+              <th>名称</th>
+              <th>描述</th>
+              <th>备注</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let data of measurementTemplates" (click)="onMeasurementTemplateChecked(data, !measurementTemplateCheckedId.has(data.id))">
+              <td [nzChecked]="measurementTemplateCheckedId.has(data.id)" (nzCheckedChange)="onMeasurementTemplateChecked(data, $event)"></td>
+              <td>{{ data.name }}</td>
+              <td>{{ data.description }}</td>
+              <td>{{ data.remark }}</td>
+            </tr>
+            </tbody>
+          </nz-table>
+
+          <nz-divider style="margin-top: 0"></nz-divider>
+
+          <nz-table
+              nzShowSizeChanger
+              [nzData]="measurementItemFields"
+              [nzFrontPagination]="false"
+              [nzPageSizeOptions]="[5, 10, 20, 50]"
+              [nzLoading]="measurementItemFieldLoading"
+              [nzTotal]="measurementItemFieldTotal"
+              [nzPageSize]="measurementItemFieldPageSize"
+              [nzPageIndex]="measurementItemFieldPageIndex"
+              (nzQueryParams)="measurementItemFieldOnQueryParamsChange($event)"
+              nzSize="small"
+            >
+              <thead>
+              <tr>
+                <th nzWidth="3%"
+                  nzChecked="false"
+                ></th>
+                <th nzWidth="3%">序号</th>
+                <th nzWidth="15%">检查项点</th>
+                <th nzWidth="25%">符合性描述</th>
+                <th nzWidth="5%">最大值</th>
+                <th nzWidth="5%">最小值</th>
+                <th nzWidth="5%">单位</th>
+                <th nzWidth="15%">记录方式</th>
+                <th nzWidth="5%">工时</th>
+                <th nzWidth="5%">备注</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let data of measurementItemFields">
+                <td nzChecked="false"></td>
+                <td>{{ data.seq }}</td>
+                <td>{{ data.name }}</td>
+                <td>{{ data.correctValue }}</td>
+                <td>{{ data.maxValue }}</td>
+                <td>{{ data.minValue }}</td>
+                <td>{{ data.unitName }}</td>
+                <td>{{ data.measurementUnitName }}</td>
+                <td>{{ data.manHour }}</td>
+                <td>{{ data.remark }}</td>
+              </tr>
+              </tbody>
+            </nz-table>
+        </nz-tab>
+      </nz-tabset>
+    </nz-card>
+  </div>
+</div>

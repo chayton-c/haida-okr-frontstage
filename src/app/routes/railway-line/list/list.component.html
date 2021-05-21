@@ -1,0 +1,160 @@
+<page-header [title]="''"></page-header>
+<div nz-row>
+  <nz-card nz-col nzSpan="4" nzTitle="车站列表">
+    <nz-table #expandTable [nzData]="lineNodePojos" [nzLoading]="railwayLineLoading" nzTableLayout="fixed" [nzFrontPagination]="false">
+      <tbody style="margin-left: 0">
+        <ng-container *ngFor="let data of expandTable.data">
+          <ng-container *ngFor="let item of mapOfExpandedData[data.id]">
+            <tr *ngIf="(item.parent && item.parent.expand) || !item.parent">
+              <td
+                [nzIndentSize]="item.level! * 20"
+                [nzShowExpand]="item.level == 0"
+                [(nzExpand)]="item.expand"
+                (nzExpandChange)="collapse(mapOfExpandedData[data.id], item, $event)"
+                (click)="clickLineNodePojo(item)"
+              >
+                <span [style]="item.id == checkedLineNodePojo.id ? 'color:#1890ff;cursor:pointer' : 'cursor:pointer'">{{ item.name }}</span>
+              </td>
+            </tr>
+          </ng-container>
+        </ng-container>
+      </tbody>
+    </nz-table>
+  </nz-card>
+
+  <div nz-col nzSpan="20">
+    <nz-card>
+      <nz-tabset>
+        <nz-tab [nzTitle]="checkedLineNodePojo == null || checkedLineNodePojo.level == 0 ? '线路信息' : '车站信息'">
+          <form nz-form [nzLayout]="'inline'" class="search__form">
+            <div nz-row [nzGutter]="48" style="width: 70%">
+              <div nz-col nzSpan="12">
+                <nz-form-item nz-row>
+                  <nz-form-label nz-col nzSpan="8">
+                    {{ checkedLineNodePojo == null || checkedLineNodePojo.level == 0 ? '线路信息' : '车站信息' }}
+                  </nz-form-label>
+                  <nz-form-control nz-col nzSpan="16">
+                    <input nz-input readonly [value]="checkedLineNodePojo == null ? '' : checkedLineNodePojo.name" />
+                  </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item nz-row *ngIf="!(checkedLineNodePojo == null || checkedLineNodePojo.level == 0)">
+                  <nz-form-label nz-col nzSpan="8"> 车站编码 </nz-form-label>
+                  <nz-form-control nz-col nzSpan="16">
+                    <input nz-input readonly [value]="checkedLineNodePojo == null ? '' : checkedLineNodePojo.code" />
+                  </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row *ngIf="!(checkedLineNodePojo == null || checkedLineNodePojo.level == 0)">
+                  <nz-form-label nz-col nzSpan="8">
+                    <span style="margin-left: 15px">公里标</span>
+                  </nz-form-label>
+                  <nz-form-control nz-col nzSpan="16">
+                    <input nz-input readonly [value]="checkedLineNodePojo == null ? '' : checkedLineNodePojo.kilometerMarkText" />
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+              <div nz-col nzSpan="12">
+                <nz-form-item>
+                  <nz-form-control>
+                    <div *ngIf="checkedLineNodePojo != null && checkedLineNodePojo.level == 0">
+                      <button nz-button (click)="formAddPage()" [nzType]="'primary'">新增线路</button>
+                      <button nz-button (click)="formUpdatePage()">修改</button>
+                      <button
+                        nz-popconfirm
+                        nzPopconfirmTitle="确定要删除选中的线路吗?"
+                        (nzOnConfirm)="deleteRailwayLine()"
+                        nzPopconfirmPlacement="topLeft"
+                        nz-button
+                      >
+                        删除
+                      </button>
+                    </div>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div>
+          </form>
+
+          <nz-divider style="margin-top: 0"></nz-divider>
+          <div *ngIf="checkedLineNodePojo != null && checkedLineNodePojo.level == 0">
+            <form
+              nz-form
+              [nzLayout]="'inline'"
+              (ngSubmit)="loadStationFromServer(stationPageIndex, stationPageSize, stationFormParams)"
+              class="search__form"
+            >
+              <div nz-row [nzGutter]="{ xs: 8, sm: 8, md: 8, lg: 24, xl: 48, xxl: 48 }" style="width: 100%">
+                <div nz-col nzMd="12" nzSm="24">
+                  <nz-form-item>
+                    <nz-form-label>车站名称</nz-form-label>
+                    <nz-form-control>
+                      <input nz-input [(ngModel)]="stationFormParams.name" name="name" placeholder="请输入车站名称" />
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+                <div nz-col nzSpan="12">
+                  <nz-form-item>
+                    <nz-form-control>
+                      <button nz-button type="submit" [nzType]="'primary'" [nzLoading]="stationLoading">查询</button>
+                      <button nz-button type="button" (click)="stationAddPage()">新增</button>
+                      <button
+                        nz-popconfirm
+                        nzPopconfirmTitle="确定要删除选中的车站吗?"
+                        (nzOnConfirm)="deleteStations()"
+                        nzPopconfirmPlacement="topLeft"
+                        nz-button
+                      >
+                        删除
+                      </button>
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+              </div>
+            </form>
+            <nz-table
+              nzShowSizeChanger
+              [nzData]="stations"
+              [nzFrontPagination]="false"
+              [nzLoading]="stationLoading"
+              [nzPageSizeOptions]="[5, 10, 20, 50]"
+              [nzTotal]="stationTotal"
+              [nzPageSize]="stationPageSize"
+              [nzPageIndex]="stationPageIndex"
+              nzSize="small"
+              (nzQueryParams)="stationOnQueryParamsChange($event)"
+            >
+              <thead>
+                <tr>
+                  <th
+                    [nzChecked]="stationChecked"
+                    [nzIndeterminate]="stationIndeterminate"
+                    (nzCheckedChange)="stationOnAllChecked($event)"
+                  ></th>
+                  <th>名称</th>
+                  <th>编码</th>
+                  <th>排序</th>
+                  <!--                  <th>责任车间</th>-->
+                  <!--                  <th>责任班组</th>-->
+                </tr>
+              </thead>
+              <!--              <tbody cdkDropList (cdkDropListDropped)="dropStations($event)">-->
+              <tbody>
+                <!--                <tr *ngFor="let data of stations" cdkDrag (click)="stationOnItemChecked(data.id, !stationCheckedId.has(data.id))">-->
+                <tr *ngFor="let data of stations" (click)="stationOnItemChecked(data.id, !stationCheckedId.has(data.id))">
+                  <td [nzChecked]="stationCheckedId.has(data.id)" (nzCheckedChange)="stationOnItemChecked(data.id, $event)"></td>
+                  <td>{{ data.name }}</td>
+                  <td>{{ data.code }}</td>
+                  <td>
+                    <input nz-input [(ngModel)]="data.seq" (ngModelChange)="updateStationSeq(data.id, checkedLineNodePojo.id, data.seq)" />
+                  </td>
+                  <!--                  <td>{{ data.workshopName }}</td>-->
+                  <!--                  <td>{{ data.workAreaName }}</td>-->
+                </tr>
+              </tbody>
+            </nz-table>
+          </div>
+        </nz-tab>
+      </nz-tabset>
+    </nz-card>
+  </div>
+</div>

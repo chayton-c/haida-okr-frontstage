@@ -1,0 +1,21 @@
+<page-header [breadcrumb]="breadcrumb" [title]="'权限配置'"></page-header>
+<ng-template #breadcrumb>
+  <nz-breadcrumb>
+    <nz-breadcrumb-item>
+      <a [routerLink]="['/']">home</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      <a [routerLink]="['/role/list']">岗位信息</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>权限配置</nz-breadcrumb-item>
+  </nz-breadcrumb>
+</ng-template>
+
+<nz-card [nzBordered]="false">
+  <nz-steps [(nzCurrent)]="item.step">
+    <nz-step nzTitle="基础信息"></nz-step>
+    <nz-step nzTitle="字段配置"></nz-step>
+  </nz-steps>
+  <app-step1 *ngIf="item.step == 0"></app-step1>
+  <app-step2 *ngIf="item.step == 1"></app-step2>
+</nz-card>

@@ -1,0 +1,24 @@
+<page-header [breadcrumb]="breadcrumb"></page-header>
+<ng-template #breadcrumb>
+  <nz-breadcrumb>
+    <nz-breadcrumb-item>
+      <a [routerLink]="['/']">首页</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      <a [routerLink]="[parentUrl]">{{ parentName }}</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>配合方案预览</nz-breadcrumb-item>
+  </nz-breadcrumb>
+</ng-template>
+<div nz-row>
+  <nz-card nz-col nzSpan="24">
+    <construction-control-plan-preview-info [constructionControlPlanId]="this.constructionControlPlanId">
+    </construction-control-plan-preview-info>
+  </nz-card>
+  <nz-card nz-col nzSpan="24" style="z-index: 1">
+    <construction-control-plan-preview [constructionControlPlanId]="this.constructionControlPlanId"> </construction-control-plan-preview>
+  </nz-card>
+</div>
+<footer-toolbar>
+  <button nz-button nzType="primary" (click)="backToParentUrl()">确定</button>
+</footer-toolbar>

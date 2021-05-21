@@ -1,0 +1,11 @@
+<div
+  id="map"
+  leaflet
+  [leafletOptions]="mapOptions"
+  [(leafletZoom)]="zoom"
+  [(leafletCenter)]="center"
+  (leafletMapReady)="onMapReady($event)"
+>
+  <div [leafletLayers]="baseLayers"></div>
+  <div [leafletLayers]="overlays"></div>
+</div>

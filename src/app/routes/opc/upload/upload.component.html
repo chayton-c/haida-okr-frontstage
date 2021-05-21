@@ -1,0 +1,92 @@
+<page-header [breadcrumb]="breadcrumb" [title]="''"></page-header>
+<ng-template #breadcrumb>
+  <nz-breadcrumb>
+    <nz-breadcrumb-item>
+      <a [routerLink]="['/']">首页</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>径路总览</nz-breadcrumb-item>
+  </nz-breadcrumb>
+</ng-template>
+
+<div nz-row>
+  <nz-card style="height: 800px; margin-bottom: 0" nz-col [nzSpan]="12" nzTitle="径路测绘情况统计" [nzExtra]="leftForm">
+    <ng-template #leftForm>
+      <organization-casecade [(values)]="organizationValues" (valuesChange)="updateOrganizationValues($event)"></organization-casecade>
+    </ng-template>
+
+    <!-- 左上 -->
+    <nz-table [nzData]="listOfData" [nzShowPagination]="false" nzBordered nzSize="small">
+      <thead>
+        <tr>
+          <th rowspan="2">统计项</th>
+          <th rowspan="2">应测数量</th>
+          <th rowspan="2">单位</th>
+          <th colspan="5">已完成测绘</th>
+        </tr>
+        <tr>
+          <th>测绘项</th>
+          <th>里程/km</th>
+          <th>区间或车站数量/个</th>
+          <th>完成比例</th>
+          <th>上传数据</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>管辖线路里程</td>
+          <td>-</td>
+          <td>km</td>
+          <td>线路径路</td>
+          <td>
+            {{ railwayLineMileage }}
+          </td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+        </tr>
+        <tr>
+          <td rowspan="2">管辖区间</td>
+          <td rowspan="2">-</td>
+          <td rowspan="2">个</td>
+          <td>区间光电缆径路</td>
+          <td>
+            {{ opcMileage }}
+          </td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+        </tr>
+        <tr>
+          <td>区间护栏径路</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+        </tr>
+        <tr>
+          <td>管辖车站</td>
+          <td>-</td>
+          <td>个</td>
+          <td>站内光电缆径路</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+        </tr>
+      </tbody>
+    </nz-table>
+
+    <nz-divider></nz-divider>
+    <!-- 左下 -->
+    <img style="width: 100%; height: 350px" src="/assets/tmp/img/screen-base.png" />
+  </nz-card>
+
+  <!-- 右 -->
+  <nz-card style="height: 800px; margin-bottom: 0" nz-col [nzSpan]="12" nzTitle="测绘径路阅览" [nzExtra]="rightForm">
+    <ng-template #rightForm>
+      <line-station-casecade [(values)]="lineStationValues" (valuesChange)="updatelineStationValues($event)"></line-station-casecade>
+    </ng-template>
+
+    <construction-control-plan-preview [(stationId)]="stationId" #constructionControlPlanPreview> </construction-control-plan-preview>
+  </nz-card>
+</div>

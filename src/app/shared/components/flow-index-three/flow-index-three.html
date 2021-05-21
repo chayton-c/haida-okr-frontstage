@@ -1,0 +1,146 @@
+<!--数据展示区-->
+<div nz-row>
+  <div nz-col nzSpan="7">
+    <nz-card nzTitle="径路测绘情况总览" class="card-box">
+      <div class="card-table-div">
+        <nz-form-label style="width: 10%">车间</nz-form-label>
+        <nz-select style="width: 180px" name="workshopId" nzPlaceHolder="所有" [(ngModel)]="formParams.workshopId">
+          <div>
+            <nz-option [nzValue]="" nzLabel="所有"></nz-option>
+          </div>
+          <div *ngFor="let data of workshops">
+            <nz-option [nzValue]="data.id" nzLabel="{{ data.name }}"></nz-option>
+          </div>
+        </nz-select>
+      </div>
+      <table>
+        <tr>
+          <td width="10%">1</td>
+          <td class="card-table-td"><nz-form-label>&nbsp;管辖总里程</nz-form-label></td>
+          <td width="20%">20</td>
+          <td width="12%">km</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td class="card-table-td"><nz-form-label>&nbsp;管辖车站数</nz-form-label></td>
+          <td>5</td>
+          <td>个</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td class="card-table-td"><nz-form-label>&nbsp;已测绘线路里程</nz-form-label></td>
+          <td>5.6</td>
+          <td>km</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td class="card-table-td"><nz-form-label>&nbsp;已测绘区间光电缆径路</nz-form-label></td>
+          <td>3.6</td>
+          <td>km</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td class="card-table-td"><nz-form-label>&nbsp;已测绘站内光电缆径路</nz-form-label></td>
+          <td>0</td>
+          <td>个</td>
+        </tr>
+      </table>
+    </nz-card>
+  </div>
+  <div nz-col nzSpan="10" style="padding-left: 22px">
+    <div nz-space class="space-align-block" style="text-align: center">
+      <nz-space-item>
+        <nz-card nzTitle="待关联方案 {{ countByConstructionStep(todayListConstant.STEP1) }} 个" class="space-item-card">
+          <p>
+            <img class="space-item-card-img" src="/assets/opcimg/opc-index-imgs/u240.png" />
+            1类： {{ countByWarnStatusAndConstructionStep(todayListConstant.LEVEL1, todayListConstant.STEP1) }} 个
+          </p>
+          <p>
+            <img class="space-item-card-img" src="/assets/opcimg/opc-index-imgs/u243.png" />
+            2类： {{ countByWarnStatusAndConstructionStep(todayListConstant.LEVEL2, todayListConstant.STEP1) }} 个
+          </p>
+          <p>
+            <img class="space-item-card-img" src="/assets/opcimg/opc-index-imgs/u252.png" />
+            3类： {{ countByWarnStatusAndConstructionStep(todayListConstant.LEVEL3, todayListConstant.STEP1) }} 个
+          </p>
+          <p>
+            <img class="space-item-card-img" src="/assets/opcimg/opc-index-imgs/u246.png" />
+            4类： {{ countByWarnStatusAndConstructionStep(todayListConstant.LEVEL4, todayListConstant.STEP1) }} 个
+          </p>
+          <p>
+            <img class="space-item-card-img" src="/assets/opcimg/opc-index-imgs/u249.png" />
+            5类： {{ countByWarnStatusAndConstructionStep(todayListConstant.LEVEL5, todayListConstant.STEP1) }} 个
+          </p>
+        </nz-card>
+      </nz-space-item>
+      <nz-space-item>
+        <nz-card nzTitle="未开始方案 {{ countByConstructionStep(todayListConstant.STEP2) }} 个" class="space-item-card">
+          <p>
+            <img class="space-item-card-img" src="/assets/opcimg/opc-index-imgs/notStarted1.png" />
+            1类： {{ countByWarnStatusAndConstructionStep(todayListConstant.LEVEL1, todayListConstant.STEP2) }} 个
+          </p>
+          <p>
+            <img class="space-item-card-img" src="/assets/opcimg/opc-index-imgs/notStarted2.png" />
+            2类： {{ countByWarnStatusAndConstructionStep(todayListConstant.LEVEL2, todayListConstant.STEP2) }} 个
+          </p>
+          <p>
+            <img class="space-item-card-img" src="/assets/opcimg/opc-index-imgs/notStarted3.png" />
+            3类： {{ countByWarnStatusAndConstructionStep(todayListConstant.LEVEL3, todayListConstant.STEP2) }} 个
+          </p>
+          <p>
+            <img class="space-item-card-img" src="/assets/opcimg/opc-index-imgs/notStarted4.png" />
+            4类： {{ countByWarnStatusAndConstructionStep(todayListConstant.LEVEL4, todayListConstant.STEP2) }} 个
+          </p>
+          <p>
+            <img class="space-item-card-img" src="/assets/opcimg/opc-index-imgs/notStarted5.png" />
+            5类： {{ countByWarnStatusAndConstructionStep(todayListConstant.LEVEL5, todayListConstant.STEP2) }} 个
+          </p>
+        </nz-card>
+      </nz-space-item>
+      <nz-space-item>
+        <nz-card nzTitle="已开始方案 {{ countByConstructionStep(todayListConstant.STEP3) }} 个" class="space-item-card">
+          <p>
+            <img class="space-item-card-img" src="/assets/opcimg/opc-index-imgs/u258.png" />
+            1类： {{ countByWarnStatusAndConstructionStep(todayListConstant.LEVEL1, todayListConstant.STEP3) }} 个
+          </p>
+          <p>
+            <img class="space-item-card-img" src="/assets/opcimg/opc-index-imgs/u261.png" />
+            2类： {{ countByWarnStatusAndConstructionStep(todayListConstant.LEVEL2, todayListConstant.STEP3) }} 个
+          </p>
+          <p>
+            <img class="space-item-card-img" src="/assets/opcimg/opc-index-imgs/u264.png" />
+            3类： {{ countByWarnStatusAndConstructionStep(todayListConstant.LEVEL3, todayListConstant.STEP3) }} 个
+          </p>
+          <p>
+            <img class="space-item-card-img" src="/assets/opcimg/opc-index-imgs/u267.png" />
+            4类： {{ countByWarnStatusAndConstructionStep(todayListConstant.LEVEL4, todayListConstant.STEP3) }} 个
+          </p>
+          <p>
+            <img class="space-item-card-img" src="/assets/opcimg/opc-index-imgs/u270.png" />
+            5类： {{ countByWarnStatusAndConstructionStep(todayListConstant.LEVEL5, todayListConstant.STEP3) }} 个
+          </p>
+        </nz-card>
+      </nz-space-item>
+    </div>
+  </div>
+  <div nz-col nzSpan="7">
+    <nz-card nzTitle="最新动态" class="card-box">
+      <div class="card-dynamic-information">
+        <!--    *ngFor="let data of constructControlPlans"    -->
+        <p>01-10 12:30 施工项目名施工项目名（2101101230）开始启动</p>
+        <p>01-10 12:30 施工项目名施工项目名（2101101230）通过审核</p>
+        <p>01-10 12:30 施工项目名施工项目名（2101101230）通过批准</p>
+        <p>01-10 12:30 施工项目名施工项目名（2101101230）已经关联正式计划</p>
+      </div>
+    </nz-card>
+  </div>
+</div>
+
+<!--流程图-->
+<div nz-row>
+  <div nz-col nzSpan="24" class="bottom-one-div">系统功能总览</div>
+</div>
+<div nz-row>
+  <div nz-col nzSpan="24" class="bottom-two-div"><img src="/assets/opcimg/index-flow.png" /></div>
+</div>
+<div style="padding-bottom: 56px"></div>

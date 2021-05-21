@@ -1,0 +1,9 @@
+<nz-cascader
+  style="width: 200px"
+  nzPlaceHolder="选择车站或线路"
+  nzChangeOnSelect
+  [nzOptions]="lineStationCasecaderOption"
+  [(ngModel)]="values"
+  (ngModelChange)="onChanges($event)"
+>
+</nz-cascader>

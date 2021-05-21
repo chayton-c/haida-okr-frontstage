@@ -1,0 +1,210 @@
+<nz-card>
+  <div nz-row style="margin-top: -10px; margin-bottom: 5px">
+    <div nz-col nzSpan="2.5" style="text-align: right">
+      <h3 style="color: #707070">
+        <img src="/assets/opcimg/notify.png" style="width: 20px; height: 20px; margin-left: 42px; margin-top: -5px" />
+        方案信息{{ this.todayPlanTotal ? '(' + this.todayPlanTotal + ')' : '' }}：
+      </h3>
+    </div>
+    <div nz-col nzSpan="1"></div>
+    <div nz-col nzSpan="18">
+      <nz-carousel nzAutoPlay [nzDots]="'false'" class="top-roll-content" [nzAutoPlaySpeed]="100" [nzTransitionSpeed]="30000">
+        <div nz-carousel-content *ngFor="let data of rawControlPlanOrDailyPlans">
+          <h3>
+            <span ngSwitch="{{ data.planType }}">
+              <span *ngSwitchCase="todayListConstant.DAILY">日计划：</span>
+              <span *ngSwitchCase="todayListConstant.CONTROL">方案：</span>
+              <span *ngSwitchDefault></span>
+            </span>
+            {{ data.constructionProjectInfo ? data.constructionProjectInfo + '，' : '' }}
+            <span style="color: red">{{ data.startStationName ? data.startStationName + '&nbsp;至&nbsp;' : '' }}</span>
+            <span style="color: red">{{ data.endStationName ? data.endStationName + '，' : '' }}</span>
+            {{ (data.startKilometer | kilometerPipe) ? (data.startKilometer | kilometerPipe) + '&nbsp;至' : '' }}
+            {{ (data.endKilometer | kilometerPipe) ? (data.endKilometer | kilometerPipe) + '，' : '' }}
+            {{ (data.startTime | date: 'yyyy-MM-dd HH:mm') ? (data.startTime | date: 'yyyy-MM-dd HH:mm') + '&nbsp;至' : '' }}
+            {{ (data.endTime | date: 'yyyy-MM-dd HH:mm') ? (data.endTime | date: 'yyyy-MM-dd HH:mm') : '' }}
+          </h3>
+        </div>
+      </nz-carousel>
+    </div>
+    <div nz-col nzSpan="2.5"></div>
+  </div>
+  <div nz-row>
+    <div nz-col nzSpan="22">
+      <div style="width: 100%; height: 796px; background: url(/assets/opcimg/map-imgs/basemap.png) no-repeat; background-size: 100% 100%">
+        <!-- 哈尔滨东站，stationId：093bba30-0461-4890-8253-acabe351cf68 -->
+        <div>
+          <a
+            style="position: absolute; top: {{ harbindongtop }}; left: {{ harbindongleft }}; width: 3%; height: 3.8%"
+            (click)="showPlanTodayListModal('093bba30-0461-4890-8253-acabe351cf68')"
+          >
+            <img [src]="getUrlByStationId('093bba30-0461-4890-8253-acabe351cf68')" />
+
+            <img src="/assets/opcimg/status-imgs/0-1.png" />
+          </a>
+        </div>
+
+        <!-- 东门站，stationId：4f3ba4bb-8646-4c72-bddf-acd76dec338e -->
+        <div>
+          <a
+            style="position: absolute; top: {{ dongmentop }}; left: {{ dongmenleft }}; width: 2%; height: 3.3%"
+            (click)="showPlanTodayListModal('4f3ba4bb-8646-4c72-bddf-acd76dec338es')"
+          >
+            <img [src]="getUrlByStationId('4f3ba4bb-8646-4c72-bddf-acd76dec338es')" />
+          </a>
+        </div>
+
+        <!-- 新香坊站，stationId：547e8a8e-d79d-4780-ba5d-a39802d1093b -->
+        <div>
+          <a
+            style="position: absolute; top: {{ xinxiangfangtop }}; left: {{ xinxiangfangleft }}; width: 3%; height: 3.8%"
+            (click)="showPlanTodayListModal('547e8a8e-d79d-4780-ba5d-a39802d1093b')"
+          >
+            <img [src]="getUrlByStationId('547e8a8e-d79d-4780-ba5d-a39802d1093b')" />
+          </a>
+        </div>
+
+        <!-- 成高子站，stationId：6b964ea1-29eb-45bd-970f-525d3df415e7 -->
+        <div>
+          <a
+            style="position: absolute; top: {{ chenggaozitop }}; left: {{ chenggaozileft }}; width: 3%; height: 3.8%"
+            (click)="showPlanTodayListModal('6b964ea1-29eb-45bd-970f-525d3df415e7')"
+          >
+            <img [src]="getUrlByStationId('6b964ea1-29eb-45bd-970f-525d3df415e7')" />
+          </a>
+        </div>
+
+        <!-- 阿城站，stationId：45fe10b7-5959-4f69-b0f2-039ed5a6118d -->
+        <div>
+          <a
+            style="position: absolute; top: {{ achengtop }}; left: {{ achengleft }}; width: 2%; height: 3.3%"
+            (click)="showPlanTodayListModal('4f3ba4bb-8646-4c72-bddf-acd76dec338es')"
+          >
+            <img [src]="getUrlByStationId('4f3ba4bb-8646-4c72-bddf-acd76dec338es')" />
+          </a>
+        </div>
+
+        <!-- 亚沟站，stationId：4361cb7d-d692-4eb3-872c-1c0cc463d046 -->
+        <div>
+          <a
+            style="position: absolute; top: {{ yagoutop }}; left: {{ yagouleft }}; width: 2%; height: 3.3%"
+            (click)="showPlanTodayListModal('4361cb7d-d692-4eb3-872c-1c0cc463d046')"
+          >
+            <img [src]="getUrlByStationId('4361cb7d-d692-4eb3-872c-1c0cc463d046')" />
+          </a>
+        </div>
+      </div>
+    </div>
+    <div nz-col nzSpan="2">
+      <nz-space nzDirection="vertical" class="nz-space-box">
+        <nz-space-item>
+          <nz-card nzTitle="待关联 {{ countByConstructionStep(todayListConstant.STEP1) }} 个" class="space-item-card">
+            <p>
+              <img class="space-item-card-img" src="/assets/opcimg/opc-index-imgs/u240.png" />
+              1类： {{ countByWarnStatusAndConstructionStep(todayListConstant.LEVEL1, todayListConstant.STEP1) }} 个
+            </p>
+            <p>
+              <img class="space-item-card-img" src="/assets/opcimg/opc-index-imgs/u243.png" />
+              2类： {{ countByWarnStatusAndConstructionStep(todayListConstant.LEVEL2, todayListConstant.STEP1) }} 个
+            </p>
+            <p>
+              <img class="space-item-card-img" src="/assets/opcimg/opc-index-imgs/u252.png" />
+              3类： {{ countByWarnStatusAndConstructionStep(todayListConstant.LEVEL3, todayListConstant.STEP1) }} 个
+            </p>
+            <p>
+              <img class="space-item-card-img" src="/assets/opcimg/opc-index-imgs/u246.png" />
+              4类： {{ countByWarnStatusAndConstructionStep(todayListConstant.LEVEL4, todayListConstant.STEP1) }} 个
+            </p>
+            <p>
+              <img class="space-item-card-img" src="/assets/opcimg/opc-index-imgs/u249.png" />
+              5类： {{ countByWarnStatusAndConstructionStep(todayListConstant.LEVEL5, todayListConstant.STEP1) }} 个
+            </p>
+          </nz-card>
+        </nz-space-item>
+        <nz-space-item>
+          <nz-card nzTitle="未开始 {{ countByConstructionStep(todayListConstant.STEP2) }} 个" class="space-item-card">
+            <p>
+              <img class="space-item-card-img" src="/assets/opcimg/opc-index-imgs/notStarted1.png" />
+              1类： {{ countByWarnStatusAndConstructionStep(todayListConstant.LEVEL1, todayListConstant.STEP2) }} 个
+            </p>
+            <p>
+              <img class="space-item-card-img" src="/assets/opcimg/opc-index-imgs/notStarted2.png" />
+              2类： {{ countByWarnStatusAndConstructionStep(todayListConstant.LEVEL2, todayListConstant.STEP2) }} 个
+            </p>
+            <p>
+              <img class="space-item-card-img" src="/assets/opcimg/opc-index-imgs/notStarted3.png" />
+              3类： {{ countByWarnStatusAndConstructionStep(todayListConstant.LEVEL3, todayListConstant.STEP2) }} 个
+            </p>
+            <p>
+              <img class="space-item-card-img" src="/assets/opcimg/opc-index-imgs/notStarted4.png" />
+              4类： {{ countByWarnStatusAndConstructionStep(todayListConstant.LEVEL4, todayListConstant.STEP2) }} 个
+            </p>
+            <p>
+              <img class="space-item-card-img" src="/assets/opcimg/opc-index-imgs/notStarted5.png" />
+              5类： {{ countByWarnStatusAndConstructionStep(todayListConstant.LEVEL5, todayListConstant.STEP2) }} 个
+            </p>
+          </nz-card>
+        </nz-space-item>
+        <nz-space-item>
+          <nz-card nzTitle="已开始 {{ countByConstructionStep(todayListConstant.STEP3) }} 个" class="space-item-card">
+            <p>
+              <img class="space-item-card-img" src="/assets/opcimg/opc-index-imgs/u258.png" />
+              1类： {{ countByWarnStatusAndConstructionStep(todayListConstant.LEVEL1, todayListConstant.STEP3) }} 个
+            </p>
+            <p>
+              <img class="space-item-card-img" src="/assets/opcimg/opc-index-imgs/u261.png" />
+              2类： {{ countByWarnStatusAndConstructionStep(todayListConstant.LEVEL2, todayListConstant.STEP3) }} 个
+            </p>
+            <p>
+              <img class="space-item-card-img" src="/assets/opcimg/opc-index-imgs/u264.png" />
+              3类： {{ countByWarnStatusAndConstructionStep(todayListConstant.LEVEL3, todayListConstant.STEP3) }} 个
+            </p>
+            <p>
+              <img class="space-item-card-img" src="/assets/opcimg/opc-index-imgs/u267.png" />
+              4类： {{ countByWarnStatusAndConstructionStep(todayListConstant.LEVEL4, todayListConstant.STEP3) }} 个
+            </p>
+            <p>
+              <img class="space-item-card-img" src="/assets/opcimg/opc-index-imgs/u270.png" />
+              5类： {{ countByWarnStatusAndConstructionStep(todayListConstant.LEVEL5, todayListConstant.STEP3) }} 个
+            </p>
+          </nz-card>
+        </nz-space-item>
+      </nz-space>
+    </div>
+  </div>
+
+  <!--预警信息-->
+  <div nz-row style="margin-top: -10px; margin-bottom: 5px">
+    <div nz-col nzSpan="2.5" style="text-align: right">
+      <h3 style="color: #707070; cursor: pointer" (click)="goToWarningInfoList()">
+        <img src="/assets/opcimg/opc-index-imgs/warning.svg" style="width: 20px; height: 20px; margin-left: 42px" alt="" />
+        预警信息{{ this.warningInfoTotal ? '(' + this.warningInfoTotal + ')' : '(0)' }}：
+      </h3>
+    </div>
+    <div nz-col nzSpan="1"></div>
+    <div nz-col nzSpan="18">
+      <nz-carousel nzAutoPlay class="top-roll-content" [nzDots]="false" [nzAutoPlaySpeed]="100" [nzTransitionSpeed]="30000">
+        <div nz-carousel-content *ngFor="let data of warningInfos">
+          <h3 style="color: red; cursor: pointer" (click)="goToWarningInfoList()">
+            施工项目{{ data.constructionControlPlanProjectInfo ? data.constructionControlPlanProjectInfo : '' }} 产生预警信息：{{
+              data.warnInfo
+            }}
+          </h3>
+        </div>
+      </nz-carousel>
+    </div>
+    <div nz-col nzSpan="2.5"></div>
+  </div>
+</nz-card>
+
+<nz-modal
+  [nzWidth]="1400"
+  nzTitle="计划预览"
+  [(nzVisible)]="showPlanTodayList"
+  [nzContent]="planTodayListContent"
+  (nzOnCancel)="this.showPlanTodayList = false"
+>
+  <ng-template #planTodayListContent>
+    <construction-daily-plan-today-list (closeAndRefresh)="closeAndRefresh()" [stationId]="stationId"></construction-daily-plan-today-list>
+  </ng-template>
+</nz-modal>

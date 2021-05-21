@@ -1,0 +1,134 @@
+<page-header [title]="''"></page-header>
+
+<nz-card>
+  <form nz-form [nzLayout]="'inline'" class="search__form">
+    <div nz-row [nzGutter]="12" style="width: 100%">
+      <div nz-col [nzSpan]="1.5">
+        <nz-form-item>
+          <nz-form-control>
+            <nz-upload [(nzFileList)]="excels" [nzBeforeUpload]="beforeUpload">
+              <button nz-button>导入计划</button>
+            </nz-upload>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="1.5">
+        <nz-form-item>
+          <nz-form-control>
+            <button nz-button>
+              <a target="_blank" rel="noopener noreferrer" href="/api/uploadimg/templates/正式计划模板.xlsx">下载模板</a>
+            </button>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="4">
+        <nz-form-item>
+          <nz-form-label>编码</nz-form-label>
+          <nz-form-control>
+            <input nz-input [(ngModel)]="formParams.planCode" name="planCode" placeholder="请输入编码" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="3">
+        <nz-form-item>
+          <nz-form-label>关联状态</nz-form-label>
+          <nz-form-control>
+            <nz-select [(ngModel)]="formParams.relevanceStatus" name="relevanceStatus" nzAllowClear>
+              <nz-option nzLabel="待关联" [nzValue]="constructionFormalPlanConstant.PENDING_RELEVANCING"></nz-option>
+              <nz-option nzLabel="已关联" [nzValue]="constructionFormalPlanConstant.RELEVANCED"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="1">
+        <nz-form-item>
+          <nz-form-control>
+            <button nz-button (click)="loadDataFromServer()" type="submit" [nzType]="'primary'" [nzLoading]="loading">查询</button>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="2">
+        <nz-form-item>
+          <nz-form-control>
+            <button
+              nz-popconfirm
+              nzPopconfirmTitle="确定要删除选中的计划吗?"
+              (nzOnConfirm)="delete()"
+              nzPopconfirmPlacement="topLeft"
+              nz-button
+            >
+              删除
+            </button>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+  </form>
+  <nz-table
+    nzShowSizeChanger
+    [nzScroll]="{ x: '150vw', y: pageSize > 5 ? '600px' : '' }"
+    [nzData]="constructionFormalPlans"
+    [nzFrontPagination]="false"
+    [nzPageSizeOptions]="[5, 10, 20, 50]"
+    [nzLoading]="loading"
+    [nzTotal]="total"
+    [nzPageSize]="pageSize"
+    [nzPageIndex]="pageIndex"
+    nzSize="small"
+    [nzBordered]="true"
+    (nzQueryParams)="onQueryParamsChange($event)"
+  >
+    <thead>
+      <tr nzTabScrollList>
+        <th nzWidth="1%" [nzChecked]="checked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="onAllChecked($event)"></th>
+        <th nzWidth="3%">编号</th>
+        <th nzWidth="2%">类别</th>
+        <th nzWidth="2%">线别</th>
+        <th nzWidth="2%">行别</th>
+        <th nzWidth="2%">关联状态</th>
+        <th nzWidth="3%">关联方案</th>
+        <th nzWidth="3%">关联方案编号</th>
+        <th nzWidth="7%">施工项目</th>
+        <th nzWidth="4%">施工日期及时间</th>
+        <th nzWidth="4%">施工地点</th>
+        <th nzWidth="10%">施工内容</th>
+        <th nzWidth="5%">施工机械</th>
+        <th nzWidth="5%">建设单位</th>
+        <th nzWidth="7%">施工单位及负责人</th>
+        <th nzWidth="7%">监理单位及负责人</th>
+        <th nzWidth="8%">设备监护单位及负责人</th>
+        <th nzWidth="5%">审核处室（监控单位）</th>
+        <th nzWidth="2%">备注</th>
+        <th nzWidth="2%">星级</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of constructionFormalPlans" (click)="onItemChecked(data.id, !setOfCheckedId.has(data.id))">
+        <td [nzChecked]="setOfCheckedId.has(data.id)" (nzCheckedChange)="onItemChecked(data.id, $event)"></td>
+        <td>{{ data.planCode }}</td>
+        <td>{{ data.planType }}</td>
+        <td>{{ data.railwayLineName }}</td>
+        <td>{{ data.downriver }}</td>
+        <td [ngSwitch]="data.relevanceStatus">
+          <span *ngSwitchCase="constructionFormalPlanConstant.PENDING_RELEVANCING">待关联</span>
+          <span *ngSwitchCase="constructionFormalPlanConstant.RELEVANCED">已关联</span>
+          <span *ngSwitchDefault>-</span>
+        </td>
+        <td>{{ data.constructionProjectInfo ? data.constructionProjectInfo : '-' }}</td>
+        <td>{{ data.constructionControlPlanCode ? data.constructionControlPlanCode : '-' }}</td>
+        <td>{{ data.constructionProject ? data.constructionProject : '-' }}</td>
+        <td>{{ data.workTime }}</td>
+        <td>{{ data.constructionSite }}</td>
+        <td>{{ data.constructionContentAndInfluenceArea }}</td>
+        <td>{{ data.constructionMachinery }}</td>
+        <td>{{ data.constructDepartment }}</td>
+        <td>{{ data.constructionDepartmentAndPrincipalName }}</td>
+        <td>{{ data.supervisionDepartmentAndPrincipalName }}</td>
+        <td>{{ data.equipmentMonitoringDepartmentAndPrincipalName }}</td>
+        <td>{{ data.auditDepartment }}</td>
+        <td>{{ data.remarks }}</td>
+        <td>{{ data.starRating }}</td>
+      </tr>
+    </tbody>
+  </nz-table>
+</nz-card>

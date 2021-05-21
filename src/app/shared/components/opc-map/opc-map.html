@@ -1,0 +1,60 @@
+<form nz-form style="position: absolute;top: 4.4%;right: 2%;width: 60%"
+      [nzLayout]="'inline'" class="search__form" *ngIf="showSearchForm">
+  <div nz-row [nzGutter]="12" style="width: 100%">
+    <div nz-col [nzSpan]="6">
+      <nz-form-item>
+        <nz-form-label>光电缆</nz-form-label>
+        <nz-form-control>
+          <nz-select nzAllowClear [(ngModel)]="formParams.opcId" name="opcId">
+            <div *ngFor="let opc of selectOpcs">
+              <nz-option [nzValue]="opc.id" nzLabel="{{ opc.name }}"></nz-option>
+            </div>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col [nzSpan]="6">
+      <nz-form-item>
+        <nz-form-label>标识类型</nz-form-label>
+        <nz-form-control>
+          <nz-select nzShowSearch nzAllowClear [(ngModel)]="formParams.opcMarkTypeId" name="opcMarkTypeId">
+            <div *ngFor="let opcMarkType of opcMarkTypeMap.values()">
+              <nz-option [nzValue]="opcMarkType.id" nzLabel="{{ opcMarkType.name }}"></nz-option>
+            </div>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col [nzSpan]="6">
+      <nz-form-item>
+        <nz-form-label>标识名称</nz-form-label>
+        <nz-form-control>
+          <input nz-input [(ngModel)]="formParams.opcMarkName" name="displayName" placeholder="请输入标识名称"/>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col [nzSpan]="2">
+      <nz-form-item>
+        <nz-form-control>
+          <button nz-button [nzType]="'primary'" (click)="initOpc()" [nzLoading]="loading">查询</button>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col [nzSpan]="2" *ngIf="enableEditing">
+      <nz-form-item>
+        <nz-upload nzAction="api/backstage/opc/importOpc" [nzMultiple]="false">
+          <button nz-button>上传</button>
+        </nz-upload>
+      </nz-form-item>
+    </div>
+    <div nz-col [nzSpan]="2" *ngIf="enableEditing">
+      <nz-form-item>
+          <button (click)="updatePage()" nz-button>编辑</button>
+      </nz-form-item>
+    </div>
+  </div>
+</form>
+<nz-card *ngIf="!hasData">
+  <div class="no-data"><i nz-icon nzType="frown"></i>暂无数据，请在上传光电缆信息后再试</div>
+</nz-card>
+<div *ngIf="hasData" id="map" style="width:100%;max-width: none;height: 670px"></div>

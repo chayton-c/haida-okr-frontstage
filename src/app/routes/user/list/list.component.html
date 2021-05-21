@@ -1,0 +1,91 @@
+<page-header [title]="'用户列表'"></page-header>
+
+<nz-card>
+  <form nz-form [nzLayout]="'inline'" (ngSubmit)="loadDataFromServer()" class="search__form">
+    <div nz-row [nzGutter]="12" style="width: 50%">
+      <div nz-col [nzSpan]="8">
+        <nz-form-item>
+          <nz-form-label>用户名</nz-form-label>
+          <nz-form-control>
+            <input nz-input [(ngModel)]="formParams.displayName" name="displayName" placeholder="请输入用户名" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="8">
+        <nz-form-item>
+          <nz-form-label>岗位名称</nz-form-label>
+          <nz-form-control>
+            <input nz-input [(ngModel)]="formParams.roleName" name="roleName" placeholder="请输入岗位名" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="2">
+          <nz-form-item>
+            <nz-form-control>
+              <button nz-button type="submit" [nzType]="'primary'" [nzLoading]="loading">查询</button>
+            </nz-form-control>
+          </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="2">
+        <nz-form-item>
+          <nz-form-control>
+            <button
+              nz-popconfirm
+              nzPopconfirmTitle="确定要删除选中的用户吗?"
+              (nzOnConfirm)="deleteUser()"
+              nzPopconfirmPlacement="topLeft"
+              nz-button
+            >
+              删除
+            </button>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+  </form>
+  <div class="my-md">
+    <nz-alert [nzType]="'info'" [nzShowIcon]="true" [nzMessage]="message">
+      <ng-template #message>
+        共<strong class="text-primary">{{ total }}</strong
+        >条记录
+      </ng-template>
+    </nz-alert>
+  </div>
+  <nz-table
+    nzShowSizeChanger
+    [nzData]="users"
+    [nzFrontPagination]="false"
+    [nzPageSizeOptions]="[5, 10, 20, 50]"
+    [nzLoading]="loading"
+    [nzTotal]="total"
+    [nzPageSize]="pageSize"
+    [nzPageIndex]="pageIndex"
+    nzSize="default"
+    (nzQueryParams)="onQueryParamsChange($event)"
+  >
+    <thead>
+      <tr>
+        <th [nzChecked]="checked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="onAllChecked($event)"></th>
+        <th>登录账号</th>
+        <th>用户名</th>
+        <th>一级部门</th>
+        <th>二级部门</th>
+        <th>三级部门</th>
+        <th>四级部门</th>
+        <th>岗位</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of users" (click)="onItemChecked(data.id, !setOfCheckedId.has(data.id))">
+        <td [nzChecked]="setOfCheckedId.has(data.id)" (nzCheckedChange)="onItemChecked(data.id, $event)"></td>
+        <td>{{ data.userName }}</td>
+        <td>{{ data.displayName }}</td>
+        <td>{{ data.bureauName }}</td>
+        <td>{{ data.sectionName }}</td>
+        <td>{{ data.workshopName }}</td>
+        <td>{{ data.workAreaName }}</td>
+        <td>{{ data.roleName }}</td>
+      </tr>
+    </tbody>
+  </nz-table>
+</nz-card>

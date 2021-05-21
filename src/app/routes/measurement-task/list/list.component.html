@@ -1,0 +1,115 @@
+<page-header [title]="''"></page-header>
+<!--/backstage/deviceMaintenancePlanDevice/getByDeviceMaintenancePlanId-->
+<nz-card>
+  <form nz-form [nzLayout]="'inline'" (ngSubmit)="loadDataFromServer(formParams)" class="search__form">
+    <div nz-row [nzGutter]="24" style="width: 100%">
+      <div nz-col nzSpan="4">
+        <nz-form-item>
+          <nz-form-label>快速查询</nz-form-label>
+          <nz-form-control>
+            <input nz-input [(ngModel)]="formParams.nameOrCode" name="nameOrCode" placeholder="工单名称"/>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="4">
+        <nz-form-item>
+          <nz-form-label>执行人</nz-form-label>
+          <nz-form-control>
+            <input nz-input [(ngModel)]="formParams.executorNames" name="executorNames" placeholder="请输入执行人名称"/>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="9">
+        <nz-form-item>
+          <nz-form-control>
+            <button nz-button type="submit" [nzType]="'primary'" [nzLoading]="loading">查询</button>
+            <button
+              nz-popconfirm
+              nzPopconfirmTitle="确定要删除选中的工单吗?"
+              (nzOnConfirm)="deleteTask()"
+              nzPopconfirmPlacement="topLeft"
+              nz-button
+            >
+              删除
+            </button>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+  </form>
+  <nz-table
+    nzShowSizeChanger
+    [nzData]="measurementTasks"
+    [nzFrontPagination]="false"
+    [nzPageSizeOptions]="[5, 10, 20, 50]"
+    [nzLoading]="loading"
+    [nzTotal]="total"
+    [nzPageSize]="pageSize"
+    [nzPageIndex]="pageIndex"
+    nzSize="small"
+    (nzQueryParams)="onQueryParamsChange($event)"
+  >
+    <thead>
+    <tr>
+      <th></th>
+      <th>名称</th>
+      <th>状态</th>
+      <th>执行人</th>
+      <th>开始时间</th>
+      <th>结束时间</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let data of measurementTasks" (click)="onItemChecked(data.id)">
+      <td [nzChecked]="setOfCheckedId.has(data.id)" (nzCheckedChange)="onItemChecked(data.id)"></td>
+      <td>{{ data.name }}</td>
+      <td>{{ data.finishedStatus }}</td>
+      <td>{{ data.executorNames }}</td>
+      <td>{{ data.startTime | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+      <td>{{ data.endTime | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+    </tr>
+    </tbody>
+  </nz-table>
+
+  <!-- 下方巡检项可编辑列表 -->
+  <nz-tabset>
+    <nz-tab nzTitle="巡检项">
+      <nz-table
+        nzShowSizeChanger
+        [nzData]="measurementTaskDetails"
+        [nzFrontPagination]="false"
+        [nzPageSizeOptions]="[5, 10, 20, 50]"
+        [nzLoading]="subLoading"
+        [nzTotal]="subTotal"
+        [nzPageSize]="subPageSize"
+        [nzPageIndex]="subPageIndex"
+        nzSize="small"
+        (nzQueryParams)="subTableOnQueryParamsChange($event)"
+      >
+        <thead>
+        <tr>
+          <th></th>
+          <th>类型</th>
+          <th>设备/位置名称</th>
+          <th>设备/位置编码</th>
+          <th>模板</th>
+          <th>提交人</th>
+          <th>提交时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let data of measurementTaskDetails" (click)="subTableOnItemChecked(data.id)">
+          <td [nzChecked]="setOfSubDataCheckedId.has(data.id)" (nzCheckedChange)="subTableOnItemChecked(data.id)"></td>
+          <td *ngIf="TYPE_DEVICE == data.dataType">设备</td>
+          <td *ngIf="TYPE_STATION == data.dataType">位置</td>
+          <td>{{ data.deviceName }}</td>
+          <td>{{ data.deviceCode }}</td>
+          <td>{{ data.measurementTemplateName }}</td>
+          <td>{{ data.uploadorNames }}</td>
+          <td>{{ data.executeTime | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+        </tr>
+        </tbody>
+      </nz-table>
+    </nz-tab>
+  </nz-tabset>
+</nz-card>

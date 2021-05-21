@@ -1,0 +1,284 @@
+<page-header [breadcrumb]="breadcrumb" [title]="''"></page-header>
+<ng-template #breadcrumb>
+  <nz-breadcrumb>
+    <nz-breadcrumb-item>
+      <a [routerLink]="['/']">首页</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      <a [routerLink]="['/relevance-plan/relevance-list']">关联计划</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>关联计划详情</nz-breadcrumb-item>
+  </nz-breadcrumb>
+</ng-template>
+
+<div nz-row style="width: 100%">
+  <nz-card nz-col [nzSpan]="12" *ngIf="!showUpdate">
+    <h1 style="width: 100%; margin-bottom: 20px; text-align: center">《施工配合方案确认单》</h1>
+    <nz-descriptions nzTitle="" nzBordered [nzColumn]="1" nzSize="small">
+      <nz-descriptions-item nzTitle="方案编号">
+        <div class="nz-descriptions-item-div">{{ constructionControlPlan.code }}</div>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="类别">
+        <div class="nz-descriptions-item-div">{{ constructionControlPlan.constructionType }}</div>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="施工地点" [nzSpan]="4">
+        <div style="height: 300px; width: 450px">
+          <span *ngFor="let constructionControlPlanKilometerMark of constructionControlPlan.constructionControlPlanKilometerMarks">
+            {{constructionControlPlanKilometerMark.detailInfo}}
+          </span>
+        </div>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="施工项目">
+        <div class="nz-descriptions-item-div">{{ constructionControlPlan.constructionProjectInfo }}</div>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="施工日期" [nzSpan]="4">
+        <div style="height: 300px; width: 450px">
+          <span *ngFor="let constructionControlPlanWorkTime of constructionControlPlan.constructionControlPlanWorkTimes">
+            {{constructionControlPlanWorkTime.detailInfo}}
+          </span>
+        </div>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="施工内容" [nzSpan]="4">
+        <div style="height: 300px; width: 450px">{{ constructionControlPlan.constructionContentAndInfluenceArea }}</div>
+      </nz-descriptions-item>
+
+      <nz-descriptions-item nzTitle="施工机械" [nzSpan]="4">
+        <div class="nz-descriptions-item-text-area">-</div>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="建设单位" [nzSpan]="4">
+        <div class="nz-descriptions-item-text-area">{{ constructionControlPlan.constructDepartment }}</div>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="施工单位及负责人" [nzSpan]="4">
+        <div class="nz-descriptions-item-text-area">{{ constructionControlPlan.constructionDepartmentAndPrincipalName }}</div>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="监理单位及负责人" [nzSpan]="4">
+        <div class="nz-descriptions-item-text-area">{{ constructionControlPlan.supervisionDepartmentAndPrincipalName }}</div>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="设备监护单位及负责人" [nzSpan]="4">
+        <div class="nz-descriptions-item-text-area">{{ constructionControlPlan.equipmentMonitoringDepartmentAndPrincipalName }}</div>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="审核处室" [nzSpan]="4">
+        <div class="nz-descriptions-item-text-area">{{ constructionControlPlan.auditDepartment }}</div>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="备注" [nzSpan]="4">
+        <div class="nz-descriptions-item-text-area">{{ constructionControlPlan.remarks }}</div>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="星级" [nzSpan]="4">
+        <div class="nz-descriptions-item-div">{{ constructionControlPlan.starRating }}</div>
+      </nz-descriptions-item>
+    </nz-descriptions>
+  </nz-card>
+
+  <nz-card nz-col [nzSpan]="14" *ngIf="showUpdate">
+    <h1 style="width: 100%; margin-bottom: 20px; text-align: center">《施工配合方案确认单》</h1>
+    <nz-descriptions nzTitle="" nzBordered [nzColumn]="4" nzSize="small">
+      <nz-descriptions-item nzTitle="计划编号" [nzSpan]="4">
+        <div class="nz-descriptions-item-div">
+          {{ constructionControlPlan.code }}
+        </div>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="类别" [nzSpan]="4">
+        <div class="nz-descriptions-item-div">
+          <input nz-input type="text" placeholder="请输入公里标" [(ngModel)]="constructionControlPlan.constructionType"/>
+        </div>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="施工地点" [nzSpan]="4">
+        <div style="height: 300px; width: 450px">
+          <span *ngFor="let constructionControlPlanKilometerMark of constructionControlPlan.constructionControlPlanKilometerMarks">
+            {{constructionControlPlanKilometerMark.detailInfo}}
+          </span>
+        </div>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="施工项目" [nzSpan]="4">
+        <div class="nz-descriptions-item-div">
+          <input nz-input type="text" placeholder="请输入施工项目" [(ngModel)]="constructionControlPlan.constructionProjectInfo"/>
+        </div>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="施工日期" [nzSpan]="4">
+        <div style="height: 300px; width: 450px">
+          <span *ngFor="let constructionControlPlanWorkTime of constructionControlPlan.constructionControlPlanWorkTimes">
+            {{constructionControlPlanWorkTime.detailInfo}}
+          </span>
+        </div>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="施工内容" [nzSpan]="4">
+        <div style="height: 300px">
+          <textarea
+            style="height: 280px"
+            nz-input
+            type="text"
+            placeholder="请输入施工单位及负责人"
+            [(ngModel)]="constructionControlPlan.constructionContentAndInfluenceArea"
+          ></textarea>
+        </div>
+      </nz-descriptions-item>
+
+      <nz-descriptions-item nzTitle="施工机械" [nzSpan]="4">
+        <div class="nz-descriptions-item-text-area">-</div>
+      </nz-descriptions-item>
+
+      <nz-descriptions-item nzTitle="建设单位" [nzSpan]="4">
+        <div class="nz-descriptions-item-text-area">
+          <textarea
+            style="height: 85px"
+            nz-input
+            type="text"
+            placeholder="请输入施工单位及负责人"
+            [(ngModel)]="constructionControlPlan.constructDepartment"
+          ></textarea>
+        </div>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="施工单位及负责人" [nzSpan]="4">
+        <div class="nz-descriptions-item-text-area">
+          <textarea
+            style="height: 85px"
+            nz-input
+            type="text"
+            placeholder="请输入施工单位及负责人"
+            [(ngModel)]="constructionControlPlan.constructionDepartmentAndPrincipalName"
+          ></textarea>
+        </div>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="监理单位及负责人" [nzSpan]="4">
+        <div class="nz-descriptions-item-text-area">
+          <textarea
+            style="height: 85px"
+            nz-input
+            type="text"
+            placeholder="请输入施工单位及负责人"
+            [(ngModel)]="constructionControlPlan.supervisionDepartmentAndPrincipalName"
+          ></textarea>
+        </div>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="设备监护单位及负责人" [nzSpan]="4">
+        <div class="nz-descriptions-item-text-area">
+          <textarea
+            style="height: 85px"
+            nz-input
+            type="text"
+            placeholder="请输入施工单位及负责人"
+            [(ngModel)]="constructionControlPlan.equipmentMonitoringDepartmentAndPrincipalName"
+          ></textarea>
+        </div>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="审核处室" [nzSpan]="4">
+        <div class="nz-descriptions-item-text-area">
+          <textarea
+            style="height: 85px"
+            nz-input
+            type="text"
+            placeholder="请输入施工单位及负责人"
+            [(ngModel)]="constructionControlPlan.auditDepartment"
+          ></textarea>
+        </div>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="备注" [nzSpan]="4">
+        <div class="nz-descriptions-item-text-area">
+          <textarea
+            style="height: 85px"
+            nz-input
+            type="text"
+            placeholder="请输入施工单位及负责人"
+            [(ngModel)]="constructionControlPlan.remarks"
+          ></textarea>
+        </div>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="星级" [nzSpan]="4">
+        <div class="nz-descriptions-item-div">
+          <input nz-input type="text" placeholder="请输入星级" [(ngModel)]="constructionControlPlan.starRating"/>
+        </div>
+      </nz-descriptions-item>
+    </nz-descriptions>
+  </nz-card>
+
+  <nz-card nz-col [nzSpan]="showUpdate ? 10 : 12">
+    <h1 style="width: 100%; margin-bottom: 20px; text-align: center">《施工正式计划》</h1>
+    <nz-descriptions nzTitle="" nzBordered [nzColumn]="4" nzSize="small">
+      <nz-descriptions-item nzTitle="计划编号" [nzSpan]="4">
+        <div class="nz-descriptions-item-div">{{ constructionFormalPlan.planCode }}</div>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="类别" [nzSpan]="4">
+        <div class="nz-descriptions-item-div">{{ constructionFormalPlan.planType }}</div>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="线路" [nzSpan]="4">
+        <div style="height: 88px; width: 450px">
+          {{ constructionFormalPlan.railwayLineName }}
+        </div>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="行别" [nzSpan]="4">
+        <div style="height: 88px; width: 450px">
+          {{ constructionFormalPlan.downriver }}
+        </div>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="施工地点" [nzSpan]="4">
+        <div style="height: 88px; width: 450px">
+          {{ constructionFormalPlan.constructionSite }}
+        </div>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="施工项目" [nzSpan]="4">
+        <div class="nz-descriptions-item-div">{{ constructionFormalPlan.constructionProject }}</div>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="施工日期" [nzSpan]="4">
+        <div style="height: 300px; width: 450px">{{ constructionFormalPlan.workTime }}</div>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="施工内容" [nzSpan]="4">
+        <div style="height: 300px; width: 450px">{{ constructionFormalPlan.constructionContentAndInfluenceArea }}</div>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="施工机械" [nzSpan]="4">
+        <div class="nz-descriptions-item-text-area">{{ constructionFormalPlan.constructionMachinery }}</div>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="建设单位" [nzSpan]="4">
+        <div class="nz-descriptions-item-text-area">{{ constructionFormalPlan.constructDepartment }}</div>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="施工单位及负责人" [nzSpan]="4">
+        <div class="nz-descriptions-item-text-area">{{ constructionFormalPlan.constructionDepartmentAndPrincipalName }}</div>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="监理单位及负责人" [nzSpan]="4">
+        <div class="nz-descriptions-item-text-area">{{ constructionFormalPlan.supervisionDepartmentAndPrincipalName }}</div>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="设备监护单位及负责人" [nzSpan]="4">
+        <div class="nz-descriptions-item-text-area">{{ constructionFormalPlan.equipmentMonitoringDepartmentAndPrincipalName }}</div>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="审核处室" [nzSpan]="4">
+        <div class="nz-descriptions-item-text-area">{{ constructionFormalPlan.auditDepartment }}</div>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="备注" [nzSpan]="4">
+        <div class="nz-descriptions-item-text-area">{{ constructionFormalPlan.remarks }}</div>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="星级" [nzSpan]="4">
+        <div class="nz-descriptions-item-div">{{ constructionFormalPlan.starRating }}</div>
+      </nz-descriptions-item>
+    </nz-descriptions>
+  </nz-card>
+</div>
+
+<footer-toolbar>
+  <button *ngIf="!showUpdate" nz-button nzType="default" (click)="back()">返回</button>
+  <button *ngIf="!showUpdate" nz-button nzType="default" (click)="showPlanMapFunction()">施工范围预览</button>
+  <button
+    *ngIf="!showUpdate"
+    nz-popconfirm
+    nzPopconfirmTitle="确定要补充调查方案吗?"
+    (nzOnConfirm)="reinvestigationPlan()"
+    nzPopconfirmPlacement="topLeft"
+    nz-button
+    nzType="default"
+  >
+    补充配合方案
+  </button>
+  <button *ngIf="!showUpdate" nz-button nzType="default" (click)="updateView()">编辑</button>
+  <button *ngIf="!showUpdate" nz-button nzType="primary" (click)="confirmRelevance()">确认关联</button>
+  <button *ngIf="showUpdate" nz-button nzType="primary" (click)="saveConstructionControlPlan()">完成编辑</button>
+</footer-toolbar>
+
+<nz-modal
+  [nzWidth]="1600"
+  nzTitle="施工范围预览"
+  [(nzVisible)]="showPlanMap"
+  [nzContent]="planMapContent"
+  (nzOnCancel)="this.showPlanMap = false"
+>
+  <ng-template #planMapContent>
+    <construction-control-plan-preview [constructionControlPlanId]="constructionControlPlanId"></construction-control-plan-preview>
+  </ng-template>
+</nz-modal>

@@ -1,0 +1,70 @@
+.card-box {
+  margin-top: 15px;
+  height: 320px;
+}
+.card-table {
+  width: 100%;
+  border: #8f949a solid 1px;
+}
+table,
+table tr th,
+table tr td {
+  border: #f0f0f0 solid 1px;
+}
+table {
+  width: 100%;
+  min-height: 25px;
+  line-height: 25px;
+  text-align: center;
+  border-collapse: collapse;
+}
+.card-table-td {
+  width: auto;
+  text-align: left;
+}
+.card-table-div {
+  margin-bottom: 10px;
+}
+.card-table-workshop-td {
+  border-top: white;
+  border-left: white;
+  border-right: white;
+}
+
+.nz-space-box {
+  position: relative;
+  top: -15px;
+  left: 2px;
+}
+.space-item-card {
+  width: 240px;
+  height: 320px;
+}
+.space-item-card p {
+  margin: 0;
+  padding: 0 0 15px 0;
+  font-size: 15px;
+}
+.space-item-card-img {
+  width: 19px;
+  height: 24px;
+}
+.top-roll-content {
+  height: 30px;
+  font-size: 14px;
+  text-align: center;
+  background: white;
+}
+
+.card-dynamic-information {
+  padding: 8px 0 0 8px;
+  height: 220px;
+  border: #f0f0f0 solid 1px;
+}
+.bottom-one-div {
+  margin-left: 20px;
+  font-size: 16px;
+}
+.bottom-two-div {
+  text-align: center;
+}

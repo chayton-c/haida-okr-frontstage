@@ -1,0 +1,37 @@
+<page-header [title]="''"></page-header>
+<div nz-row>
+  <nz-card nz-col nzSpan="4" nzTitle="车站列表">
+    <nz-table #expandTable [nzData]="lineNodePojos" [nzLoading]="railwayLineLoading" nzTableLayout="fixed" [nzFrontPagination]="false">
+      <tbody style="margin-left: 0">
+      <ng-container *ngFor="let data of expandTable.data">
+        <ng-container *ngFor="let item of mapOfExpandedData[data.id]">
+          <tr *ngIf="(item.parent && item.parent.expand) || !item.parent">
+            <td
+              [nzIndentSize]="item.level! * 20"
+              [nzShowExpand]="item.level == 0"
+              [(nzExpand)]="item.expand"
+              (nzExpandChange)="collapse(mapOfExpandedData[data.id], item, $event)"
+              (click)="clickLineNodePojo(item)"
+            >
+              <span [style]="item.id == checkedLineNodePojo.id ? 'color:#1890ff;cursor:pointer' : 'cursor:pointer'">{{ item.name }}</span>
+            </td>
+          </tr>
+        </ng-container>
+      </ng-container>
+      </tbody>
+    </nz-table>
+  </nz-card>
+
+  <div nz-col nzSpan="20">
+    <nz-card>
+      <nz-tabset [(nzSelectedIndex)]="selectIndex">
+        <nz-tab *ngFor="let tab of tabs"
+                [nzTitle]="tab.station ? tab.station.name : tab.leftStation.name + '-' + tab.rightStation.name">
+          <ng-template nz-tab>
+            <opc-map [leftStationId]="tab.leftStation.id" [rightStationId]="tab.rightStation.id" enableAddConstructionPoint="true"></opc-map>
+          </ng-template>
+        </nz-tab>
+      </nz-tabset>
+    </nz-card>
+  </div>
+</div>

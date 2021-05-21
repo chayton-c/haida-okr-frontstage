@@ -1,0 +1,88 @@
+<page-header [title]="''"></page-header>
+<nz-card>
+  <!--  <button (click)="open(statisticAnalysisConstant.TENDENCY_CHART)">趋势图</button>-->
+  <!--    <button (click)="testOpen()">BC类施工计划</button>-->
+  <nz-list nzSize="small" [nzGrid]="{ gutter: 24, lg: 6, md: 8, sm: 12, xs: 24 }" [nzSplit]="false">
+    <div nz-row [nzGutter]="24">
+      <nz-list-item nz-col nzSpan="12">
+        <a (click)="open(statisticAnalysisConstant.TENDENCY_CHART)">
+          <nz-card nzHoverable [nzCover]="cover">
+            <ng-template #cover>
+              <img src="assets/opcimg/statistic-analysis/tendency_chart.png" />
+            </ng-template>
+            <nz-card-meta [nzTitle]="'趋势图'" [nzDescription]="'趋势图'"></nz-card-meta>
+            <div class="card-item-content">
+              <span class="text-grey">施工管控计划、BC类管控计划</span>
+              <!--      <avatar-list size="mini">-->
+              <!--        <avatar-list-item *ngFor="let m of item.members" [src]="m.avatar" [tips]="m.name"></avatar-list-item>-->
+              <!--      </avatar-list>-->
+            </div>
+          </nz-card>
+        </a>
+      </nz-list-item>
+      <nz-list-item nz-col nzSpan="12">
+        <a (click)="open(statisticAnalysisConstant.BC_CONSTRUCTION)">
+          <nz-card nzHoverable [nzCover]="cover">
+            <ng-template #cover>
+              <img src="assets/opcimg/statistic-analysis/tendency_chart.png" />
+            </ng-template>
+            <nz-card-meta [nzTitle]="'BC类施工计划'" [nzDescription]="'BC类施工计划'"></nz-card-meta>
+            <div class="card-item-content">
+              <span class="text-grey">BC类施工计划统计</span>
+              <!--      <avatar-list size="mini">-->
+              <!--        <avatar-list-item *ngFor="let m of item.members" [src]="m.avatar" [tips]="m.name"></avatar-list-item>-->
+              <!--      </avatar-list>-->
+            </div>
+          </nz-card>
+        </a>
+      </nz-list-item>
+    </div>
+  </nz-list>
+</nz-card>
+
+<!--<nz-card>-->
+<!--  &lt;!&ndash;  <iframe [src]="sanitizer.bypassSecurityTrustResourceUrl('http://demo.cuafoo.cn/RDP-SERVER/index.html')" height="600" width="1000"></iframe>&ndash;&gt;-->
+<!--  &lt;!&ndash;  查询条件&ndash;&gt;-->
+<!--  <div nz-row style="margin-bottom: 20px">-->
+<!--    <div nz-col nzSpan="6">-->
+<!--      <nz-form-label>起止日期</nz-form-label>-->
+<!--      <nz-date-picker [(ngModel)]="formParams.startTime"></nz-date-picker>-->
+<!--      <span style="margin: 0 8px">至</span>-->
+<!--      <nz-date-picker [(ngModel)]="formParams.endTime"></nz-date-picker>-->
+<!--    </div>-->
+<!--    <div nz-col nzSpan="4">-->
+<!--      <nz-form-label>车间</nz-form-label>-->
+<!--      <nz-select style="width: 150px">-->
+<!--        <nz-option nzValue="1" nzLabel="哈车车间"></nz-option>-->
+<!--      </nz-select>-->
+<!--    </div>-->
+<!--  </div>-->
+
+<!--  &lt;!&ndash;  生产管控情况&ndash;&gt;-->
+<!--  <div nz-row>-->
+<!--    <div nz-col nzSpan="24">-->
+<!--      <h3>生产管控情况</h3>-->
+<!--      <div id="chart1" echarts [options]="options" theme="macarons" class="demo-chart"></div>-->
+<!--    </div>-->
+<!--  </div>-->
+
+<!--  &lt;!&ndash;  各车间BC类数量、BC类作业项目&ndash;&gt;-->
+<!--  <div nz-row>-->
+<!--    <div nz-col nzSpan="12">-->
+<!--      <h3>各车间BC类数量</h3>-->
+<!--      <div id="chart2" echarts [options]="options" theme="macarons" class="demo-chart"></div>-->
+<!--    </div>-->
+<!--    <div nz-col nzSpan="12">-->
+<!--      <h3>BC类作业项目</h3>-->
+<!--      <div id="chart3" echarts [options]="options" theme="macarons" class="demo-chart"></div>-->
+<!--    </div>-->
+<!--  </div>-->
+
+<!--  &lt;!&ndash;  出工率、出勤率&ndash;&gt;-->
+<!--  <div nz-row>-->
+<!--    <div nz-col nzSpan="24">-->
+<!--      <h3>出工率、出勤率</h3>-->
+<!--      <div id="chart4" echarts [options]="options" theme="macarons" class="demo-chart"></div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</nz-card>-->

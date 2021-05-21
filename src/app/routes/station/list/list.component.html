@@ -1,0 +1,75 @@
+<page-header [title]="''"></page-header>
+
+<nz-card>
+  <form nz-form [nzLayout]="'inline'" (ngSubmit)="loadDataFromServer()" class="search__form">
+    <div nz-row [nzGutter]="12" style="width: 50%">
+      <div nz-col [nzSpan]="8">
+        <nz-form-item>
+          <nz-form-label>快速查询</nz-form-label>
+          <nz-form-control>
+            <input nz-input [(ngModel)]="formParams.nameOrCode" name="nameOrCode" placeholder="请输入名称或编码" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="10">
+        <nz-form-item>
+          <nz-form-control>
+            <button nz-button type="submit" [nzType]="'primary'" [nzLoading]="loading">查询</button>
+            <button nz-button type="button" (click)="stationAddPage()">新增</button>
+            <button nz-button type="button" (click)="stationUpdatePage()">修改</button>
+            <button
+              nz-popconfirm
+              nzPopconfirmTitle="确定要删除选中的车站吗?"
+              (nzOnConfirm)="deleteStation()"
+              nzPopconfirmPlacement="topLeft"
+              nz-button
+            >
+              删除
+            </button>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+  </form>
+  <div class="my-md">
+    <nz-alert [nzType]="'info'" [nzShowIcon]="true" [nzMessage]="message">
+      <ng-template #message>
+        共<strong class="text-primary">{{ total }}</strong
+        >条记录
+      </ng-template>
+    </nz-alert>
+  </div>
+  <nz-table
+    nzShowSizeChanger
+    [nzData]="stations"
+    [nzFrontPagination]="false"
+    [nzPageSizeOptions]="[5, 10, 20, 50]"
+    [nzLoading]="loading"
+    [nzTotal]="total"
+    [nzPageSize]="pageSize"
+    [nzPageIndex]="pageIndex"
+    nzSize="default"
+    (nzQueryParams)="onQueryParamsChange($event)"
+  >
+    <thead>
+      <tr>
+        <th></th>
+        <th>名称</th>
+        <th>编码</th>
+        <th>公里标</th>
+        <th>站段</th>
+        <th>车间</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of stations" (click)="updateCheckedSet(data.id, !setOfCheckedId.has(data.id))">
+        <td [nzChecked]="setOfCheckedId.has(data.id)"></td>
+        <td>{{ data.name }}</td>
+        <td>{{ data.code }}</td>
+        <td>{{ data.kilometerMarkText }}</td>
+        <td>{{ data.sectionName }}</td>
+        <td>{{ data.workshopName }}</td>
+      </tr>
+    </tbody>
+  </nz-table>
+</nz-card>

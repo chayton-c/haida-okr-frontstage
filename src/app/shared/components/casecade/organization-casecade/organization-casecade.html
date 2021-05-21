@@ -1,0 +1,9 @@
+<nz-cascader
+  style="width: 400px"
+  nzPlaceHolder="选择单位"
+  nzChangeOnSelect
+  [nzOptions]="organizationNodes"
+  [(ngModel)]="values"
+  (ngModelChange)="onChanges($event)"
+>
+</nz-cascader>

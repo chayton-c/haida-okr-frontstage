@@ -1,0 +1,536 @@
+<page-header [breadcrumb]="breadcrumb" [title]="''"></page-header>
+<ng-template #breadcrumb>
+  <nz-breadcrumb>
+    <nz-breadcrumb-item>
+      <a [routerLink]="['/']">首页</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      <a [routerLink]="['/construction-control-plan/list']">动态管控</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      <a [routerLink]="['/construction-control-plan/list']">方案管控</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>配合方案列表</nz-breadcrumb-item>
+  </nz-breadcrumb>
+</ng-template>
+<nz-card>
+  <form nz-form [nzLayout]="'inline'" class="search__form">
+    <div nz-row [nzGutter]="12" style="width: 100%">
+      <div nz-col [nzSpan]="3">
+        <nz-form-item>
+          <nz-form-label>方案流程</nz-form-label>
+          <nz-form-control>
+            <nz-select [(ngModel)]="formParams.processStatus" name="processStatus" nzPlaceHolder="全部">
+              <nz-option [nzValue]="" nzLabel="全部"></nz-option>
+              <nz-option [nzValue]="constructionControlPlanConstant.PENDING_SUBMIT" nzLabel="待提交"></nz-option>
+              <nz-option [nzValue]="constructionControlPlanConstant.PENDING_COUNTERSIGN" nzLabel="待会签"></nz-option>
+              <nz-option [nzValue]="constructionControlPlanConstant.PENDING_RELEVANCE" nzLabel="待关联"></nz-option>
+              <nz-option [nzValue]="constructionControlPlanConstant.RELEVANCEED" nzLabel="已关联"></nz-option>
+              <nz-option [nzValue]="constructionControlPlanConstant.CLOSED" nzLabel="已关闭"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col [nzSpan]="3">
+        <nz-form-item>
+          <nz-form-label>方案状态</nz-form-label>
+          <nz-form-control>
+            <nz-select [(ngModel)]="formParams.planStatus" name="planStatus" nzPlaceHolder="全部">
+              <nz-option [nzValue]="" nzLabel="全部"></nz-option>
+              <nz-option [nzValue]="constructionControlPlanConstant.FIRST_DRAFT" nzLabel="初稿"></nz-option>
+              <nz-option [nzValue]="constructionControlPlanConstant.TECH_COUNTERSIGN" nzLabel="技术会签"></nz-option>
+              <nz-option [nzValue]="constructionControlPlanConstant.SAFE_COUNTERSIGN" nzLabel="安全会签"></nz-option>
+              <nz-option [nzValue]="constructionControlPlanConstant.COUNTERSIGNED" nzLabel="已会签"></nz-option>
+              <nz-option [nzValue]="constructionControlPlanConstant.PENDING_START" nzLabel="未开始"></nz-option>
+              <nz-option [nzValue]="constructionControlPlanConstant.FORMAL_START" nzLabel="已开始"></nz-option>
+              <nz-option [nzValue]="constructionControlPlanConstant.CONSTRUCTING" nzLabel="施工中"></nz-option>
+              <nz-option [nzValue]="constructionControlPlanConstant.SYSTEM_CLOSED" nzLabel="系统关闭"></nz-option>
+              <nz-option [nzValue]="constructionControlPlanConstant.MANUALLY_CLOSED" nzLabel="人工关闭"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col [nzSpan]="3">
+        <nz-form-item>
+          <nz-form-label>调查状态</nz-form-label>
+          <nz-form-control>
+            <nz-select [(ngModel)]="formParams.investigationProgressStatus" name="investigationProgressStatus" nzPlaceHolder="全部">
+              <nz-option [nzValue]="" nzLabel="全部"></nz-option>
+              <nz-option [nzValue]="constructionControlPlanConstant.INVESTIGATION_NOT_OPENED" nzLabel="待调查"></nz-option>
+              <nz-option [nzValue]="constructionControlPlanConstant.INVESTIGATING" nzLabel="进行中"></nz-option>
+              <nz-option [nzValue]="constructionControlPlanConstant.INVESTIGATED" nzLabel="已完成"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <!--      <div>-->
+      <!--        <nz-form-item>-->
+      <!--          <nz-form-label>管辖单位</nz-form-label>-->
+      <!--          <nz-form-control>-->
+      <!--            <organization-casecade> </organization-casecade>-->
+      <!--          </nz-form-control>-->
+      <!--        </nz-form-item>-->
+      <!--      </div>-->
+      <div nz-col [nzSpan]="5.5">
+        <nz-form-item>
+          <nz-form-label>方案时间</nz-form-label>
+          <nz-form-control>
+            <nz-date-picker
+              [nzDisabledDate]="disabledStartDate"
+              nzFormat="yyyy-MM-dd"
+              [(ngModel)]="formParams.startTime"
+              name="startTime"
+              nzPlaceHolder="开始日期"
+              (nzOnOpenChange)="handleStartOpenChange($event)"
+            ></nz-date-picker>
+            至
+            <nz-date-picker
+              #endDatePicker
+              [nzDisabledDate]="disabledEndDate"
+              nzFormat="yyyy-MM-dd"
+              [(ngModel)]="formParams.endTime"
+              name="endTime"
+              nzPlaceHolder="结束日期"
+            ></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="9">
+        <nz-form-item>
+          <nz-form-control>
+            <button nz-button (click)="loadDataFromServer()" type="submit" [nzType]="'primary'" [nzLoading]="loading">查询</button>
+            <button acl="fanganguankong-add" nz-button (click)="add()">添加</button>
+            <button acl="fanganguankong-update" nz-button (click)="update()">修改</button>
+            <button acl="fanganguankong-file-list" nz-button (click)="showUploadModel()">文件上传</button>
+            <button
+              acl="fanganguankong-close"
+              nz-button
+              nz-popconfirm
+              nzPopconfirmTitle="确定要关闭选中的方案吗?"
+              (nzOnConfirm)="closePlan()"
+              nzPopconfirmPlacement="topLeft"
+            >
+              关闭
+            </button>
+            <button
+              acl="fanganguankong-delete"
+              nz-button
+              nz-popconfirm
+              nzPopconfirmTitle="确定要删除选中的方案吗?"
+              (nzOnConfirm)="deletePlan()"
+              nzPopconfirmPlacement="topLeft"
+            >
+              删除
+            </button>
+            <!--            <button acl="fanganguankong-add-test-point" nz-button nzType="default" (click)="uploadDemoPoint()">添加测试点</button>-->
+            <button acl="fanganguankong-bind-equipment" nz-button nzType="default" (click)="equipmentPage()">机具绑定</button>
+            <!--            <button nz-button (click)="showIssueModal()" [nzLoading]="loading">现场调查</button>-->
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+  </form>
+  <nz-table
+    nzShowSizeChanger
+    [nzData]="constructionControlPlans"
+    [nzFrontPagination]="false"
+    [nzPageSizeOptions]="[10, 15, 20, 50]"
+    [nzLoading]="loading"
+    [nzTotal]="total"
+    [nzPageSize]="pageSize"
+    [nzPageIndex]="pageIndex"
+    nzSize="small"
+    [nzBordered]="true"
+    (nzQueryParams)="onQueryParamsChange($event)"
+  >
+    <thead>
+      <tr>
+        <th [nzChecked]="checked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="onAllChecked($event)"></th>
+        <th>方案流程</th>
+        <th>方案状态</th>
+        <th>调查状态</th>
+        <!--        <th>机具绑定</th>-->
+        <th>方案编号</th>
+        <th>施工项目</th>
+        <th>施工日期及时间</th>
+        <th>施工地点</th>
+        <th>风险等级</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of constructionControlPlans" (click)="onItemChecked(data.id, !setOfCheckedId.has(data.id))">
+        <td [nzChecked]="setOfCheckedId.has(data.id)" (nzCheckedChange)="onItemChecked(data.id, $event)"></td>
+
+        <!-- 方案流程 -->
+        <td [ngSwitch]="data.processStatus">
+          <span *ngSwitchCase="constructionControlPlanConstant.PENDING_SUBMIT">待提交</span>
+          <span *ngSwitchCase="constructionControlPlanConstant.PENDING_COUNTERSIGN">待会签</span>
+          <span *ngSwitchCase="constructionControlPlanConstant.PENDING_RELEVANCE">待关联</span>
+          <span *ngSwitchCase="constructionControlPlanConstant.RELEVANCEED">已关联</span>
+          <span *ngSwitchCase="constructionControlPlanConstant.CLOSED">已关闭</span>
+          <span *ngSwitchDefault>-</span>
+        </td>
+
+        <!-- 方案状态 -->
+        <td [ngSwitch]="data.planStatus">
+          <span *ngSwitchCase="constructionControlPlanConstant.FIRST_DRAFT">初稿</span>
+          <span *ngSwitchCase="constructionControlPlanConstant.TECH_COUNTERSIGN">技术会签</span>
+          <span *ngSwitchCase="constructionControlPlanConstant.SAFE_COUNTERSIGN">安全会签</span>
+          <span *ngSwitchCase="constructionControlPlanConstant.COUNTERSIGNED">已会签</span>
+          <span *ngSwitchCase="constructionControlPlanConstant.PENDING_START">未开始</span>
+          <span *ngSwitchCase="constructionControlPlanConstant.FORMAL_START">已开始</span>
+          <span *ngSwitchCase="constructionControlPlanConstant.CONSTRUCTING">施工中</span>
+          <span *ngSwitchCase="constructionControlPlanConstant.SYSTEM_CLOSED">系统关闭</span>
+          <span *ngSwitchCase="constructionControlPlanConstant.MANUALLY_CLOSED">人工关闭</span>
+        </td>
+
+        <!-- 调查状态 -->
+        <td [ngSwitch]="data.investigationProgressStatus">
+          <span *ngSwitchCase="constructionControlPlanConstant.INVESTIGATION_NOT_OPENED">未开始</span>
+          <span *ngSwitchCase="constructionControlPlanConstant.PENDING_INVESTIGATE">未开始</span>
+          <span *ngSwitchCase="constructionControlPlanConstant.INVESTIGATING">调查中</span>
+          <span *ngSwitchCase="constructionControlPlanConstant.INVESTIGATED">已完成</span>
+        </td>
+
+        <!-- 机具绑定 -->
+        <!--        <td>{{ data.equipmentBindCount + '/' + data.equipmentReleaseCount }}</td>-->
+
+        <!-- 编码 -->
+        <td>
+          <a (click)="showPlanDetailFunction(data.id)">{{ data.code }}</a>
+        </td>
+
+        <td>{{ data.constructionProjectInfo }}</td>
+
+        <!-- 施工日期及时间 -->
+        <td>
+          <div *ngFor="let constructionControlPlanWorkTime of data.constructionControlPlanWorkTimes">
+            {{ constructionControlPlanWorkTime.detailInfo }}
+          </div>
+        </td>
+
+        <!-- 施工地点 -->
+        <td>
+          <div *ngFor="let constructionControlPlanKilometerMark of data.constructionControlPlanKilometerMarks">
+            {{ constructionControlPlanKilometerMark.detailInfo }}
+          </div>
+        </td>
+
+        <!-- 风险等级 -->
+        <td [ngSwitch]="data.warnStatus">
+          <span *ngSwitchCase="0">红色</span>
+          <span *ngSwitchCase="1">橙色</span>
+          <span *ngSwitchCase="2">黄色</span>
+          <span *ngSwitchCase="3">蓝色</span>
+          <span *ngSwitchCase="4">绿色</span>
+        </td>
+        <td>
+          <!-- 提交会签 -->
+          <!-- 1 -->
+          <a
+            nz-button
+            nzType="link"
+            acl="fanganguankong-submit-huiqian"
+            *ngIf="
+              data.processStatus == constructionControlPlanConstant.PENDING_SUBMIT &&
+              data.investigationProgressStatus != constructionControlPlanConstant.INVESTIGATING
+            "
+            (click)="submitCountersignModal(data)"
+            >会签</a
+          >
+          <!-- 2 -->
+          <a
+            nz-button
+            nzType="link"
+            style="color: #dcdcdc"
+            acl="fanganguankong-submit-huiqian"
+            *ngIf="
+              data.processStatus != constructionControlPlanConstant.PENDING_SUBMIT ||
+              data.investigationProgressStatus == constructionControlPlanConstant.INVESTIGATING
+            "
+            >会签</a
+          >
+          <!--          <i-->
+          <!--            acl="fanganguankong-submit-huiqian"-->
+          <!--            *ngIf="-->
+          <!--              data.processStatus == constructionControlPlanConstant.PENDING_SUBMIT &&-->
+          <!--              data.investigationProgressStatus != constructionControlPlanConstant.INVESTIGATING-->
+          <!--            "-->
+          <!--            nz-icon-->
+          <!--            nzType="right"-->
+          <!--            nzTheme="outline"-->
+          <!--            title="提交会签"-->
+          <!--            (click)="submitCountersignModal(data)"-->
+          <!--          ></i>-->
+          <!--          <i-->
+          <!--            acl="fanganguankong-submit-huiqian"-->
+          <!--            *ngIf="-->
+          <!--              data.processStatus != constructionControlPlanConstant.PENDING_SUBMIT ||-->
+          <!--              data.investigationProgressStatus == constructionControlPlanConstant.INVESTIGATING-->
+          <!--            "-->
+          <!--            nz-icon-->
+          <!--            nzType="right"-->
+          <!--            nzTheme="outline"-->
+          <!--            title="提交会签"-->
+          <!--            style="color: #dcdcdc"-->
+          <!--          ></i>-->
+          <nz-divider acl="fanganguankong-submit-huiqian" nzType="vertical" style="margin: 0 -7px"></nz-divider>
+
+          <!-- 发起调查 -->
+          <!-- 1 -->
+          <a
+            nz-button
+            nzType="link"
+            acl="fanganguankong-faqi-diaocha"
+            *ngIf="
+              data.processStatus == constructionControlPlanConstant.PENDING_SUBMIT &&
+              data.investigationProgressStatus == constructionControlPlanConstant.INVESTIGATION_NOT_OPENED
+            "
+            (click)="issueInvestigationTasks(data.id)"
+            >调查</a
+          >
+          <!-- 2 -->
+          <a
+            nz-button
+            nzType="link"
+            acl="fanganguankong-faqi-diaocha"
+            *ngIf="
+              data.processStatus != constructionControlPlanConstant.PENDING_SUBMIT ||
+              data.investigationProgressStatus != constructionControlPlanConstant.INVESTIGATION_NOT_OPENED
+            "
+            style="color: #dcdcdc"
+            >调查</a
+          >
+
+          <!--          <i-->
+          <!--            acl="fanganguankong-faqi-diaocha"-->
+          <!--            *ngIf="-->
+          <!--              data.processStatus == constructionControlPlanConstant.PENDING_SUBMIT &&-->
+          <!--              data.investigationProgressStatus == constructionControlPlanConstant.INVESTIGATION_NOT_OPENED-->
+          <!--            "-->
+          <!--            nz-icon-->
+          <!--            nzType="search"-->
+          <!--            nzTheme="outline"-->
+          <!--            title="发起调查"-->
+          <!--            (click)="issueInvestigationTasks(data.id)"-->
+          <!--          ></i>-->
+          <!--          <i-->
+          <!--            acl="fanganguankong-faqi-diaocha"-->
+          <!--            *ngIf="-->
+          <!--              data.processStatus != constructionControlPlanConstant.PENDING_SUBMIT ||-->
+          <!--              data.investigationProgressStatus != constructionControlPlanConstant.INVESTIGATION_NOT_OPENED-->
+          <!--            "-->
+          <!--            nz-icon-->
+          <!--            nzType="search"-->
+          <!--            nzTheme="outline"-->
+          <!--            title="发起调查"-->
+          <!--            style="color: #dcdcdc"-->
+          <!--          ></i>-->
+          <nz-divider nzType="vertical" style="margin: 0 -7px"></nz-divider>
+
+          <!-- 技术科会签 -->
+          <!-- 1 -->
+          <a
+            nz-button
+            nzType="link"
+            acl="fanganguankong-jishu-huiqian"
+            *ngIf="
+              data.processStatus == constructionControlPlanConstant.PENDING_COUNTERSIGN &&
+              data.planStatus == constructionControlPlanConstant.TECH_COUNTERSIGN
+            "
+            (click)="techCountersignReviewModel(data.id)"
+            >技术</a
+          >
+          <!-- 2 -->
+          <a
+            nz-button
+            nzType="link"
+            acl="fanganguankong-jishu-huiqian"
+            *ngIf="
+              data.processStatus != constructionControlPlanConstant.PENDING_COUNTERSIGN ||
+              data.planStatus != constructionControlPlanConstant.TECH_COUNTERSIGN
+            "
+            style="color: #dcdcdc"
+            >技术</a
+          >
+
+          <!--          <i-->
+          <!--            acl="fanganguankong-jishu-huiqian"-->
+          <!--            *ngIf="-->
+          <!--              data.processStatus == constructionControlPlanConstant.PENDING_COUNTERSIGN &&-->
+          <!--              data.planStatus == constructionControlPlanConstant.TECH_COUNTERSIGN-->
+          <!--            "-->
+          <!--            nz-icon-->
+          <!--            nzType="edit"-->
+          <!--            nzTheme="outline"-->
+          <!--            title="技术科会签"-->
+          <!--            (click)="techCountersignReviewModel(data.id)"-->
+          <!--          >-->
+          <!--          </i>-->
+          <!--          <i-->
+          <!--            acl="fanganguankong-jishu-huiqian"-->
+          <!--            *ngIf="-->
+          <!--              data.processStatus != constructionControlPlanConstant.PENDING_COUNTERSIGN ||-->
+          <!--              data.planStatus != constructionControlPlanConstant.TECH_COUNTERSIGN-->
+          <!--            "-->
+          <!--            nz-icon-->
+          <!--            nzType="edit"-->
+          <!--            nzTheme="outline"-->
+          <!--            title="技术科会签"-->
+          <!--            style="color: #dcdcdc"-->
+          <!--          >-->
+          <!--          </i>-->
+          <nz-divider acl="fanganguankong-jishu-huiqian" nzType="vertical" style="margin: 0 -7px"></nz-divider>
+
+          <!-- 安全科会签 -->
+          <!-- 1 -->
+          <a
+            nz-button
+            nzType="link"
+            acl="fanganguankong-anquan-huiqian"
+            *ngIf="
+              data.processStatus == constructionControlPlanConstant.PENDING_COUNTERSIGN &&
+              data.planStatus == constructionControlPlanConstant.SAFE_COUNTERSIGN
+            "
+            (click)="showSafeCountersignModel(data)"
+            >安全</a
+          >
+          <!-- 2 -->
+          <a
+            nz-button
+            nzType="link"
+            acl="fanganguankong-anquan-huiqian"
+            *ngIf="
+              data.processStatus != constructionControlPlanConstant.PENDING_COUNTERSIGN ||
+              data.planStatus != constructionControlPlanConstant.SAFE_COUNTERSIGN
+            "
+            style="color: #dcdcdc"
+            >安全</a
+          >
+
+          <!--          <i-->
+          <!--            acl="fanganguankong-anquan-huiqian"-->
+          <!--            *ngIf="-->
+          <!--              data.processStatus == constructionControlPlanConstant.PENDING_COUNTERSIGN &&-->
+          <!--              data.planStatus == constructionControlPlanConstant.SAFE_COUNTERSIGN-->
+          <!--            "-->
+          <!--            nz-icon-->
+          <!--            nzType="check"-->
+          <!--            nzTheme="outline"-->
+          <!--            title="安全科会签"-->
+          <!--            (click)="showSafeCountersignModel(data)"-->
+          <!--          ></i>-->
+          <!--          <i-->
+          <!--            acl="fanganguankong-anquan-huiqian"-->
+          <!--            *ngIf="-->
+          <!--              data.processStatus != constructionControlPlanConstant.PENDING_COUNTERSIGN ||-->
+          <!--              data.planStatus != constructionControlPlanConstant.SAFE_COUNTERSIGN-->
+          <!--            "-->
+          <!--            nz-icon-->
+          <!--            nzType="check"-->
+          <!--            nzTheme="outline"-->
+          <!--            title="安全科会签"-->
+          <!--            style="color: #dcdcdc"-->
+          <!--          ></i>-->
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</nz-card>
+
+<nz-modal
+  [nzWidth]="1200"
+  nzTitle="提交会签"
+  [(nzVisible)]="submitCountersignReview"
+  [nzContent]="submitReviewContent"
+  [nzFooter]="submitReviewFooter"
+  (nzOnCancel)="this.submitCountersignReview = false"
+>
+  <ng-template #submitReviewContent>
+    <div>
+      <h2 style="width: 100%; margin-bottom: 20px; text-align: center">《施工配合方案任务单》</h2>
+      <div style="float: right; margin: 8px 0 8px 0">
+        <!--        <button nz-button nzType="primary" (click)="supplementPlan(this.detailModel.constructionControlPlanId)">补充提交</button>-->
+        <button nz-button nzType="primary" (click)="submitCountersign(this.submitCountersignModel.constructionControlPlanId)">
+          提交会签
+        </button>
+      </div>
+      <div style="margin-bottom: 10px"></div>
+    </div>
+    <!--    <construction-control-plan-detail [hideTitle]="true" #detailModel> </construction-control-plan-detail>-->
+    <construction-control-plan-view [hideTitle]="true" #submitCountersignModel></construction-control-plan-view>
+  </ng-template>
+
+  <ng-template #submitReviewFooter>
+    <span></span>
+  </ng-template>
+</nz-modal>
+
+<nz-modal
+  [nzWidth]="1200"
+  nzTitle="技术会签"
+  [(nzVisible)]="showTechCountersign"
+  [nzContent]="approveViewContent"
+  [nzFooter]="approveViewFooter"
+  (nzOnCancel)="this.showTechCountersign = false"
+>
+  <ng-template #approveViewContent>
+    <div nz-row>
+      <h2 style="width: 100%; margin-bottom: 20px; text-align: center">《施工配合方案任务单》</h2>
+      <div nz-col [nzSpan]="20" style="margin: 8px 0 8px 0; text-align: right">
+        <button nz-button nzType="primary" (click)="techCountersignModelRejectPlan()">驳回</button>
+        <button nz-button nzType="primary" (click)="techCountersign()">同意会签</button>
+      </div>
+    </div>
+    <construction-control-plan-view [hideTitle]="true" #techCountersignModel></construction-control-plan-view>
+  </ng-template>
+
+  <ng-template #approveViewFooter>
+    <span></span>
+  </ng-template>
+</nz-modal>
+
+<nz-modal
+  [nzWidth]="800"
+  nzTitle="上传附件"
+  [(nzVisible)]="showUpload"
+  [nzContent]="uploadContent"
+  [nzFooter]="uploadFooter"
+  (nzAfterClose)="loadDataFromServer()"
+  (nzOnCancel)="this.showUpload = false"
+>
+  <ng-template #uploadContent>
+    <upload-image-list [constructionControlPlanId]="this.setOfCheckedId.values().next().value"></upload-image-list>
+  </ng-template>
+  <ng-template #uploadFooter>
+    <div></div>
+  </ng-template>
+</nz-modal>
+
+<nz-modal
+  [nzWidth]="1200"
+  nzTitle="安全科会签"
+  [(nzVisible)]="showSafeCountersign"
+  [nzContent]="showSafeCountersignContent"
+  [nzFooter]="showSafeCountersignFooter"
+  (nzOnCancel)="this.showSafeCountersign = false"
+>
+  <ng-template #showSafeCountersignContent>
+    <div nz-row>
+      <h2 style="width: 100%; margin-bottom: 20px; text-align: center">《施工配合方案任务单》</h2>
+      <div nz-col [nzSpan]="21" style="margin: 8px 0 8px 0; text-align: right">
+        <button nz-button nzType="primary" (click)="approveModelRejectPlan()">驳回</button>
+        <button nz-button nzType="primary" (click)="approveSafeCountersign()">批准</button>
+        <!--        <button nz-button nzType="primary" (click)="equipmentPage()">设备详情</button>-->
+      </div>
+    </div>
+    <construction-control-plan-view [hideTitle]="true" #safeCountersignModel></construction-control-plan-view>
+  </ng-template>
+
+  <ng-template #showSafeCountersignFooter>
+    <span></span>
+  </ng-template>
+</nz-modal>

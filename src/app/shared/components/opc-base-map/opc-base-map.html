@@ -1,0 +1,42 @@
+<div id="map">
+  <!--  铁路线路图层-->
+  <!--  <div [leafletLayer]="railwayLineLayer"></div>-->
+
+  <!--  铁路线公里标图层-->
+  <div *ngFor="let kilometerMarkPointLayer of kilometerMarkPointLayers">
+    <div [leafletLayers]="[kilometerMarkPointLayer]"></div>
+  </div>
+
+  <!--  光电缆线图层-->
+  <div *ngFor="let opcLineStringLayer of opcLineStringLayers">
+    <div [leafletLayers]="[opcLineStringLayer]"></div>
+  </div>
+
+  <!--  光电缆Mark图层-->
+  <div *ngFor="let opcMarkPointLayer of opcMarkPointLayers">
+    <div [leafletLayers]="[opcMarkPointLayer]"></div>
+  </div>
+</div>
+
+<!--<div style="display: none">-->
+<!--  <div #opcRightClickMenu>-->
+<!--    <nz-table>-->
+<!--      <thead>-->
+<!--      <tr>-->
+<!--        id-->
+<!--      </tr>-->
+<!--      </thead>-->
+<!--      <tbody>-->
+<!--      <td>{{checkedLocation.locationId}}</td>-->
+<!--      </tbody>-->
+<!--    </nz-table>-->
+<!--    &lt;!&ndash;    <ul nz-menu style="border-right: none">&ndash;&gt;-->
+<!--    &lt;!&ndash;      <li nz-menu-item (click)="deleteLocationConfirm()">&ndash;&gt;-->
+<!--    &lt;!&ndash;        删除该点&ndash;&gt;-->
+<!--    &lt;!&ndash;      </li>&ndash;&gt;-->
+<!--    &lt;!&ndash;      <li nz-menu-item (click)="getDistanceFromOpcOrRailwayLine()">&ndash;&gt;-->
+<!--    &lt;!&ndash;        光电缆/线路距离&ndash;&gt;-->
+<!--    &lt;!&ndash;      </li>&ndash;&gt;-->
+<!--    &lt;!&ndash;    </ul>&ndash;&gt;-->
+<!--  </div>-->
+<!--</div>-->

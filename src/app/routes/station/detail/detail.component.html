@@ -1,0 +1,101 @@
+<page-header [breadcrumb]="breadcrumb" [title]="'位置信息'"></page-header>
+<ng-template #breadcrumb>
+  <nz-breadcrumb>
+    <nz-breadcrumb-item>
+      <a [routerLink]="['/']">首页</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      <a [routerLink]="['/station/list']">车站列表</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>车站信息</nz-breadcrumb-item>
+  </nz-breadcrumb>
+</ng-template>
+
+<nz-card nzTitle="位置信息">
+  <form nz-form [formGroup]="validateForm" (ngSubmit)="executeStationInfo()" class="ant-advanced-search-form">
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzSpan]="16">
+        <nz-form-item [nzGutter]="24">
+          <nz-form-label [nzSpan]="2">名称</nz-form-label>
+          <nz-form-control [nzSpan]="22" nzHasFeedback [nzErrorTip]="userErrorTpl">
+            <input nz-input formControlName="name" placeholder="请输入名称" [(ngModel)]="station.name" />
+            <ng-template #userErrorTpl let-control>
+              <ng-container *ngIf="control.hasError('required')"> 请输入名称 </ng-container>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="16">
+        <nz-form-item [nzGutter]="24">
+          <nz-form-label [nzSpan]="2">编码</nz-form-label>
+          <nz-form-control [nzSpan]="22" nzHasFeedback [nzErrorTip]="userErrorTpl">
+            <input nz-input formControlName="code" placeholder="请输入编码" [(ngModel)]="station.code" />
+            <ng-template #userErrorTpl let-control>
+              <ng-container *ngIf="control.hasError('required')"> 请输入编码 </ng-container>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="16">
+        <nz-form-item [nzGutter]="24">
+          <nz-form-label [nzSpan]="2">一级组织</nz-form-label>
+          <nz-form-control [nzSpan]="22">
+            <nz-select formControlName="bureauId" [(ngModel)]="station.bureauId" (ngModelChange)="resetOrganizations(1)">
+              <div *ngFor="let bureau of bureaus">
+                <nz-option [nzValue]="bureau.id" nzLabel="{{ bureau.name }}"></nz-option>
+              </div>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="16">
+        <nz-form-item [nzGutter]="24">
+          <nz-form-label [nzSpan]="2">二级组织</nz-form-label>
+          <nz-form-control [nzSpan]="22">
+            <nz-select formControlName="sectionId" [(ngModel)]="station.sectionId" (ngModelChange)="resetOrganizations(2)">
+              <div *ngFor="let section of sections">
+                <nz-option
+                  *ngIf="station.bureauId == '' || section.parentId == station.bureauId"
+                  [nzValue]="section.id"
+                  nzLabel="{{ section.name }}"
+                >
+                </nz-option>
+              </div>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="16">
+        <nz-form-item [nzGutter]="24">
+          <nz-form-label [nzSpan]="2">三级组织</nz-form-label>
+          <nz-form-control [nzSpan]="22">
+            <nz-select formControlName="workshopId" [(ngModel)]="station.workshopId" (ngModelChange)="resetOrganizations(3)">
+              <div *ngFor="let workshop of workshops">
+                <nz-option
+                  *ngIf="station.sectionId == '' || workshop.parentId == station.sectionId"
+                  [nzValue]="workshop.id"
+                  nzLabel="{{ workshop.name }}"
+                >
+                </nz-option>
+              </div>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="16">
+        <nz-form-item [nzGutter]="24">
+          <nz-form-label [nzSpan]="2">公里标</nz-form-label>
+          <nz-form-control [nzSpan]="21">
+            <input nz-input formControlName="kilometerMark" placeholder="请输入公里标" [(ngModel)]="station.kilometerMark" />
+          </nz-form-control>
+          <nz-form-label [nzSpan]="1" [nzNoColon]="true">KM</nz-form-label>
+        </nz-form-item>
+      </div>
+    </div>
+    <div nz-row>
+      <div nz-col [nzSpan]="24" class="search-area">
+        <button nz-button [disabled]="!validateForm.valid" [nzType]="'primary'">提交</button>
+      </div>
+    </div>
+  </form>
+</nz-card>

@@ -1,0 +1,38 @@
+<h3 *ngIf="!hideTitle" style="width: 100%; margin-bottom: 20px; text-align: center">《B/C类施工配合方案确认单》</h3>
+<nz-descriptions nzBordered [nzSize]="'small'" [nzColumn]="4">
+  <nz-descriptions-item nzTitle="方案编号" nzSpan="2">{{ constructionControlPlan.code }}</nz-descriptions-item>
+  <nz-descriptions-item nzTitle="施工类型" nzSpan="2">
+    <div [ngSwitch]="constructionControlPlan.constructionStatus">
+      <span *ngSwitchCase="constructionConstrolPlanConstant.BC_CONSTRUCTION">B、C类施工</span>
+      <span *ngSwitchCase="constructionConstrolPlanConstant.NORMAL_CONSTRUCTION">施工</span>
+      <span *ngSwitchDefault>-</span>
+    </div>
+  </nz-descriptions-item>
+  <nz-descriptions-item nzTitle="施工项目" nzSpan="2">{{ constructionControlPlan.constructionProjectInfo }}</nz-descriptions-item>
+  <nz-descriptions-item nzTitle="施工内容及影响范围" nzSpan="2">
+    {{ constructionControlPlan.constructionContentAndInfluenceArea }}
+  </nz-descriptions-item>
+  <nz-descriptions-item nzTitle="施工日期及时间" nzSpan="2">
+    <span *ngFor="let constructionControlPlanWorkTime of constructionControlPlan.constructionControlPlanWorkTimes">
+      {{constructionControlPlanWorkTime.detailInfo}}
+    </span>
+  </nz-descriptions-item>
+  <nz-descriptions-item nzTitle="施工地点" nzSpan="2">
+    <span *ngFor="let constructionControlPlanKilometerMark of constructionControlPlan.constructionControlPlanKilometerMarks">
+      {{constructionControlPlanKilometerMark.detailInfo}}
+    </span>
+  </nz-descriptions-item>
+  <!--  <nz-descriptions-item nzTitle="施工机械"></nz-descriptions-item>-->
+</nz-descriptions>
+
+<nz-modal
+  [nzWidth]="1600"
+  nzTitle="施工范围预览"
+  [(nzVisible)]="showPlanMap"
+  [nzContent]="planMapContent"
+  (nzOnCancel)="this.showPlanMap = false"
+>
+  <ng-template #planMapContent>
+    <construction-control-plan-preview [constructionControlPlanId]="constructionControlPlanId"> </construction-control-plan-preview>
+  </ng-template>
+</nz-modal>

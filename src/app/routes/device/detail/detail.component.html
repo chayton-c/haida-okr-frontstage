@@ -1,0 +1,104 @@
+<page-header [breadcrumb]="breadcrumb" [title]="''"></page-header>
+<ng-template #breadcrumb>
+  <nz-breadcrumb>
+    <nz-breadcrumb-item>
+      <a [routerLink]="['/']">home</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      <a [routerLink]="['/device/list']">设备台账</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>设备信息</nz-breadcrumb-item>
+  </nz-breadcrumb>
+</ng-template>
+
+<nz-card nzTitle="设备信息">
+  <form nz-form [formGroup]="validateForm" (ngSubmit)="execute()">
+    <div nz-col [nzSpan]="13">
+      <nz-form-item [nzGutter]="24">
+        <nz-form-label nzFor="stationId" [nzSpan]="3">位置信息</nz-form-label>
+        <nz-form-control nzHasFeedback [nzErrorTip]="stationErrorTpl">
+          <nz-tree-select
+            formControlName="stationId"
+            style="width: 370px"
+            [nzNodes]="lineSelectTreeNodes"
+            nzShowSearch
+            nzPlaceHolder="环境位置"
+            [(ngModel)]="device.stationId"
+            name="stationId"
+          >
+          </nz-tree-select>
+          <ng-template #stationErrorTpl let-control>
+            <ng-container *ngIf="control.hasError('required')"> 位置信息不能为空</ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col [nzSpan]="13">
+      <nz-form-item [nzGutter]="24">
+        <nz-form-label nzFor="deviceTypeIdOrDeviceSubTypeId" [nzSpan]="3">设备类型</nz-form-label>
+        <nz-form-control nzHasFeedback [nzErrorTip]="deviceTypeErrorTpl">
+          <nz-tree-select
+            formControlName="deviceTypeIdOrDeviceSubTypeId"
+            style="width: 370px"
+            [nzNodes]="deviceTypeSelectTreeNodes"
+            nzShowSearch
+            nzPlaceHolder="设备类型"
+            [(ngModel)]="device.deviceTypeIdOrDeviceSubTypeId"
+            name="deviceTypeIdOrDeviceSubTypeId"
+          >
+          </nz-tree-select>
+          <ng-template #deviceTypeErrorTpl let-control>
+            <ng-container *ngIf="control.hasError('required')"> 设备类型不能为空</ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzSpan]="13">
+        <nz-form-item [nzGutter]="24">
+          <nz-form-label nzFor="name" [nzSpan]="3">名称</nz-form-label>
+          <nz-form-control nzHasFeedback [nzErrorTip]="nameErrorTpl">
+            <input nz-input formControlName="name" placeholder="请输入名称" [(ngModel)]="device.name"/>
+            <ng-template #nameErrorTpl let-control>
+              <ng-container *ngIf="control.hasError('required')"> 设备名称不能为空</ng-container>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="13">
+        <nz-form-item [nzGutter]="24">
+          <nz-form-label nzFor="code" [nzSpan]="3">编码</nz-form-label>
+          <nz-form-control nzHasFeedback [nzErrorTip]="codeErrorTpl">
+            <input nz-input formControlName="code" placeholder="请输入编码" [(ngModel)]="device.code"/>
+            <ng-template #codeErrorTpl let-control>
+              <ng-container *ngIf="control.hasError('required')"> 设备编码不能为空</ng-container>
+              <ng-container *ngIf="control.hasError('needStationId')"> 请选择位置信息</ng-container>
+              <ng-container *ngIf="control.hasError('duplicated')"> 同一位置下已存在编码相同的设备</ng-container>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="13">
+        <nz-form-item [nzGutter]="24">
+          <nz-form-label nzFor="deviceModel" [nzSpan]="3">设备型号</nz-form-label>
+          <nz-form-control nzHasFeedback>
+            <input nz-input formControlName="deviceModel" placeholder="请输入设备型号" [(ngModel)]="device.deviceModel"/>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="13">
+        <nz-form-item [nzGutter]="24">
+          <nz-form-label nzFor="remark" [nzSpan]="3">备注</nz-form-label>
+          <nz-form-control nzHasFeedback>
+            <input nz-input formControlName="remark" placeholder="请输入备注" [(ngModel)]="device.remark"/>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="13">
+        <div class="search-area">
+          <button nz-button [disabled]="!validateForm.valid" [nzType]="'primary'">提交</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</nz-card>

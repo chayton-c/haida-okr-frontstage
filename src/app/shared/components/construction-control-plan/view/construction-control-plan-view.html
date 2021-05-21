@@ -1,0 +1,56 @@
+<h2 *ngIf="!hideTitle" style="width: 100%; margin-bottom: 20px; text-align: center">《B/C类施工配合方案确认单》</h2>
+<nz-descriptions nzBordered [nzSize]="'middle'" [nzColumn]="2">
+  <nz-descriptions-item nzTitle="方案编号">{{ constructionControlPlan.code }}</nz-descriptions-item>
+  <nz-descriptions-item nzTitle="施工类型" [ngSwitch]="constructionControlPlan.constructionStatus">
+    <span *ngSwitchCase="constructionConstrolPlanConstant.BC_CONSTRUCTION">B、C类施工</span>
+    <span *ngSwitchCase="constructionConstrolPlanConstant.NORMAL_CONSTRUCTION">施工</span>
+  </nz-descriptions-item>
+  <!--  <nz-descriptions-item nzTitle="等级或级别" [ngSwitch]="constructionControlPlan.constructionLevel">-->
+  <!--    <span *ngSwitchCase="constructionConstrolPlanConstant.LEVEL1">1级</span>-->
+  <!--    <span *ngSwitchCase="constructionConstrolPlanConstant.LEVEL2">2级</span>-->
+  <!--    <span *ngSwitchCase="constructionConstrolPlanConstant.LEVEL3">3级</span>-->
+  <!--    <span *ngSwitchCase="constructionConstrolPlanConstant.TYPEB">B类</span>-->
+  <!--    <span *ngSwitchCase="constructionConstrolPlanConstant.TYPEC">C类</span>-->
+  <!--  </nz-descriptions-item>-->
+  <nz-descriptions-item nzTitle="施工项目" [nzSpan]="4">{{ constructionControlPlan.constructionProjectInfo }}</nz-descriptions-item>
+  <nz-descriptions-item nzTitle="施工内容及影响范围" [nzSpan]="4">
+    <div style="width: 400px">{{ constructionControlPlan.constructionContentAndInfluenceArea }}</div>
+  </nz-descriptions-item>
+  <!--  <nz-descriptions-item nzTitle="施工机械"></nz-descriptions-item>-->
+  <nz-descriptions-item nzTitle="建设单位" [nzSpan]="4">{{ constructionControlPlan.constructDepartment }}</nz-descriptions-item>
+  <nz-descriptions-item nzTitle="施工单位及负责人" [nzSpan]="4"
+  >{{ constructionControlPlan.constructionDepartmentAndPrincipalName }}</nz-descriptions-item
+  >
+  <nz-descriptions-item nzTitle="现场调查部门" [nzSpan]="4">{{ constructionControlPlan.investigationOrganizationName }}</nz-descriptions-item>
+  <nz-descriptions-item nzTitle="完成调查时间" [nzSpan]="4"></nz-descriptions-item>
+  <nz-descriptions-item nzTitle="调查结果说明" [nzSpan]="4"></nz-descriptions-item>
+  <nz-descriptions-item nzTitle="施工地点" [nzSpan]="4">
+    <div *ngFor="let constructionControlPlanKilometerMark of constructionControlPlan.constructionControlPlanKilometerMarks">
+      {{constructionControlPlanKilometerMark.detailInfo}}
+    </div>
+  </nz-descriptions-item>
+  <nz-descriptions-item nzTitle="施工日期及时间" [nzSpan]="4">
+    <div *ngFor="let constructionControlPlanWorkTime of constructionControlPlan.constructionControlPlanWorkTimes">
+      {{constructionControlPlanWorkTime.detailInfo}}
+    </div>
+  </nz-descriptions-item>
+  <nz-descriptions-item nzTitle="施工范围示意图">
+    <a nzType="butuon" (click)="showPlanMapFunction()">查看</a>
+  </nz-descriptions-item>
+</nz-descriptions>
+
+<nz-modal
+  [nzWidth]="1600"
+  nzTitle="施工范围预览"
+  [(nzVisible)]="showPlanMap"
+  [nzContent]="planMapContent"
+  [nzFooter]="planMapFooter"
+  (nzOnCancel)="this.showPlanMap = false"
+>
+  <ng-template #planMapContent>
+    <construction-control-plan-preview [constructionControlPlanId]="constructionControlPlanId"></construction-control-plan-preview>
+  </ng-template>
+  <ng-template #planMapFooter>
+    <button nz-button (click)="showPlanMap = false" nzType="primary">确定</button>
+  </ng-template>
+</nz-modal>

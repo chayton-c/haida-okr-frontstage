@@ -1,0 +1,268 @@
+<page-header [title]="''"></page-header>
+<div nz-row>
+  <nz-card nz-col nzSpan="4" nzTitle="组织列表">
+    <nz-table #expandTable [nzData]="organizations" [nzLoading]="organizationLoading" nzTableLayout="fixed" [nzFrontPagination]="false">
+      <tbody style="margin-left: 0">
+        <ng-container *ngFor="let data of expandTable.data">
+          <ng-container *ngFor="let item of mapOfExpandedData[data.id]">
+            <tr *ngIf="(item.parent && item.parent.expand) || !item.parent">
+              <td
+                [nzIndentSize]="item.level! * 10"
+                [nzShowExpand]="item.level != 3"
+                [(nzExpand)]="item.expand"
+                (nzExpandChange)="collapse(mapOfExpandedData[data.id], item, $event)"
+                (click)="clickOrganization(item)"
+              >
+                <span [style]="checkedOrganization.id == item.id ? 'color:#1890ff;cursor:pointer' : 'cursor:pointer'">{{ item.name }}</span>
+              </td>
+            </tr>
+          </ng-container>
+        </ng-container>
+      </tbody>
+    </nz-table>
+  </nz-card>
+
+  <div nz-col nzSpan="20">
+    <nz-card>
+      <nz-tabset>
+        <nz-tab nzTitle="岗位列表">
+          <form
+            nz-form
+            [nzLayout]="'inline'"
+            (ngSubmit)="loadRoleDataFromServer(rolePageIndex, rolePageSize, roleFormParams)"
+            class="search__form"
+          >
+            <div nz-row [nzGutter]="{ xs: 12, sm: 12, md: 12, lg: 24, xl: 48, xxl: 48 }">
+              <div nz-col nzMd="10" nzSm="24">
+                <nz-form-item>
+                  <nz-form-label nzFor="role">岗位名称</nz-form-label>
+                  <nz-form-control>
+                    <input nz-input [(ngModel)]="roleFormParams.name" name="role" placeholder="请输入岗位名称" id="role" />
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+              <div nz-col nzMd="14">
+                <nz-form-item>
+                  <nz-form-control>
+                    <button nz-button type="submit" [nzType]="'primary'" [nzLoading]="roleLoading">查询</button>
+                    <button nz-button type="submit" (click)="addRoleOrganization()">添加</button>
+                    <button
+                      nz-popconfirm
+                      nzPopconfirmTitle="确定要删除选中的岗位吗?"
+                      (nzOnConfirm)="deleteRoleOrganization()"
+                      nzPopconfirmPlacement="topLeft"
+                      nz-button
+                    >
+                      删除
+                    </button>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div>
+          </form>
+          <nz-table
+            nzShowSizeChanger
+            [nzData]="roles"
+            [nzFrontPagination]="false"
+            [nzPageSizeOptions]="[5, 10, 20, 50]"
+            [nzLoading]="roleLoading"
+            [nzTotal]="roleTotal"
+            [nzPageSize]="rolePageSize"
+            [nzPageIndex]="rolePageIndex"
+            nzSize="small"
+            (nzQueryParams)="onQueryParamsChange($event)"
+          >
+            <thead>
+              <tr>
+                <th></th>
+                <th nzColumnKey="name">岗位</th>
+                <th nzColumnKey="gender">描述</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of roles" (click)="onRoleChecked(data, !setOfRolesCheckedId.has(data.id))">
+                <td [nzChecked]="setOfRolesCheckedId.has(data.id)" (nzCheckedChange)="onRoleChecked(data, $event)"></td>
+                <td>{{ data.name }}</td>
+                <td>{{ data.description }}</td>
+              </tr>
+            </tbody>
+          </nz-table>
+
+          <nz-divider></nz-divider>
+          <form
+            nz-form
+            [nzLayout]="'inline'"
+            (ngSubmit)="loadUsersFromServer(userPageIndex, userPageSize, userFormParams)"
+            class="search__form"
+          >
+            <div nz-row [nzGutter]="{ xs: 8, sm: 8, md: 8, lg: 24, xl: 48, xxl: 48 }" style="width: 100%">
+              <div nz-col nzMd="12">
+                <nz-form-item>
+                  <nz-form-label>用户名</nz-form-label>
+                  <nz-form-control>
+                    <input nz-input [(ngModel)]="userFormParams.displayName" name="displayName" placeholder="请输入用户名" />
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+              <div nz-col nzSpan="12">
+                <nz-form-item>
+                  <nz-form-control>
+                    <button nz-button type="submit" [nzType]="'primary'" [nzLoading]="userLoading">查询</button>
+                    <button nz-button type="button" (click)="userAddPage()">新增</button>
+                    <button nz-button type="button" (click)="userUpdatePage()">修改</button>
+                    <button
+                      nz-popconfirm
+                      nzPopconfirmTitle="确定要删除选中的用户吗?"
+                      (nzOnConfirm)="deleteUser()"
+                      nzPopconfirmPlacement="topLeft"
+                      nz-button
+                    >
+                      删除
+                    </button>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div>
+          </form>
+          <nz-table
+            nzShowSizeChanger
+            [nzData]="users"
+            [nzFrontPagination]="false"
+            [nzPageSizeOptions]="[5, 10, 20, 50]"
+            [nzLoading]="userLoading"
+            [nzTotal]="userTotal"
+            [nzPageSize]="userPageSize"
+            [nzPageIndex]="userPageIndex"
+            nzSize="small"
+            (nzQueryParams)="userOnQueryParamsChange($event)"
+          >
+            <thead>
+              <tr>
+                <th [nzChecked]="userChecked" [nzIndeterminate]="userIndeterminate" (nzCheckedChange)="userOnAllChecked($event)"></th>
+                <th>登录账号</th>
+                <th>用户名</th>
+                <th>一级部门</th>
+                <th>二级部门</th>
+                <th>三级部门</th>
+                <th>四级部门</th>
+                <th>岗位</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of users">
+                <td [nzChecked]="setOfUsersCheckedId.has(data.id)" (nzCheckedChange)="userOnItemChecked(data.id, $event)"></td>
+                <td>{{ data.userName }}</td>
+                <td>{{ data.displayName }}</td>
+                <td>{{ data.bureauName }}</td>
+                <td>{{ data.sectionName }}</td>
+                <td>{{ data.workshopName }}</td>
+                <td>{{ data.workAreaName }}</td>
+                <td>{{ data.roleName }}</td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </nz-tab>
+        <nz-tab nzTitle="组织信息">
+          <form nz-form [nzLayout]="'inline'" class="search__form">
+            <div nz-row [nzGutter]="16">
+              <div nz-col nzSpan="20">
+                <nz-form-item nz-row>
+                  <nz-form-label nz-col nzSpan="6">组织名称</nz-form-label>
+                  <nz-form-control nz-col nzSpan="18">
+                    <input nz-input readonly [value]="checkedOrganization == null ? '' : checkedOrganization.name" />
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+              <div nz-col nzSpan="4">
+                <nz-form-item>
+                  <nz-form-control>
+                    <button nz-button (click)="organizationUpdatePage()" [nzType]="'primary'">修改</button>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div>
+          </form>
+
+          <nz-divider style="margin-top: 0"></nz-divider>
+          <form
+            nz-form
+            [nzLayout]="'inline'"
+            (ngSubmit)="
+              loadSubordinateOrganizationFromServer(
+                subordinateOrganizationPageIndex,
+                subordinateOrganizationPageSize,
+                subordinateOrganizationFormParams
+              )
+            "
+            class="search__form"
+          >
+            <div nz-row [nzGutter]="{ xs: 8, sm: 8, md: 8, lg: 24, xl: 48, xxl: 48 }" style="width: 100%">
+              <div nz-col nzMd="12" nzSm="24">
+                <nz-form-item>
+                  <nz-form-label>下级组织名称</nz-form-label>
+                  <nz-form-control>
+                    <input nz-input [(ngModel)]="subordinateOrganizationFormParams.name" name="name" placeholder="请输入组织名称" />
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+              <div nz-col nzSpan="12">
+                <nz-form-item>
+                  <nz-form-control>
+                    <button nz-button type="submit" [nzType]="'primary'" [nzLoading]="subordinateOrganizationLoading">查询</button>
+                    <button nz-button type="button" (click)="organizationAddPage()">新增</button>
+                    <button nz-button type="button" (click)="organizationListUpdatePage()">修改</button>
+                    <button
+                      nz-popconfirm
+                      nzPopconfirmTitle="确定要删除选中的组织吗?"
+                      (nzOnConfirm)="deleteOrganizations()"
+                      nzPopconfirmPlacement="topLeft"
+                      nz-button
+                    >
+                      删除
+                    </button>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div>
+          </form>
+          <nz-table
+            nzShowSizeChanger
+            [nzData]="subordinateOrganizations"
+            [nzFrontPagination]="false"
+            [nzPageSizeOptions]="[5, 10, 20, 50]"
+            [nzLoading]="subordinateOrganizationLoading"
+            [nzTotal]="subordinateOrganizationTotal"
+            [nzPageSize]="subordinateOrganizationPageSize"
+            [nzPageIndex]="subordinateOrganizationPageIndex"
+            nzSize="small"
+            (nzQueryParams)="subordinateOrganizationOnQueryParamsChange($event)"
+          >
+            <thead>
+              <tr>
+                <th
+                  [nzChecked]="subordinateOrganizationChecked"
+                  [nzIndeterminate]="subordinateOrganizationIndeterminate"
+                  (nzCheckedChange)="subordinateOrganizationOnAllChecked($event)"
+                ></th>
+                <th>名称</th>
+                <th>描述</th>
+                <th>备注</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of subordinateOrganizations">
+                <td
+                  [nzChecked]="setOfSubordinateOrganizationCheckedId.has(data.id)"
+                  (nzCheckedChange)="subordinateOrganizationOnItemChecked(data.id, $event)"
+                ></td>
+                <td>{{ data.name }}</td>
+                <td>{{ data.description }}</td>
+                <td>{{ data.remark }}</td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </nz-tab>
+      </nz-tabset>
+    </nz-card>
+  </div>
+</div>

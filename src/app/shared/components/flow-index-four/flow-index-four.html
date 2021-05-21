@@ -1,0 +1,272 @@
+<div nz-row>
+  <div nz-col nzSpan="6">
+    <nz-card nzTitle="径路测绘情况总览">
+      <div class="station-box">
+        <nz-form-label>车间</nz-form-label>
+        <nz-select style="width: 180px" name="pathPlottingWorkshopId" nzPlaceHolder="所有" [(ngModel)]="formParams.pathPlottingWorkshopId">
+          <div>
+            <nz-option [nzValue]="" nzLabel="所有"></nz-option>
+          </div>
+          <div *ngFor="let data of workshops">
+            <nz-option [nzValue]="data.id" nzLabel="{{ data.name }}"></nz-option>
+          </div>
+        </nz-select>
+      </div>
+      <table width="100%">
+        <tr>
+          <td width="10%">1</td>
+          <td class="card-table-td">
+            <nz-form-label>&nbsp;管辖总里程</nz-form-label>
+          </td>
+          <td width="20%">20</td>
+          <td width="12%">km</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td class="card-table-td">
+            <nz-form-label>&nbsp;管辖车站数</nz-form-label>
+          </td>
+          <td>5</td>
+          <td>个</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td class="card-table-td">
+            <nz-form-label>&nbsp;已测绘线路里程</nz-form-label>
+          </td>
+          <td>5.6</td>
+          <td>km</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td class="card-table-td">
+            <nz-form-label>&nbsp;已测绘区间光电缆径路</nz-form-label>
+          </td>
+          <td>3.6</td>
+          <td>km</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td class="card-table-td">
+            <nz-form-label>&nbsp;已测绘站内光电缆径路</nz-form-label>
+          </td>
+          <td>0</td>
+          <td>个</td>
+        </tr>
+      </table>
+    </nz-card>
+  </div>
+  <div nz-col nzSpan="5">
+    <nz-card nzTitle="方案管控总览">
+      <div class="station-box">
+        <nz-form-label>车间</nz-form-label>
+        <nz-select
+          style="width: 180px"
+          name="cooperativePlanWorkshopId"
+          nzPlaceHolder="所有"
+          [(ngModel)]="formParams.cooperativePlanWorkshopId"
+        >
+          <div>
+            <nz-option [nzValue]="" nzLabel="所有"></nz-option>
+          </div>
+          <div *ngFor="let data of workshops">
+            <nz-option [nzValue]="data.id" nzLabel="{{ data.name }}"></nz-option>
+          </div>
+        </nz-select>
+      </div>
+      <div echarts style="width: 300px; height: 176px" (chartInit)="onChartInit($event)" [options]="options" [autoResize]="true"></div>
+    </nz-card>
+  </div>
+  <div nz-col nzSpan="13">
+    <nz-card nzTitle="作业管控情况总览">
+      <div nz-row class="station-box">
+        <div nz-col nzSpan="7.5">
+          <nz-form-label>车间</nz-form-label>
+          <nz-select
+            style="width: 180px"
+            name="operationalProcessWorkshopId"
+            nzPlaceHolder="所有"
+            [(ngModel)]="formParams.operationalProcessWorkshopId"
+          >
+            <div>
+              <nz-option [nzValue]="" nzLabel="所有"></nz-option>
+            </div>
+            <div *ngFor="let data of workshops">
+              <nz-option [nzValue]="data.id" nzLabel="{{ data.name }}"></nz-option>
+            </div>
+          </nz-select>
+        </div>
+        <div nz-col nzSpan="1.5">
+          <nz-form-label>&nbsp;&nbsp;单位</nz-form-label>
+          <nz-form-label [nzNoColon]="true">个</nz-form-label>
+        </div>
+        <div nz-col nzSpan="1"></div>
+        <div nz-col nzSpan="14" style="margin-top: 5px">
+          <div style="width: 500px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">
+            <img src="/assets/opcimg/opc-index-imgs/warning.svg" style="margin-right: 10px" />
+            <span>日计划（2101010001），于1月1日 12:30 产生预警：预警内容预警内容预警内容预警内容预警内容预警内容预警内容</span>
+          </div>
+        </div>
+      </div>
+      <nz-table nzSize="small" style="margin-bottom: 18px" [nzData]="operationalProcessList" [nzShowPagination]="false" [nzBordered]="true">
+        <thead>
+          <tr>
+            <th [nzAlign]="'center'">阶段</th>
+            <th [nzAlign]="'center'">1类</th>
+            <th [nzAlign]="'center'">2类</th>
+            <th [nzAlign]="'center'">3类</th>
+            <th [nzAlign]="'center'">4类</th>
+            <th [nzAlign]="'center'">5类</th>
+            <th [nzAlign]="'center'">当年总计</th>
+            <th [nzAlign]="'center'">当月总计</th>
+            <th [nzAlign]="'center'">上月总计</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!--        <tr *ngFor="let data of operationalProcessList">-->
+          <!--          <td [nzAlign]="'center'">{{ data.step }}</td>-->
+          <!--          <td [nzAlign]="'center'">{{ data.level1 }}</td>-->
+          <!--          <td [nzAlign]="'center'">{{ data.level2 }}</td>-->
+          <!--          <td [nzAlign]="'center'">{{ data.level3 }}</td>-->
+          <!--          <td [nzAlign]="'center'">{{ data.level4 }}</td>-->
+          <!--          <td [nzAlign]="'center'">{{ data.level5 }}</td>-->
+          <!--          <td [nzAlign]="'center'">{{ data.currentYearTotal }}</td>-->
+          <!--          <td [nzAlign]="'center'">{{ data.currentMonthTotal }}</td>-->
+          <!--          <td [nzAlign]="'center'">{{ data.lastMonthTotal }}</td>-->
+          <!--        </tr>-->
+          <tr>
+            <td [nzAlign]="'center'">已关联方案</td>
+            <td [nzAlign]="'center'">0</td>
+            <td [nzAlign]="'center'">0</td>
+            <td [nzAlign]="'center'">0</td>
+            <td [nzAlign]="'center'">0</td>
+            <td [nzAlign]="'center'">0</td>
+            <td [nzAlign]="'center'">0</td>
+            <td [nzAlign]="'center'">0</td>
+            <td [nzAlign]="'center'">0</td>
+          </tr>
+          <tr>
+            <td [nzAlign]="'center'">未开始方案</td>
+            <td [nzAlign]="'center'">{{ countByWarnStatusAndConstructionStep(todayListConstant.LEVEL1, todayListConstant.STEP2) }}</td>
+            <td [nzAlign]="'center'">{{ countByWarnStatusAndConstructionStep(todayListConstant.LEVEL2, todayListConstant.STEP2) }}</td>
+            <td [nzAlign]="'center'">{{ countByWarnStatusAndConstructionStep(todayListConstant.LEVEL3, todayListConstant.STEP2) }}</td>
+            <td [nzAlign]="'center'">{{ countByWarnStatusAndConstructionStep(todayListConstant.LEVEL4, todayListConstant.STEP2) }}</td>
+            <td [nzAlign]="'center'">{{ countByWarnStatusAndConstructionStep(todayListConstant.LEVEL5, todayListConstant.STEP2) }}</td>
+            <td [nzAlign]="'center'">0</td>
+            <td [nzAlign]="'center'">0</td>
+            <td [nzAlign]="'center'">0</td>
+          </tr>
+          <tr>
+            <td [nzAlign]="'center'">已开始方案</td>
+            <td [nzAlign]="'center'">{{ countByWarnStatusAndConstructionStep(todayListConstant.LEVEL1, todayListConstant.STEP3) }}</td>
+            <td [nzAlign]="'center'">{{ countByWarnStatusAndConstructionStep(todayListConstant.LEVEL2, todayListConstant.STEP3) }}</td>
+            <td [nzAlign]="'center'">{{ countByWarnStatusAndConstructionStep(todayListConstant.LEVEL3, todayListConstant.STEP3) }}</td>
+            <td [nzAlign]="'center'">{{ countByWarnStatusAndConstructionStep(todayListConstant.LEVEL4, todayListConstant.STEP3) }}</td>
+            <td [nzAlign]="'center'">{{ countByWarnStatusAndConstructionStep(todayListConstant.LEVEL5, todayListConstant.STEP3) }}</td>
+            <td [nzAlign]="'center'">0</td>
+            <td [nzAlign]="'center'">0</td>
+            <td [nzAlign]="'center'">0</td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </nz-card>
+  </div>
+</div>
+<div nz-row>
+  <div nz-col nzSpan="11">
+    <div nz-row>
+      <nz-card nzTitle="系统功能总览">
+        <div class="system-function-div">
+          <img class="system-function-div-img" src="/assets/opcimg/index-flow.png" />
+        </div>
+      </nz-card>
+    </div>
+    <div nz-row>
+      <div nz-col nzSpan="24">
+        <nz-card nzTitle="最新动态">
+          <div>
+            <p>01-10 12:30 施工项目名施工项目名（2101101230）开始启动</p>
+            <p>01-10 12:30 施工项目名施工项目名（2101101230）通过审核</p>
+            <p>01-10 12:30 施工项目名施工项目名（2101101230）通过批准</p>
+            <p>01-10 12:30 施工项目名施工项目名（2101101230）已经关联正式计划</p>
+          </div>
+        </nz-card>
+      </div>
+    </div>
+  </div>
+  <div nz-col nzSpan="13">
+    <nz-card nzTitle="日计划情况总览">
+      <div nz-row class="station-box">
+        <div nz-col nzSpan="8">
+          <nz-form-label>车间</nz-form-label>
+          <nz-select style="width: 180px" name="dailyPlanWorkshopId" nzPlaceHolder="所有" [(ngModel)]="formParams.dailyPlanWorkshopId">
+            <div>
+              <nz-option [nzValue]="" nzLabel="所有"></nz-option>
+            </div>
+            <div *ngFor="let data of workshops">
+              <nz-option [nzValue]="data.id" nzLabel="{{ data.name }}"></nz-option>
+            </div>
+          </nz-select>
+        </div>
+        <div nz-col nzSpan="16">
+          <nz-form-label>日期</nz-form-label>
+          <nz-date-picker style="width: 180px" name="dailyPlanDate" [(ngModel)]="formParams.dailyPlanDate"></nz-date-picker>
+        </div>
+      </div>
+      <nz-table
+        nzShowSizeChanger
+        [nzData]="constructionDailyPlanList"
+        [nzFrontPagination]="true"
+        [nzPageSizeOptions]="[5, 10]"
+        [nzLoading]="constructionDailyPlanLoading"
+        [nzTotal]="constructionDailyPlanTotal"
+        [nzPageSize]="constructionDailyPlanPageSize"
+        [nzPageIndex]="constructionDailyPlanPageIndex"
+        nzSize="small"
+        [nzBordered]="true"
+        (nzQueryParams)="onConstructionDailyPlanQueryParamsChange($event)"
+      >
+        <thead>
+          <tr>
+            <th>日计划编号</th>
+            <th>等级</th>
+            <th>方案编号</th>
+            <th>线路</th>
+            <th>行别</th>
+            <th>施工项目</th>
+            <th>登记站</th>
+            <th>开始时间</th>
+            <th>结束时间</th>
+            <th>开始里程</th>
+            <th>结束里程</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of constructionDailyPlanList">
+            <!-- 日计划编号 -->
+            <td>{{ data.code }}</td>
+            <td>1</td>
+            <td>{{ data.code }}</td>
+            <td>{{ data.railwayLineName }}</td>
+            <td [ngSwitch]="data.downriver">
+              <span *ngSwitchCase="constructionControlPlanConstant.UPRIVER">上行</span>
+              <span *ngSwitchCase="constructionControlPlanConstant.DOWNRIVER">下行</span>
+              <span *ngSwitchDefault>-</span>
+            </td>
+            <td>
+              <div style="width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">
+                施工项目施工项目施工项目施工项目施工项目项目施工项目施工项目
+              </div>
+              <!--            {{ data.constructionProjectInfo }}-->
+            </td>
+            <td>哈尔滨站</td>
+            <td>{{ data.startTime | date: 'yyyy-MM-dd HH:mm' }}</td>
+            <td>{{ data.endTime | date: 'yyyy-MM-dd HH:mm' }}</td>
+            <td>{{ data.startKilometer | kilometerPipe }}</td>
+            <td>{{ data.endKilometer | kilometerPipe }}</td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </nz-card>
+  </div>
+</div>

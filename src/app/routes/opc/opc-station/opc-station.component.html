@@ -1,0 +1,15 @@
+<page-header [title]="''"></page-header>
+<div nz-row>
+  <div nz-col [nzSpan]="24">
+    <nz-card>
+      <nz-tabset [(nzSelectedIndex)]="selectIndex">
+        <nz-tab *ngFor="let tab of tabs"
+                [nzTitle]="tab.station ? tab.station.name : tab.leftStation.name + '-' + tab.rightStation.name">
+          <ng-template nz-tab>
+            <opc-map [leftStationId]="tab.leftStation.id" [rightStationId]="tab.rightStation.id"></opc-map>
+          </ng-template>
+        </nz-tab>
+      </nz-tabset>
+    </nz-card>
+  </div>
+</div>

@@ -1,0 +1,77 @@
+<page-header [title]="'岗位列表'"></page-header>
+
+<nz-card>
+  <form nz-form [nzLayout]="'inline'" (ngSubmit)="loadDataFromServer(pageIndex, pageSize, formParams)" class="search__form">
+    <div nz-row [nzGutter]="24" style="width: 100%">
+      <div nz-col nzSpan="12">
+        <nz-form-item>
+          <nz-form-label nzFor="role">岗位名称</nz-form-label>
+          <nz-form-control>
+            <input nz-input [(ngModel)]="formParams.name" name="role" placeholder="请输入岗位名称" id="role" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="12">
+        <nz-form-item>
+          <nz-form-control>
+            <button nz-button type="submit" [nzType]="'primary'" [nzLoading]="loading">查询</button>
+            <button nz-button (click)="addPage()" type="submit">新增</button>
+            <button nz-button (click)="updatePage()" type="submit">修改</button>
+            <button nz-button (click)="updateAuth()" type="submit">编辑权限</button>
+            <button
+              nz-popconfirm
+              nzPopconfirmTitle="确定要删除选中的岗位吗?"
+              (nzOnConfirm)="deleteRole()"
+              nzPopconfirmPlacement="topLeft"
+              nz-button
+            >
+              删除
+            </button>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+  </form>
+  <div class="my-md">
+    <nz-alert [nzType]="'info'" [nzShowIcon]="true" [nzMessage]="message">
+      <ng-template #message>
+        共<strong class="text-primary">{{ total }}</strong
+        >条记录
+      </ng-template>
+    </nz-alert>
+  </div>
+  <nz-table
+    nzShowSizeChanger
+    [nzData]="roles"
+    [nzFrontPagination]="false"
+    [nzLoading]="loading"
+    [nzPageSizeOptions]="[5, 10, 20, 50]"
+    [nzTotal]="total"
+    [nzPageSize]="pageSize"
+    [nzPageIndex]="pageIndex"
+    nzSize="small"
+    (nzQueryParams)="onQueryParamsChange($event)"
+  >
+    <thead>
+      <tr>
+        <th [nzChecked]="checked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="onAllChecked($event)"></th>
+        <th nzColumnKey="name">岗位</th>
+        <th nzColumnKey="gender">部门</th>
+        <th nzColumnKey="gender">级别</th>
+        <th nzColumnKey="gender">描述</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of roles" (click)="onItemChecked(data.id, !setOfCheckedId.has(data.id))">
+        <td [nzChecked]="setOfCheckedId.has(data.id)" (nzCheckedChange)="onItemChecked(data.id, $event)"></td>
+        <td>{{ data.name }}</td>
+        <td>{{ data.organizationNames }}</td>
+        <td *ngIf="data.organizationPermission == 1">一级部门</td>
+        <td *ngIf="data.organizationPermission == 2">二级部门</td>
+        <td *ngIf="data.organizationPermission == 3">三级部门</td>
+        <td *ngIf="data.organizationPermission == 4">四级部门</td>
+        <td>{{ data.description }}</td>
+      </tr>
+    </tbody>
+  </nz-table>
+</nz-card>

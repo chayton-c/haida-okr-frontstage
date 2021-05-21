@@ -1,0 +1,47 @@
+<page-header [breadcrumb]="breadcrumb" [title]="''"></page-header>
+<ng-template #breadcrumb>
+  <nz-breadcrumb>
+    <nz-breadcrumb-item>
+      <a [routerLink]="['/']">首页</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      <a [routerLink]="['/organization/list']">基础数据</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      <a [routerLink]="['/railway-line/list']">线路车站</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>线路配置</nz-breadcrumb-item>
+  </nz-breadcrumb>
+</ng-template>
+
+<nz-card nzTitle="线路信息">
+  <form nz-form [formGroup]="validateForm" (ngSubmit)="executeRailwayLineInfo()">
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzSpan]="13">
+        <nz-form-item [nzGutter]="24">
+          <nz-form-label nzFor="name">名称</nz-form-label>
+          <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+            <input nz-input formControlName="name" placeholder="请输入名称" [(ngModel)]="railwayLine.name" />
+            <ng-template #userErrorTpl let-control>
+              <ng-container *ngIf="control.hasError('required')"> 单位名称不能为空</ng-container>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item [nzGutter]="24">
+          <nz-form-label nzFor="code">编码</nz-form-label>
+          <nz-form-control nzHasFeedback [nzErrorTip]="userErrorTpl">
+            <input nz-input formControlName="code" placeholder="请输入名称" [(ngModel)]="railwayLine.code" />
+            <ng-template #userErrorTpl let-control>
+              <ng-container *ngIf="control.hasError('required')"> 编码名称不能为空</ng-container>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-row>
+        <div nz-col [nzSpan]="24" class="search-area">
+          <button nz-button [disabled]="!validateForm.valid" [nzType]="'primary'">提交</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</nz-card>

@@ -1,0 +1,325 @@
+<page-header [title]="''"></page-header>
+
+<nz-card>
+  <form nz-form [nzLayout]="'inline'" class="search__form">
+    <div nz-row [nzGutter]="12" style="width: 100%">
+      <div nz-col [nzSpan]="2">
+        <nz-form-label>待关联方案</nz-form-label>
+      </div>
+      <div nz-col [nzSpan]="3">
+        <nz-form-item>
+          <nz-form-label>方案流程</nz-form-label>
+          <nz-form-control>
+            <nz-select [(ngModel)]="constructionControlPlanFormParams.processStatus" name="processStatus">
+              <nz-option [nzValue]="" nzLabel="全部"></nz-option>
+              <nz-option [nzValue]="constructionControlPlanConstant.PENDING_SUBMIT" nzLabel="待提交"></nz-option>
+              <nz-option [nzValue]="constructionControlPlanConstant.PENDING_COUNTERSIGN" nzLabel="待会签"></nz-option>
+              <nz-option [nzValue]="constructionControlPlanConstant.PENDING_RELEVANCE" nzLabel="待关联"></nz-option>
+              <nz-option [nzValue]="constructionControlPlanConstant.RELEVANCEED" nzLabel="已关联"></nz-option>
+              <nz-option [nzValue]="constructionControlPlanConstant.CLOSED" nzLabel="已关闭"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col [nzSpan]="3">
+        <nz-form-item>
+          <nz-form-label>方案状态</nz-form-label>
+          <nz-form-control>
+            <nz-select [(ngModel)]="constructionControlPlanFormParams.planStatus" name="planStatus">
+              <nz-option [nzValue]="" nzLabel="全部"></nz-option>
+              <nz-option [nzValue]="constructionControlPlanConstant.FIRST_DRAFT" nzLabel="初稿"></nz-option>
+              <nz-option [nzValue]="constructionControlPlanConstant.TECH_COUNTERSIGN" nzLabel="技术会签"></nz-option>
+              <nz-option [nzValue]="constructionControlPlanConstant.SAFE_COUNTERSIGN" nzLabel="安全会签"></nz-option>
+              <nz-option [nzValue]="constructionControlPlanConstant.COUNTERSIGNED" nzLabel="已会签"></nz-option>
+              <nz-option [nzValue]="constructionControlPlanConstant.PENDING_START" nzLabel="未开始"></nz-option>
+              <nz-option [nzValue]="constructionControlPlanConstant.FORMAL_START" nzLabel="已开始"></nz-option>
+              <nz-option [nzValue]="constructionControlPlanConstant.CONSTRUCTING" nzLabel="施工中"></nz-option>
+              <nz-option [nzValue]="constructionControlPlanConstant.SYSTEM_CLOSED" nzLabel="系统关闭"></nz-option>
+              <nz-option [nzValue]="constructionControlPlanConstant.MANUALLY_CLOSED" nzLabel="人工关闭"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="4">
+        <nz-form-item>
+          <nz-form-label>快速查询</nz-form-label>
+          <nz-form-control>
+            <input
+              nz-input
+              [(ngModel)]="constructionControlPlanFormParams.codeOrConstructionProjectInfo"
+              name="codeOrConstructionProjectInfo"
+              placeholder="请输入编码或名称"
+            />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="1">
+        <nz-form-item>
+          <nz-form-control>
+            <button
+              nz-button
+              (click)="loadConstructionControlPlans()"
+              type="submit"
+              [nzType]="'primary'"
+              [nzLoading]="constructionControlPlanLoading"
+            >
+              查询
+            </button>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+  </form>
+  <nz-table
+    nzShowSizeChanger
+    [nzData]="constructionControlPlans"
+    [nzFrontPagination]="false"
+    [nzPageSizeOptions]="[5, 10, 20, 50]"
+    [nzLoading]="constructionControlPlanLoading"
+    [nzTotal]="constructionControlPlanTotal"
+    [nzPageSize]="constructionControlPlanPageSize"
+    [nzPageIndex]="constructionControlPlanPageIndex"
+    nzSize="small"
+    [nzBordered]="true"
+    (nzQueryParams)="onConstructionControlPlanQueryParamsChange($event)"
+  >
+    <thead>
+      <tr>
+        <th></th>
+        <th>方案流程</th>
+        <th>方案状态</th>
+        <th>调查状态</th>
+        <th>机具绑定</th>
+        <th>方案编号</th>
+        <th>施工项目</th>
+        <th>施工日期及时间</th>
+        <th>施工地点</th>
+        <th>所属车间</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="let data of constructionControlPlans"
+        (click)="onConstructionControlPlanItemChecked(data.id, !setOfConstructionControlPlanCheckedId.has(data.id))"
+      >
+        <td
+          [nzChecked]="setOfConstructionControlPlanCheckedId.has(data.id)"
+          (nzCheckedChange)="onConstructionControlPlanItemChecked(data.id, $event)"
+        ></td>
+
+        <!-- 方案流程 -->
+        <td [ngSwitch]="data.processStatus">
+          <span *ngSwitchCase="constructionControlPlanConstant.PENDING_SUBMIT">待提交</span>
+          <span *ngSwitchCase="constructionControlPlanConstant.PENDING_COUNTERSIGN">待会签</span>
+          <span *ngSwitchCase="constructionControlPlanConstant.PENDING_RELEVANCE">待关联</span>
+          <span *ngSwitchCase="constructionControlPlanConstant.RELEVANCEED">已关联</span>
+          <span *ngSwitchCase="constructionControlPlanConstant.CLOSED">已关闭</span>
+          <span *ngSwitchDefault>-</span>
+        </td>
+
+        <!-- 方案状态 -->
+        <td [ngSwitch]="data.planStatus">
+          <span *ngSwitchCase="constructionControlPlanConstant.FIRST_DRAFT">初稿</span>
+          <span *ngSwitchCase="constructionControlPlanConstant.TECH_COUNTERSIGN">技术会签</span>
+          <span *ngSwitchCase="constructionControlPlanConstant.SAFE_COUNTERSIGN">安全会签</span>
+          <span *ngSwitchCase="constructionControlPlanConstant.COUNTERSIGNED">已会签</span>
+          <span *ngSwitchCase="constructionControlPlanConstant.PENDING_START">未开始</span>
+          <span *ngSwitchCase="constructionControlPlanConstant.FORMAL_START">已开始</span>
+          <span *ngSwitchCase="constructionControlPlanConstant.CONSTRUCTING">施工中</span>
+          <span *ngSwitchCase="constructionControlPlanConstant.SYSTEM_CLOSED">系统关闭</span>
+          <span *ngSwitchCase="constructionControlPlanConstant.MANUALLY_CLOSED">人工关闭</span>
+        </td>
+
+        <!-- 调查状态 -->
+        <td [ngSwitch]="data.investigationProgressStatus">
+          <span *ngSwitchCase="constructionControlPlanConstant.INVESTIGATION_NOT_OPENED">未开始</span>
+          <span *ngSwitchCase="constructionControlPlanConstant.PENDING_INVESTIGATE">未开始</span>
+          <span *ngSwitchCase="constructionControlPlanConstant.INVESTIGATING">调查中</span>
+          <span *ngSwitchCase="constructionControlPlanConstant.INVESTIGATED">已完成</span>
+        </td>
+
+        <!-- 机具绑定 -->
+        <td>{{ data.equipmentBindCount + '/' + data.equipmentReleaseCount }}</td>
+
+        <!-- 编码 -->
+        <td>
+          <a (click)="showPlanDetailFunction(data.id)">{{ data.code }}</a>
+        </td>
+
+        <td>{{ data.constructionProjectInfo }}</td>
+
+        <!-- 施工日期及时间 -->
+        <td>
+          <div *ngFor="let constructionControlPlanWorkTime of data.constructionControlPlanWorkTimes">
+            {{constructionControlPlanWorkTime.detailInfo}}
+          </div>
+        </td>
+
+        <!-- 施工地点 -->
+        <td>
+          <div *ngFor="let constructionControlPlanKilometerMark of data.constructionControlPlanKilometerMarks">
+            {{constructionControlPlanKilometerMark.detailInfo}}
+          </div>
+        </td>
+        <td>{{ data.workshopName }}</td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <nz-divider></nz-divider>
+  <!--  正式计划 -->
+  <form nz-form [nzLayout]="'inline'" class="search__form">
+    <div nz-row [nzGutter]="12" style="width: 100%">
+      <div nz-col [nzSpan]="2">
+        <nz-form-label>正式计划</nz-form-label>
+      </div>
+      <div nz-col [nzSpan]="4">
+        <nz-form-item>
+          <nz-form-label>编码</nz-form-label>
+          <nz-form-control>
+            <input
+              nz-input
+              [(ngModel)]="constructionFormalPlanFormParams.codeOrConstructionProjectInfo"
+              name="codeOrConstructionProjectInfo"
+              placeholder="请输入编码"
+            />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="4">
+        <nz-form-item>
+          <nz-form-label>线路</nz-form-label>
+          <nz-form-control>
+            <input nz-input [(ngModel)]="constructionFormalPlanFormParams.railwayLine" name="railwayLine" placeholder="请输入线路" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="4">
+        <nz-form-item>
+          <nz-form-label>车间</nz-form-label>
+          <nz-form-control>
+            <input nz-input [(ngModel)]="constructionFormalPlanFormParams.workshop" name="workshop" placeholder="请输入车间" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="4">
+        <nz-form-item>
+          <nz-form-label>类别</nz-form-label>
+          <nz-form-control>
+            <input nz-input [(ngModel)]="constructionFormalPlanFormParams.planType" name="planType" placeholder="请输入类别" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="3">
+        <nz-form-item>
+          <nz-form-control>
+            <button
+              nz-button
+              (click)="loadConstructionFormalPlans()"
+              type="submit"
+              [nzType]="'primary'"
+              [nzLoading]="constructionControlPlanLoading"
+            >
+              查询
+            </button>
+            <button
+              nz-button
+              (click)="showPlanRelevanceDetailFunction()"
+              type="submit"
+              [nzType]="'primary'"
+              [nzLoading]="constructionControlPlanLoading"
+            >
+              确认关联
+            </button>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+  </form>
+  <nz-table
+    nzShowSizeChanger
+    [nzScroll]="{ x: '150vw', y: constructionFormalPlanPageSize > 5 ? '300px' : '' }"
+    [nzData]="constructionFormalPlans"
+    [nzFrontPagination]="false"
+    [nzPageSizeOptions]="[5, 10, 20, 50]"
+    [nzLoading]="constructionFormalPlanLoading"
+    [nzTotal]="constructionFormalPlanTotal"
+    [nzPageSize]="constructionFormalPlanPageSize"
+    [nzPageIndex]="constructionFormalPlanPageIndex"
+    nzSize="small"
+    [nzBordered]="true"
+    (nzQueryParams)="onConstructionFormalPlanQueryParamsChange($event)"
+  >
+    <thead>
+      <tr>
+        <th nzWidth="1%"></th>
+        <th nzWidth="3%">编号</th>
+        <th nzWidth="2%">类别</th>
+        <th nzWidth="2%">线别</th>
+        <th nzWidth="2%">行别</th>
+        <th nzWidth="7%">施工项目</th>
+        <th nzWidth="4%">施工日期及时间</th>
+        <th nzWidth="4%">施工地点</th>
+        <th nzWidth="10%">施工内容</th>
+        <th nzWidth="5%">施工机械</th>
+        <th nzWidth="5%">建设单位</th>
+        <th nzWidth="7%">施工单位及负责人</th>
+        <th nzWidth="7%">监理单位及负责人</th>
+        <th nzWidth="8%">设备监护单位及负责人</th>
+        <th nzWidth="5%">审核处室（监控单位）</th>
+        <th nzWidth="2%">备注</th>
+        <th nzWidth="2%">星级</th>
+        <th nzWidth="3%">导入日期</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="let data of constructionFormalPlans"
+        (click)="onConstructionFormalPlanItemChecked(data.id, !setOfConstructionFormalPlanCheckedId.has(data.id))"
+      >
+        <td
+          [nzChecked]="setOfConstructionFormalPlanCheckedId.has(data.id)"
+          (nzCheckedChange)="onConstructionFormalPlanItemChecked(data.id, $event)"
+        ></td>
+        <td>{{ data.planCode }}</td>
+        <td>{{ data.planType }}</td>
+        <td>{{ data.railwayLineName }}</td>
+        <td>{{ data.downriver }}</td>
+        <td>{{ data.constructionProject ? data.constructionProject : '-' }}</td>
+        <td>{{ data.workTime }}</td>
+        <td>{{ data.constructionSite }}</td>
+        <td>{{ data.constructionContentAndInfluenceArea }}</td>
+        <td>{{ data.constructionMachinery }}</td>
+        <td>{{ data.constructDepartment }}</td>
+        <td>{{ data.constructionDepartmentAndPrincipalName }}</td>
+        <td>{{ data.supervisionDepartmentAndPrincipalName }}</td>
+        <td>{{ data.equipmentMonitoringDepartmentAndPrincipalName }}</td>
+        <td>{{ data.auditDepartment }}</td>
+        <td>{{ data.remarks }}</td>
+        <td>{{ data.starRating }}</td>
+        <td>{{ data.addTime | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+      </tr>
+    </tbody>
+  </nz-table>
+</nz-card>
+
+<nz-modal
+  [nzWidth]="1600"
+  nzTitle="关联确认"
+  [(nzVisible)]="showPlanRelevanceDetail"
+  [nzContent]="planRelevanceDetailContent"
+  [nzFooter]="planRelevanceDetailFooter"
+  (nzOnCancel)="this.showPlanRelevanceDetail = false"
+>
+  <ng-template #planRelevanceDetailContent>
+    <construction-control-plan-relevance-detail
+      (closeAndRefresh)="closeAndRefresh()"
+      [constructionFormalPlanId]="this.setOfConstructionFormalPlanCheckedId.values().next().value"
+      [constructionControlPlanId]="this.setOfConstructionControlPlanCheckedId.values().next().value"
+    >
+    </construction-control-plan-relevance-detail>
+    <!--    <construction-control-plan-relevance-detail [constructionControlPlanId]="this.setOfConstructionControlPlanCheckedId.values().next().value">-->
+    <!--    </construction-control-plan-relevance-detail>-->
+  </ng-template>
+  <ng-template #planRelevanceDetailFooter> </ng-template>
+</nz-modal>

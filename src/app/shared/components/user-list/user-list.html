@@ -1,0 +1,52 @@
+<form nz-form [nzLayout]="'inline'" (ngSubmit)="loadDataFromServer(pageIndex, pageSize, formParams)" class="search__form">
+  <div nz-row [nzGutter]="12" style="width: 100%">
+    <div nz-col [nzSpan]="8">
+      <nz-form-item>
+        <nz-form-label>用户名</nz-form-label>
+        <nz-form-control>
+          <input nz-input [(ngModel)]="formParams.displayName" name="displayName" placeholder="请输入用户名" />
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col [nzSpan]="8">
+      <nz-form-item>
+        <nz-form-label>岗位名称</nz-form-label>
+        <nz-form-control>
+          <input nz-input [(ngModel)]="formParams.roleName" name="roleName" placeholder="请输入岗位名" />
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col [nzSpan]="2">
+      <nz-form-item>
+        <nz-form-control>
+          <button nz-button type="submit" [nzType]="'primary'" [nzLoading]="loading">查询</button>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
+</form>
+<nz-table
+  nzShowSizeChanger
+  [nzData]="datas"
+  [nzFrontPagination]="false"
+  [nzPageSizeOptions]="[10, 20, 50]"
+  [nzLoading]="loading"
+  [nzTotal]="total"
+  [nzPageSize]="pageSize"
+  [nzPageIndex]="pageIndex"
+  nzSize="small"
+  (nzQueryParams)="onQueryParamsChange($event)"
+>
+  <thead>
+  <tr>
+    <th [nzChecked]="checked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="onAllChecked($event)"></th>
+    <th *ngFor="let head of headers">{{head}}</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let data of datas" (click)="onItemChecked(data.id, !setOfCheckedId.has(data.id), data.disabled)">
+    <td [nzChecked]="setOfCheckedId.has(data.id)" [nzDisabled]="data.disabled" (nzCheckedChange)="onItemChecked(data.id, $event)"></td>
+    <td *ngFor="let list of data | keysPipe : keys">{{data[list]}}</td>
+  </tr>
+  </tbody>
+</nz-table>

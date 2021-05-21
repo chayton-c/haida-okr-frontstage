@@ -1,0 +1,34 @@
+<div
+  id="map"
+  style="float: left; width: 100%; max-width: none; height: 645px"
+  leaflet
+  [leafletOptions]="mapOptions"
+  (leafletCenterChange)="moveCenter()"
+  [(leafletZoom)]="zoom"
+  [(leafletCenter)]="center"
+  (leafletMapReady)="onMapReady($event)"
+>
+  <div [leafletLayers]="tileLayers"></div>
+  <div [leafletLayers]="baseLayers"></div>
+  <div [leafletLayers]="overlays"></div>
+  <div [leafletLayers]="overlappingLayers"></div>
+  <div *ngIf="this.zoom > 19 && this.zoom < 23" [leafletLayers]="kilometerMarkerLayers"></div>
+  <div *ngFor="let opcPointLayer of locationPointLayers">
+    <div *ngIf="this.zoom > 22" [leafletLayers]="[opcPointLayer]"></div>
+  </div>
+  <div *ngIf="showAuxiliaryLineLayers" [leafletLayers]="auxiliaryLineLayers"></div>
+  <div [leafletLayers]="equipmentsLayers"></div>
+</div>
+
+<div style="display: none">
+  <div #opcRightClickMenu>
+    <ul nz-menu style="border-right: none">
+      <li nz-menu-item (click)="deleteLocationConfirm()">
+        删除该点
+      </li>
+      <li nz-menu-item (click)="getDistanceFromOpcOrRailwayLine()">
+        光电缆/线路距离
+      </li>
+    </ul>
+  </div>
+</div>

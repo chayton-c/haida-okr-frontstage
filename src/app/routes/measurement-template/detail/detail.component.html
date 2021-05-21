@@ -1,0 +1,24 @@
+<page-header [breadcrumb]="breadcrumb" [title]="''"></page-header>
+<ng-template #breadcrumb>
+  <nz-breadcrumb>
+    <nz-breadcrumb-item>
+      <a [routerLink]="['/']">home</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item *ngIf="type == typeDevice">
+      <a [routerLink]="['/measurement-template/list']">作业标准</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item *ngIf="type == typeStation">
+      <a [routerLink]="['/measurement-template/line-list']">作业标准</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>标准详情</nz-breadcrumb-item>
+  </nz-breadcrumb>
+</ng-template>
+
+<nz-card [nzBordered]="false">
+  <nz-steps [(nzCurrent)]="item.step">
+    <nz-step nzTitle="基础信息"></nz-step>
+    <nz-step nzTitle="检查项配置"></nz-step>
+  </nz-steps>
+  <app-step1 *ngIf="item.step == 0"></app-step1>
+  <app-step2 *ngIf="item.step == 1"></app-step2>
+</nz-card>

@@ -1,0 +1,135 @@
+<page-header [title]="''"></page-header>
+
+<nz-card>
+  <div nz-row>
+    <div nz-col nzSpan="5">
+      <nz-form-label>线路车站</nz-form-label>
+      <line-station-casecade (valuesChange)="loadOpcCasecadeByStationId($event)"></line-station-casecade>
+    </div>
+    <div nz-col nzSpan="19">
+      <nz-form-label>光电缆</nz-form-label>
+      <nz-select
+        style="width: 95%"
+        [nzMaxTagCount]="10"
+        [nzMaxTagPlaceholder]="tagPlaceHolder"
+        nzMode="multiple"
+        nzPlaceHolder="请选择光电缆"
+        [nzDisabled]="nzDisabled"
+        [(ngModel)]="formParams.opcIds"
+        (ngModelChange)="loadOpcDataOfTableList($event)"
+      >
+        <nz-option
+          *ngFor="let item of opcOptions"
+          [nzLabel]="item.opcTypeName ? (item.name ? item.opcTypeName + '--' + item.name : '') : ''"
+          [nzValue]="item.id"
+        ></nz-option>
+      </nz-select>
+      <ng-template #tagPlaceHolder let-selectedList> and {{ selectedList.length }} more selected</ng-template>
+    </div>
+  </div>
+  <div nz-row>
+    <div nz-col nzSpan="24">
+      <nz-tabset>
+        <nz-tab nzTitle="地图显示">
+          <!--          <div id="map"></div>-->
+          <opc-base-map #opcBaseMap [opcIds]="formParams.opcIds"></opc-base-map>
+
+          <!--          <construction-control-plan-preview #constructionControlPlanPreview-->
+          <!--                                             [opcIds]="formParams.opcIds">-->
+          <!--          </construction-control-plan-preview>-->
+        </nz-tab>
+        <nz-tab nzTitle="光电缆标记列表显示">
+          <nz-table
+            nzShowSizeChanger
+            [nzData]="locations"
+            [nzFrontPagination]="false"
+            [nzPageSizeOptions]="[10, 20, 50]"
+            [nzLoading]="loading"
+            [nzTotal]="total"
+            [nzPageSize]="pageSize"
+            [nzPageIndex]="pageIndex"
+            [nzBordered]="true"
+            nzSize="small"
+            (nzQueryParams)="onQueryParamsChange($event)"
+          >
+            <thead>
+              <tr>
+                <!--              <th-->
+                <!--                [nzChecked]="checked"-->
+                <!--                [nzIndeterminate]="indeterminate"-->
+                <!--                (nzCheckedChange)="onAllChecked($event)"-->
+                <!--              ></th>-->
+                <th>信息点名称</th>
+                <th>信息点属性</th>
+                <th>经度</th>
+                <th>纬度</th>
+                <th>高程</th>
+                <th>公里标</th>
+                <th>备注</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of locations">
+                <!--              <td-->
+                <!--                [nzChecked]="checkedId.has(data.id)"-->
+                <!--                (nzCheckedChange)="onItemChecked(data.id, $event)"-->
+                <!--              ></td>-->
+                <td>{{ data.opcMarkName }}</td>
+                <td>{{ data.opcMarkTypeName }}</td>
+                <td>{{ data.longitude }}</td>
+                <td>{{ data.latitude }}</td>
+                <td></td>
+                <td>{{ data.opcMarkKilometerMark }}</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </nz-tab>
+        <nz-tab nzTitle="平面图显示">
+          <!--          <opc-floor-plan [test]="'test'"></opc-floor-plan>-->
+          <img src="assets/map/images/1002.svg" style="width: 100%; height: 100%" />
+        </nz-tab>
+      </nz-tabset>
+    </div>
+  </div>
+</nz-card>
+
+<!--原文件备份-->
+<!--<div style="height: 60px; padding: 15px 10px 15px 0; background: white">-->
+<!--  <button nz-button nzType="primary" style="float: right" routerLink="/dashboard/v1" [nzSize]="'default'" nzShape="round">返回首页</button>-->
+<!--</div>-->
+<!--<div nz-row>-->
+<!--  <nz-card nz-col nzSpan="4" nzTitle="车站列表">-->
+<!--    <nz-table #expandTable [nzData]="lineNodePojos" [nzLoading]="railwayLineLoading" nzTableLayout="fixed" [nzFrontPagination]="false">-->
+<!--      <tbody style="margin-left: 0">-->
+<!--        <ng-container *ngFor="let data of expandTable.data">-->
+<!--          <ng-container *ngFor="let item of mapOfExpandedData[data.id]">-->
+<!--            <tr *ngIf="(item.parent && item.parent.expand) || !item.parent">-->
+<!--              <td-->
+<!--                [nzIndentSize]="item.level! * 20"-->
+<!--                [nzShowExpand]="item.level == 0"-->
+<!--                [(nzExpand)]="item.expand"-->
+<!--                (nzExpandChange)="collapse(mapOfExpandedData[data.id], item, $event)"-->
+<!--                (click)="clickLineNodePojo(item)"-->
+<!--              >-->
+<!--                <span [style]="item.id == checkedLineNodePojo.id ? 'color:#1890ff;cursor:pointer' : 'cursor:pointer'">{{ item.name }}</span>-->
+<!--              </td>-->
+<!--            </tr>-->
+<!--          </ng-container>-->
+<!--        </ng-container>-->
+<!--      </tbody>-->
+<!--    </nz-table>-->
+<!--  </nz-card>-->
+
+<!--  <div nz-col nzSpan="20">-->
+<!--    <nz-card>-->
+<!--      <nz-tabset [(nzSelectedIndex)]="selectIndex">-->
+<!--        <nz-tab *ngFor="let tab of tabs" [nzTitle]="tab.station ? tab.station.name : tab.leftStation.name + '-' + tab.rightStation.name">-->
+<!--          <ng-template nz-tab>-->
+<!--            <opc-map [leftStationId]="tab.leftStation.id" [rightStationId]="tab.rightStation.id"></opc-map>-->
+<!--          </ng-template>-->
+<!--        </nz-tab>-->
+<!--      </nz-tabset>-->
+<!--    </nz-card>-->
+<!--  </div>-->
+<!--</div>-->

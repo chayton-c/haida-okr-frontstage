@@ -1,0 +1,39 @@
+<!--<div class="example-box" cdkDrag [cdkDragFreeDragPosition]="dragPosition" (mousemove)="onMouseMove($event)" >-->
+<!--  Drag me around-->
+<!--</div>-->
+<nz-card>
+  <div nz-row>
+    <div nz-col nzSpan="2"></div>
+    <div nz-col>
+      <nz-form-label>线路车站</nz-form-label>
+      <line-station-casecade (valuesChange)="lineStationValueChange($event)"></line-station-casecade>
+      <button nz-button nzType="primary" (click)="resetPosition()">复位</button>
+      <button nz-button nzType="primary" (click)="savePosition()">保存</button>
+      <!--  <button (click)="changePosition()">测试点位回显</button>-->
+    </div>
+  </div>
+  <div nz-row>
+    <div nz-col nzSpan="2"></div>
+    <div nz-col nzSpan="20">
+      <div style="background: url('/assets/tmp/img/screen-base.png') center no-repeat; background-size: 1465px; height: 796px">
+        <!--    <img-->
+        <!--      cdkDrag-->
+        <!--      [cdkDragFreeDragPosition]="dragPosition"-->
+        <!--      (cdkDragMoved)="c($event)"-->
+        <!--      (click)="getFreeDragPosition($event)"-->
+        <!--      src="/assets/opcimg/status-imgs/2-0.png"-->
+        <!--      style="z-index: 102;width: 32px; height: 40px;" />-->
+        <!--        <img cdkDrag [cdkDragFreeDragPosition]="dragPositionGlint" [src]="testImageUrl" [ngClass]="blinking" />-->
+        <img cdkDrag [cdkDragFreeDragPosition]="dragPositionGlint" src="/assets/opcimg/status-imgs/0-0.png" [ngClass]="blinking" />
+
+        <div class="video">
+          <video controls #videoPlayer style="display: none">
+            <source src="/assets/opcvideos/warning.wav" type="video/mp4" />
+          </video>
+        </div>
+      </div>
+    </div>
+    <div nz-col nzSpan="2"></div>
+  </div>
+  <div nz-row></div>
+</nz-card>

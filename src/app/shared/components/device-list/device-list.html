@@ -1,0 +1,90 @@
+<form nz-form [nzLayout]="'inline'" (ngSubmit)="loadDataFromServer(pageIndex, pageSize, formParams)" class="search__form">
+  <div nz-row [nzGutter]="24" style="width: 120%">
+    <div nz-col nzSpan="5">
+      <nz-form-item>
+        <nz-form-label>环境位置</nz-form-label>
+        <nz-form-control>
+          <nz-tree-select
+            style="width: 170px"
+            [nzNodes]="lineSelectTreeNodes"
+            nzShowSearch
+            nzPlaceHolder="环境位置"
+            [(ngModel)]="formParams.railwayLineIdOrStationId"
+            name="railwayLineIdOrStationId"
+          >
+          </nz-tree-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col nzSpan="5">
+      <nz-form-item>
+        <nz-form-label>设备类型</nz-form-label>
+        <nz-form-control>
+          <nz-tree-select
+            style="width: 170px"
+            [nzNodes]="deviceTypeSelectTreeNodes"
+            nzShowSearch
+            nzPlaceHolder="设备类型"
+            [(ngModel)]="formParams.deviceTypeIdOrDeviceSubTypeId"
+            name="deviceTypeIdOrDeviceSubTypeId"
+          >
+          </nz-tree-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col nzSpan="5">
+      <nz-form-item>
+        <nz-form-label>设备名称</nz-form-label>
+        <nz-form-control>
+          <input nz-input [(ngModel)]="formParams.deviceNameOrCode" name="roleName" placeholder="请输入设备名称" />
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col nzSpan="6">
+      <nz-form-item>
+        <nz-form-control>
+          <button nz-button type="submit" [nzType]="'primary'" [nzLoading]="loading">查询</button>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
+</form>
+<nz-table
+  nzShowSizeChanger
+  [nzData]="devices"
+  [nzFrontPagination]="false"
+  [nzPageSizeOptions]="[5, 10, 20, 50]"
+  [nzLoading]="loading"
+  [nzTotal]="total"
+  [nzPageSize]="pageSize"
+  [nzPageIndex]="pageIndex"
+  nzSize="small"
+  (nzQueryParams)="onQueryParamsChange($event)"
+>
+  <thead>
+  <tr>
+    <th [nzChecked]="checked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="onAllChecked($event)"></th>
+    <th>名称</th>
+    <th>编码</th>
+    <th>环境信息</th>
+    <th>位置信息</th>
+    <th>负责部门</th>
+    <th>类型</th>
+    <th>子类型</th>
+    <th>修改时间</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let data of devices" (click)="rowChecked(data.id)">
+    <td [nzChecked]="setOfCheckedId.has(data.id)" (nzCheckedChange)="onItemChecked(data.id, $event)"></td>
+    <td>{{ data.name }}</td>
+    <td>{{ data.code }}</td>
+    <td>{{ data.railwayLineNames }}</td>
+    <td>{{ data.stationName }}</td>
+    <td>{{ data.workAreaName }}</td>
+    <td>{{ data.deviceTypeName }}</td>
+    <td>{{ data.deviceSubTypeName }}</td>
+    <td>{{ data.addTime }}</td>
+  </tr>
+  </tbody>
+</nz-table>
